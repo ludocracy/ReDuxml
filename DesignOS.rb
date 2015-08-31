@@ -12,12 +12,13 @@
 #in order to provide real-time feedback to XML editor
 #could add switch to turn this off
 module Base_types
+  require 'rubytree'
+  require 'nokogiri'
+
   class Component < Tree::TreeNode
-    require 'rubytree'
-    require 'nokogiri'
 
     #redefining TreeNode::name as Component::id
-    alias_method @id, :name
+    alias_method :id, :name
 
     #element name for the root of this Component
     @root
@@ -83,7 +84,7 @@ module Base_types
     #scrubs keywords of ones that should not be inherited by new children components
     def scrub_reserved key_words
       #list includes: singleton (because child may not be one), element name because child element will surely differ
-      key_words.include ['singleton']
+      key_words.include [:singleton]
     end
     private :scrub_reserved, :set_id
 
@@ -94,7 +95,7 @@ module Base_types
       raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Node
       @root = xml_node.name
       #adding inherited key_words
-      @keywords = args['key_words']
+      @keywords = args[:key_words]
       #storing node's XML XPATH
       @node_xpath = xml_node.xpath
       #setting or getting id -- all Components must have a unique global id
@@ -104,7 +105,7 @@ module Base_types
         #picking up design conditionals as rules
         @rules[xml_node] = xml_node['if']
         #and picking up view conditions as keywords; adding them to ones inherited
-        @keywords += xml_node['keywords'].split(' ')
+        @keywords += xml_node[:keywords].split(' ')
         case xml_node.children.size
           #this is a leaf node
           when 0
@@ -114,7 +115,8 @@ module Base_types
               #add to concrete pointer; create new child based on child's class; indicate it is a singleton
               #the view is 'xml', an implicit view that includes XML elements that are not properly a part of the data model
               #in non-XML view (default), traverses will skip these and go straight to children
-              add_concrete 'xml', {xml_node.child.name => self.class.new xml_node.child, @keywords+'singleton'}
+              name_component_pair = xml_node.child.name <= self.class.new(xml_node.child, @keywords+'singleton')
+              add_concrete 'xml', name_component_pair
             end
             #traverse
             xml_node = xml_node.child
@@ -122,11 +124,12 @@ module Base_types
             #adding each child
             xml_node.children.each do |child|
               #is this XML element name reserved? if so, call subclass constructor (may need to add namespace of template somehow?)
-              if args['reserved'].include? child.name
+              if args[:reserved].include? child.name
                 #getting class of child
                 child_class = Object.const_set(child.name.classify, Class.new)
                 #calling that class's initializer - should be subclass of Component
-                @children << child_class.new(child, {'keywords' => scrub_reserved @keywords})
+                new_child = {:keywords => scrub_reserved(@keywords)}
+                @children << child_class.new(child, new_child)
               end
             end
         end
@@ -156,7 +159,7 @@ module Base_types
   class Owners < Component
     @owner_hash
 
-    attr_reader :@owner_hash
+    attr_reader :owner_hash
 
     def initialize xml_node, *args
       super xml_node, args
@@ -191,7 +194,7 @@ module Base_types
     #root component of template design
     @system
     #template's must always correspond to a document Node
-    alias_method @doc, @node_xpath
+    alias_method :doc, :node_xpath
     #file object
     @file
     #list of element names reserved by the template (pulled from schema rules)
@@ -232,7 +235,7 @@ module Base_types
     attr_reader :doc, :name, :owners
 
     #args is a Hash of values to seed a new template file when starting from scratch
-    def initialize(template_file, *args)
+    def initialize template_file, *args
       #these reserved elements are there for all templates
       @reserved_components = ['owners', 'history']
       @file = template_file
@@ -245,7 +248,7 @@ module Base_types
       @reserved_components += self.class.get_reserved_components
 
       #call Component initialize
-      super @doc, {'reserved' => @reserved_components}
+      super @doc, {reserved: @reserved_components}
 
       #setting history pointer
       @history = self.child('history')
@@ -426,7 +429,7 @@ module Base_types
       super registry_file
     end
     #rename doc
-    alias_method @registry, :doc
+    alias_method :registry, :doc
 
     #user id must be provided by user for now; could pull from environment
     #args are for if new user is being created by an admin and is being given starting views and owned templates
@@ -449,10 +452,10 @@ module Base_types
     #hash of owned templates
     @ownership_list
     #string of user's id; equivalent to Tree::Node.name
-    alias_method @user_id, @name
+    alias_method :user_id, :name
     #user's full name
     @full_name
-    alias_method @user_node, @node_xpath
+    alias_method :user_node, :node_xpath
 
     #creating new user
     def initialize user_id, *args
@@ -506,6 +509,15 @@ module Editor
 
   def initialize template
     #load template and load methods
+    @current_template = Template.new template
+    @current_template.child('methods').children.each do |method|
+      @methods[method['name']] = method.content
+    end
+    listen
+  end
+
+  def listen
+
   end
 end
 
@@ -521,7 +533,7 @@ module Builder
   @parameter_hash
 
   #converts xml template file to template tree, prunes unauthorized views, etc.
-  def initialize template, views
+  def initialize template
     @root_template = template
     @views = *views
     @current_template = Build.new @root_template.node_xpath
@@ -558,23 +570,15 @@ end
 module Inspector
   include Base_types
   #collection of files that govern
-  require 'rules'
   #queries start a trace of a given system to either find a given Component,
   #or inspect design for validity and generate error messages
-  class Query
-    #takes list of authorized views and checks against given template
-    def initialize template_file, *views
-      @template_file = template_file
-      @views = *views
-      template = Template.new @template_file
-      views.each do |view| view.can_see? template? template
-      end
-      false
-    end
-    #
+
+  def initialize template
+
   end
 end
 
+include Base_types
 #main program - actually a template that has as subsystems
 class DesignOS < Template
   #makes program options available in standard format
@@ -587,10 +591,9 @@ class DesignOS < Template
   include Inspector
   #this template is actually partial - the rest (version-specific and general global properties)
   #are contained in the file below
-  require_relative 'designos_template.xml'
 
   def initialize *args
-    super 'designos_template.xml', args
+    super 'designos_template.xml'
     main
   end
 

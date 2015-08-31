@@ -81,12 +81,11 @@
 
     <rng:div>
         <a:documentation>these Components make up histories</a:documentation>
+        
         <rng:define name="history">
             <a:documentation> history of significant changes to this template </a:documentation>
             <rng:element name="history">
                 <rng:optional>
-                    <!-- in case while crawling through combined histories we need to know which template the change occurred in -->
-                    <!-- in some cases multiple templates were changed along with this one so change_ids is plural -->
                     <rng:ref name="change_ids"/>
                 </rng:optional>
                 <rng:oneOrMore>
@@ -101,7 +100,6 @@
                 </rng:oneOrMore>
             </rng:element>
         </rng:define>
-
 
         <rng:define name="content">
             <a:documentation> container for content changes in history </a:documentation>
@@ -127,7 +125,6 @@
         <rng:define name="change">
             <a:documentation> histories of templates consist of operations on an object by a certain
                 owner on an exact time and date </a:documentation>
-            <rng:notAllowed/>
             <rng:ref name="owner"/>
             <rng:oneOrMore>
                 <rng:ref name="change_ids"/>
