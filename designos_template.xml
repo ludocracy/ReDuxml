@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Design OS default values for this version
+    when SO starts up it uses these values to initialize itself-->
+<?xml-model href="rng/designos.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<designOS xmlns="" id="designOS_0">
+    <name>Design OS</name>
+    <version>0.1</version>
+    <owner id="b33791">
+        <name>Peter Kong</name>
+    </owner>
+    <description>An operating system for designers.</description>
+    <!-- this history was hand-created since designOS can't write its own history if it never launched -->
+    <history>
+        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil">
+            <owner id="b33791">
+                <name>Peter Kong</name>
+            </owner>
+            <description>created file</description>
+            <date>2015-08-20T19:20:30+01:00</date>
+        </insert>
+    </history>
+    <!-- initialization steps; arithmetic and string operations are not allowed here! 
+        parameters can only be passed in but not operated on; boolean params can be used to operate system logic
+        but that only allows the user to instantiate or deinstantiate secondary modules (since arrays require arithmetic and don't make sense here -->
+    <initialize id="designOS_system_0" logics="Boolean">
+        <!-- these parameters are arguments passed to DesignOS on startup -->
+        <parameters>
+        </parameters>
+        <!-- each of these modules is an instance and can be conditionalized, but there must be at least one module of each kind -->
+        <!-- default is console, but plugins (like an XML editor) can override this value -->
+        <editor id="designOS_main_editor_0" ref="console"/>
+        <!-- default is registry to authenticate new user; during runtime switches to whatever template's assigned inspector -->
+        <inspector id="designOS_main_inspector_0" ref="registry"/>
+        <!-- default is standard builder; can be overridden by plugins -->
+        <builder id="designOS_main_builder_0" ref="builder"/>        
+    </initialize>
+</designOS>

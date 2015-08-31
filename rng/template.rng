@@ -1,0 +1,388 @@
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" ns=""
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <a:documentation> XML Schema for DesignOS "template" </a:documentation>
+
+    <rng:start combine="choice">
+        <rng:ref name="template"/>
+    </rng:start>
+    <rng:define name="template">
+        <rng:element name="template">
+            <a:documentation> root element of base template </a:documentation>
+            <rng:ref name="templateComType"/>
+        </rng:element>
+    </rng:define>
+
+    <rng:div>
+        <a:documentation>these attributes define links to Components</a:documentation>
+        <rng:define name="previous">
+            <a:documentation> holds id of previous (in time or hierarchy) component </a:documentation>
+            <rng:attribute name="previous"/>
+        </rng:define>
+
+        <rng:define name="next">
+            <rng:attribute name="next">
+                <a:documentation> holds id of next (in time or hierarchy) component
+                </a:documentation>
+            </rng:attribute>
+        </rng:define>
+
+        <rng:define name="ref">
+            <rng:attribute name="ref">
+                <a:documentation> holds id of referenced component </a:documentation>
+            </rng:attribute>
+        </rng:define>
+
+        <rng:define name="change_ids">
+            <rng:attribute name="change_ids">
+                <a:documentation> holds id of changed component(s) </a:documentation>
+            </rng:attribute>
+        </rng:define>
+    </rng:div>
+
+    <rng:define name="templateComType">
+        <a:documentation> base template type - can be extended for any template application
+            including designOS components </a:documentation>
+        <rng:optional>
+            <rng:ref name="name"/>
+        </rng:optional>
+        <rng:ref name="version"/>
+        <rng:oneOrMore>
+            <rng:ref name="owner"/>
+        </rng:oneOrMore>
+        <rng:ref name="description"/>
+        <rng:ref name="history"/>
+        <rng:ref name="system"/>
+        <rng:ref name="objectAttributes"/>
+    </rng:define>
+
+    <rng:define name="version">
+        <a:documentation>version of a template</a:documentation>
+        <rng:element name="version">
+            <rng:text/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="owner">
+        <a:documentation> every template must have at least one owner </a:documentation>
+        <rng:element name="owner">
+            <rng:oneOrMore>
+                <rng:ref name="name"/>
+            </rng:oneOrMore>
+            <rng:optional>
+                <rng:attribute name="role">
+                    <rng:data type="string"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:ref name="objectAttributes"/>
+        </rng:element>
+    </rng:define>
+
+
+    <rng:div>
+        <a:documentation>these Components make up histories</a:documentation>
+        <rng:define name="history">
+            <a:documentation> history of significant changes to this template </a:documentation>
+            <rng:element name="history">
+                <rng:optional>
+                    <!-- in case while crawling through combined histories we need to know which template the change occurred in -->
+                    <!-- in some cases multiple templates were changed along with this one so change_ids is plural -->
+                    <rng:ref name="change_ids"/>
+                </rng:optional>
+                <rng:oneOrMore>
+                    <rng:choice>
+                        <rng:ref name="move"/>
+                        <rng:ref name="insert"/>
+                        <rng:ref name="remove"/>
+                        <rng:ref name="edit"/>
+                        <rng:ref name="error"/>
+                        <rng:ref name="instantiate"/>
+                    </rng:choice>
+                </rng:oneOrMore>
+            </rng:element>
+        </rng:define>
+
+
+        <rng:define name="content">
+            <a:documentation> container for content changes in history </a:documentation>
+            <rng:element name="original">
+                <a:documentation> original text </a:documentation>
+                <rng:text/>
+                <rng:ref name="previous"/>
+            </rng:element>
+            <rng:element name="edit">
+                <a:documentation> new text </a:documentation>
+                <rng:text/>
+                <rng:ref name="next"/>
+            </rng:element>
+            <rng:optional>
+                <rng:attribute name="attribute">
+                    <a:documentation> either name of attribute changed or nil if element content
+                        changed; default is nil </a:documentation>
+                </rng:attribute>
+            </rng:optional>
+        </rng:define>
+
+
+        <rng:define name="change">
+            <a:documentation> histories of templates consist of operations on an object by a certain
+                owner on an exact time and date </a:documentation>
+            <rng:notAllowed/>
+            <rng:ref name="owner"/>
+            <rng:oneOrMore>
+                <rng:ref name="change_ids"/>
+            </rng:oneOrMore>
+            <rng:ref name="description"/>
+            <rng:element name="date">
+                <rng:data type="dateTime"/>
+            </rng:element>
+            <rng:ref name="objectAttributes"/>
+        </rng:define>
+
+        <rng:div>
+            <a:documentation>the following are changes to the design that occur during build time.
+                these changes are removed from the history by default after each
+                iteration.</a:documentation>
+            <rng:define name="error">
+                <rng:element name="error">
+                    <a:documentation>a rule check has failed. if changes are committed, error will
+                        be added permanently to history.</a:documentation>
+                    <rng:ref name="change"/>
+                    <rng:ref name="previous"/>
+                    <rng:ref name="next"/>
+                </rng:element>
+            </rng:define>
+            <rng:define name="instantiate">
+                <rng:element name="instantiate">
+                    <a:documentation>a Component has been instantiated; the build-time equivalent of
+                        an insertion.</a:documentation>
+                    <rng:ref name="change"/>
+                    <rng:ref name="previous">
+                        <a:documentation>here "previous" means the antecedent of this
+                            instance.</a:documentation>
+                    </rng:ref>
+                    <rng:ref name="next">
+                        <a:documentation>here "next" means the instance children</a:documentation>
+                    </rng:ref>
+                </rng:element>
+            </rng:define>
+        </rng:div>
+
+        <rng:define name="move">
+            <rng:element name="move">
+                <a:documentation>a Component has moved</a:documentation>
+                <rng:ref name="change"/>
+                <rng:ref name="previous">
+                    <a:documentation> previous here means the old parent </a:documentation>
+                </rng:ref>
+                <rng:ref name="next">
+                    <a:documentation> next here means the new parent </a:documentation>
+                </rng:ref>
+            </rng:element>
+        </rng:define>
+
+        <rng:define name="insert">
+            <rng:element name="insert">
+                <a:documentation>a new Component has been inserted</a:documentation>
+                <rng:ref name="change"/>
+                <rng:ref name="previous">
+                    <a:documentation> previous here is the id of the parent object "previous" in the
+                        hierarchy </a:documentation>
+                </rng:ref>
+                <rng:zeroOrMore>
+                    <rng:ref name="next">
+                        <a:documentation> each "next" is a child element that was added with this
+                            one </a:documentation>
+                    </rng:ref>
+                </rng:zeroOrMore>
+            </rng:element>
+        </rng:define>
+
+        <rng:define name="remove">
+            <rng:element name="remove">
+                <!-- remove operations include all the children, so they are tracked -->
+                <rng:ref name="change"/>
+                <!-- previous here is the old parent -->
+                <rng:ref name="previous"/>
+                <!-- each "next" is a child element that was removed with this one -->
+                <rng:zeroOrMore>
+                    <rng:ref name="next"/>
+                </rng:zeroOrMore>
+            </rng:element>
+        </rng:define>
+        <!-- each edit has only one content node so changes to -->
+        <!-- more than one element or content and attribute values will generate new edits -->
+        <rng:define name="edit">
+            <rng:element name="edit">
+                <rng:ref name="change"/>
+                <rng:ref name="content"/>
+            </rng:element>
+        </rng:define>
+    </rng:div>
+
+    <rng:div>
+        <a:documentation>Instance-type Components have their own instance-specific parameter
+            values;.</a:documentation>
+        <rng:define name="system">
+            <rng:element name="system">
+                <a:documentation> a system is the content of a template - the digital representation
+                    of a design; there is only one per template </a:documentation>
+                <rng:ref name="instanceComType"/>
+                <rng:oneOrMore>
+                    <rng:choice>
+                        <a:documentation> the actual design goes here and it's up to the system's
+                            users how to define its sub schema </a:documentation>
+                        <rng:zeroOrMore>
+                            <rng:element>
+                                <rng:anyName/>
+                                <rng:text/>
+                            </rng:element>
+                        </rng:zeroOrMore>
+                        <rng:zeroOrMore>
+                            <rng:ref name="instance"/>
+                        </rng:zeroOrMore>
+                        <rng:zeroOrMore>
+                            <rng:ref name="array"/>
+                        </rng:zeroOrMore>
+                    </rng:choice>
+                </rng:oneOrMore>
+                <rng:optional>
+                    <rng:ref name="systemComAttr"/>
+                </rng:optional>
+            </rng:element>
+        </rng:define>
+
+        <rng:define name="systemComAttr">
+            <a:documentation>All systems have the logic attribute, determining what logics are
+                allowed when building it.</a:documentation>
+            <rng:attribute name="logics">
+                <rng:data type="string"/>
+            </rng:attribute>
+        </rng:define>
+
+
+        <rng:define name="array">
+            <a:documentation> creates patterned instances of referenced objects </a:documentation>
+            <rng:element name="array">
+                <rng:ref name="instanceComType"/>
+                <rng:oneOrMore>
+                    <rng:zeroOrMore>
+                        <rng:ref name="instance"/>
+                    </rng:zeroOrMore>
+                    <rng:zeroOrMore>
+                        <rng:element>
+                            <rng:anyName/>
+                            <rng:text/>
+                        </rng:element>
+                    </rng:zeroOrMore>
+                </rng:oneOrMore>
+                <rng:attribute name="size">
+                    <a:documentation>Limits the number of array instances.</a:documentation>
+                    <rng:data type="string"/>
+                </rng:attribute>
+            </rng:element>
+        </rng:define>
+
+
+        <rng:define name="instance">
+            <a:documentation> creates instance of referenced object or template applying given
+                parameter values </a:documentation>
+            <rng:element name="instance">
+                <rng:ref name="instanceComType"/>
+            </rng:element>
+        </rng:define>
+
+
+        <rng:define name="instanceComType">
+            <a:documentation> common type for instances (arrays, systems, instances) </a:documentation>
+            <rng:optional>
+                <rng:ref name="parameters"/>
+            </rng:optional>
+            <rng:choice>
+                <rng:zeroOrMore>
+                    <rng:ref name="ref"/>
+                </rng:zeroOrMore>
+            </rng:choice>
+            <rng:ref name="conditional"/>
+            <rng:ref name="objectAttributes"/>
+        </rng:define>
+
+
+        <rng:define name="parameters">
+            <a:documentation> container for all of a template or instance's parameters </a:documentation>
+            <rng:element name="parameters">
+                <rng:zeroOrMore>
+                    <rng:ref name="parameter"/>
+                </rng:zeroOrMore>
+            </rng:element>
+        </rng:define>
+
+
+        <rng:define name="parameter">
+            <a:documentation> how parameters are assigned values </a:documentation>
+            <rng:element name="parameter">
+                <rng:optional>
+                    <rng:ref name="description"/>
+                </rng:optional>
+                <rng:attribute name="name">
+                    <rng:data type="string"/>
+                </rng:attribute>
+                <rng:attribute name="value"/>
+                <rng:ref name="objectAttributes"/>
+            </rng:element>
+        </rng:define>
+    </rng:div>
+
+
+    <rng:define name="description">
+        <a:documentation> generic description element for objects; can contain extended
+            documentation content </a:documentation>
+        <rng:element name="description">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:element>
+                        <!-- either plain text or documentation XML (e.g. DITA) -->
+                        <rng:anyName/>
+                        <rng:text/>
+                    </rng:element>
+                    <rng:text/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+
+    <rng:define name="objectAttributes">
+        <a:documentation> attributes common to any object </a:documentation>
+        <rng:attribute name="id">
+            <a:documentation>unique id within a given template</a:documentation>
+            <rng:data type="string"/>
+        </rng:attribute>
+        <rng:optional>
+            <rng:attribute name="keywords">
+                <a:documentation>list of views</a:documentation>
+                <rng:data type="string"/>
+            </rng:attribute>
+        </rng:optional>
+    </rng:define>
+
+
+    <rng:define name="conditional">
+        <a:documentation> attributes common to all instantiation constructs </a:documentation>
+        <rng:optional>
+            <rng:attribute name="if">
+                <a:documentation>value determines whether or not instance is to be part of
+                    design</a:documentation>
+                <rng:data type="string"/>
+            </rng:attribute>
+        </rng:optional>
+    </rng:define>
+
+    <rng:define name="name">
+        <a:documentation> name construct </a:documentation>
+        <rng:element name="name">
+            <a:documentation>names should be outward-facing</a:documentation>
+            <rng:data type="string"/>
+        </rng:element>
+    </rng:define>
+</rng:grammar>

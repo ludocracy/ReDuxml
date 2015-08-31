@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="14.2">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="newProject.xpr">
+        <folder path="rng/"/>
+        <file name="builder_template.xml"/>
+        <file name="designos_template.xml"/>
+        <file name="editor_template.xml"/>
+        <file name="inspector_template.xml"/>
+        <file name="registry_template.xml"/>
+        <file name="sample_template.xml"/>
+    </projectTree>
+</project>

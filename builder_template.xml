@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Builder default values for this version -->
+<?xml-model href="rng/builder.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<builder xmlns="" id="designOS_0">
+    <name>Builder</name>
+    <version>0.1</version>
+    <owner id="designOS">
+        <name>DesignOS</name>
+    </owner>
+    <description>The views of a design available to DesignOS</description>
+    <!-- this history was hand-created since designOS can't write its own history if it never launched -->
+    <history>
+        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil">
+            <owner id="b33791">
+                <name>Peter Kong</name>
+            </owner>
+            <description>created file</description>
+            <date>2015-08-20T19:20:30+01:00</date>
+        </insert>
+    </history>
+    <!-- initialization steps; arithmetic and string operations are not allowed here! 
+        parameters can only be passed in but not operated on; boolean params can be used to operate system logic
+        but that only allows the user to instantiate or deinstantiate secondary modules (since arrays require arithmetic and don't make sense here -->
+    <views id="designOS_system_0" logics="Boolean">
+        <!-- these parameters are arguments passed to Builder on startup -->
+        <parameters>
+        </parameters>
+        <!-- each of these views is a constraint on the users perspective of the design; the starting values are defaults
+        each iteration this list is updated with the user's views plus any user-defined restrictions -->
+        <view name="read">User can read the given template</view>
+    </views>
+</builder>

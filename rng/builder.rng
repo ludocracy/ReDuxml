@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- builder template is the basis for all automated manipulation of design data
+    at its core it is the Ruby interpreter plus DesignOS core API 
+    it can be extended to allow specialized instantiation constructs and logics
+    as well as modifying how often and when the inspector is called -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- including base template -->
+    <include href="template.rng"> </include>
+
+    <!-- name of template root -->
+    <start>
+        <ref name="template"/>
+    </start>
+    <define name="template" combine="choice">
+        <element name="builder">
+            <!-- includes name, owner, version, description, with history -->
+            <ref name="templateComType"/>
+        </element>
+    </define>
+
+    <!-- initializing basic builder; it contains the view constraints currently applied
+    only the OS can write to this file - it is owned only by the OS; the values contained here on reset are defaults 
+    some views are inherent to the system and cannot be deinstantiated-->
+    <define name="system" combine="choice">
+        <element name="views">
+            <!-- logic attribute is required here because some default logics (arithmetic, string) are not normally allowed in this template -->
+            <ref name="systemComAttr"/>
+            <!-- each build process is an instance; mainly relevant for debugging or multi-threaded operation
+             -->
+            <ref name="instanceComType"/>
+            <oneOrMore>
+                <!-- each view has a name and a description (populated when the method is called and loaded into the OS -->
+                <element name="view">
+                    <!-- the name is how the OS finds the view to pull in; obviously must be unique within this namespace -->
+                    <attribute name="name"/>
+                    <text/>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+</grammar>

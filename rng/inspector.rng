@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- inspector template is the basis for all verification of design data
+    at its core it is a database of algorithms that ultimately evaluate to true or false
+    the base inspector comes with methods native to Ruby 
+    for any false value, the inspector begins a trace operation to find the root Component cause
+    it can be extended to allow evaluation methods not easily represented in a single Ruby statement   -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- including base template -->
+    <include href="template.rng"> </include>
+
+    <!-- name of template root -->
+    <start>
+        <ref name="template"/>
+    </start>
+    <define name="template" combine="choice">
+        <element name="inspector">
+            <!-- includes name, owner, version, description, with history -->
+            <ref name="templateComType"/>
+        </element>
+    </define>
+
+    <!-- this template's contents initialize the basic inspector; it contains a domain representing a single managed rules database that is internally consistent
+        in its hierarchy of rule execution (from abstract to concrete)
+    only the OS can write to this file - it is owned only by the OS; the values contained here on reset are defaults pertaining to the base DesignOS schema rules 
+    some rules are inherent to the system and cannot be deinstantiated-->
+    <define name="system" combine="choice">
+        <element name="domain">
+            <!-- logic attribute is required here because some default logics (arithmetic, string) are not normally allowed in this template -->
+            <ref name="systemComAttr"/>
+            <!-- each inspection process is an instance; mainly relevant for debugging or multi-threaded operation -->
+            <ref name="instanceComType"/>
+            <oneOrMore>
+                <!-- each rule has a name and a description (populated when the rule is invoked and loaded into the OS -->
+                <element name="rule">
+                    <!-- the name is how the OS finds the rule or algorithm to pull in; obviously must be unique within this namespace -->
+                    <attribute name="name"/>
+                    <text/>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+</grammar>
