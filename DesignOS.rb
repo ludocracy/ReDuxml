@@ -510,8 +510,9 @@ module Editor
   def initialize template
     #load template and load methods
     @current_template = Template.new template
+    #should only make methods in the template public; all else should be made private so that user cannot call them
     @current_template.child('methods').children.each do |method|
-      @methods[method['name']] = method.content
+      @methods[method['name']] = method.node_xpath.content
     end
     listen
   end

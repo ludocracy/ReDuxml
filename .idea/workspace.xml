@@ -7,11 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="37b866da-49b3-4128-8c5d-7e5527228571" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/DesignOS.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DesignOS.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/DesignOS.iml" afterPath="$PROJECT_DIR$/.idea/DesignOS.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DesignOS.rb" afterPath="$PROJECT_DIR$/DesignOS.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="DesignOS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,8 +49,8 @@
       <file leaf-file-name="DesignOS.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DesignOS.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.81654674">
-              <caret line="513" column="47" selection-start-line="513" selection-start-column="47" selection-end-line="513" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.51079136">
+              <caret line="512" column="115" selection-start-line="512" selection-start-column="115" selection-end-line="512" selection-end-column="115" />
               <folding />
             </state>
           </provider>
@@ -324,25 +323,9 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="DesignOS" type="RubyRunConfigurationType" factoryName="Ruby">
-      <module name="DesignOS" />
-      <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="" />
-      <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
-      <envs />
-      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
-      <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/DesignOS.rb" />
-      <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
-      <method />
-    </configuration>
     <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="IRB console.IRB console: DesignOS" />
-      <item index="1" class="java.lang.String" itemvalue="Ruby.DesignOS" />
+      <item index="0" class="java.lang.String" itemvalue="Ruby.DesignOS" />
+      <item index="1" class="java.lang.String" itemvalue="IRB console.IRB console: DesignOS" />
     </list>
     <recent_temporary>
       <list size="1">
@@ -553,8 +536,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignOS.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.81654674">
-          <caret line="513" column="47" selection-start-line="513" selection-start-column="47" selection-end-line="513" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.51079136">
+          <caret line="512" column="115" selection-start-line="512" selection-start-column="115" selection-end-line="512" selection-end-column="115" />
           <folding />
         </state>
       </provider>
