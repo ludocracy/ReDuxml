@@ -12,7 +12,11 @@
 #in order to provide real-time feedback to XML editor
 #could add switch to turn this off
 module Base_types
+  #authentication gem
+  require 'devise'
+  #basic tree structure, providing attributes: @name, @children, @siblings, @parent, @content etc.
   require 'rubytree'
+  #XML parsing and manipulation
   require 'nokogiri'
 
   class Component < Tree::TreeNode
@@ -220,7 +224,7 @@ module Base_types
         @name = name
       else
         #pull name from file
-        @name = self.child'name'.content
+        @name = self.child('name').content
       end
     end
 
@@ -235,9 +239,10 @@ module Base_types
     attr_reader :doc, :name, :owners
 
     #args is a Hash of values to seed a new template file when starting from scratch
+    #or pass an argument to sub template
     def initialize template_file, *args
       #these reserved elements are there for all templates
-      @reserved_components = ['owners', 'history']
+      @reserved_components = [:owners, :history]
       @file = template_file
 
       #set or create this XML document
@@ -248,7 +253,7 @@ module Base_types
       @reserved_components += self.class.get_reserved_components
 
       #call Component initialize
-      super @doc, {reserved: @reserved_components}
+      @system = super @doc, {reserved: @reserved_components}
 
       #setting history pointer
       @history = self.child('history')
@@ -257,6 +262,10 @@ module Base_types
 
       #assigning or getting template formal/full name
       set_name args[name]
+
+      #loading any template arguments as concrete children
+
+      @system.add_concrete args [:user], args[:templates]
     end
 
     #public method to see if a given template is owned by the user - only way to get write access
@@ -503,6 +512,11 @@ end
 #Editor contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
 module Editor
   include Base_types
+  require 'active_support/core_ext/hash/conversions'
+  #
+  require 'yaml'
+  #makes program options available in standard format
+  require 'optparse'
 
   @user
   @current_template
@@ -514,11 +528,20 @@ module Editor
     @current_template.child('methods').children.each do |method|
       @methods[method['name']] = method.node_xpath.content
     end
+    #zeroing out current template so user can load one
+    @current_template = nil
     listen
   end
 
+  #if no current template ask for one; if no owner (default on startup) ask for one
   def listen
+    loop do
 
+      file = File.open("data/mconvert.xml", "r")
+      hash = Hash.from_xml(file.read)
+      yaml = hash.to_yaml
+      File.open("data/mirador.yml", "w") { |file| file.write(yaml) }
+    end
   end
 end
 
@@ -582,8 +605,8 @@ end
 include Base_types
 #main program - actually a template that has as subsystems
 class DesignOS < Template
-  #makes program options available in standard format
-  require 'optparse'
+  #our customization of option parser to convert program arguments into options
+  require_relative 'option_parser'
   #Editor can be an XML editor or custom DesignOS interface but can also run in basic console mode (which underlies the other interfaces)
   include Editor
   #Builder constructs design from template, populating its children and applying parameter values
@@ -594,7 +617,9 @@ class DesignOS < Template
   #are contained in the file below
 
   def initialize *args
-    super 'designos_template.xml'
+    #convert arguments into options
+    options = Option_Parser.new args
+    self = Template.new options.templates, options.user
     main
   end
 
