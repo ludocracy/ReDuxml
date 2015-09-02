@@ -19,6 +19,115 @@ module Base_types
   #XML parsing and manipulation
   require 'nokogiri'
 
+  #Design elements are XML Element Nodes but with the addition of DesignOS attributes
+  class Design_element < Nokogiri::XML::Element
+    #searches attribute values and element content for parameter expressions and returns them as array of strings
+    def get_macro_strings
+      #adding element content to total string to look for expressions
+      content_string = self.content
+      #looping through attribute values to find its parameter expressions
+      self.attributes.each.values do |value_string|
+        #adding to total string
+        content_string << value_string
+      end
+
+      #creating array to hold any discovered macro strings
+      parameter_macro_strings = []
+      #passing total string to current string
+      content_string_stub = content_string
+      #looping through total string, looking for macro string wrapper around parameter expression
+      loop do
+        #looks for macro string start index or returns -1 if not found
+        macro_string_index = self.content.find_index'@(' ||= -1
+        #we'll make the current string the start of this macro string
+        content_string_stub = self.content[macro_string_index]
+        #if passed -1, the resulting stub should be too short to contain any macro strings
+        #or passed an empty parameter expression no processing needed
+        if content_string_stub.size > 3
+          #find the end of the macro string
+          macro_string_close_index = find_close_parens_index content_string_stub
+          #add macro string to array
+          parameter_macro_strings << content_string_stub[0...macro_string_close_index]
+          content_string_stub = content_string_stub[macro_string_close_index]
+        else
+          return nil
+        end
+      end
+      parameter_macro_strings
+    end
+
+    #replace macro strings in attributes and element content with provided values
+    def resolve_element macro_value_hash
+      #loop through each provided macro_string/value pair
+      macro_value_hash.each do |macro_value_pair|
+        #replacing macro strings in element content
+        self.content = replace_macro_strings self.content, macro_value_pair
+        #looping through each attribute of this element
+        self.attributes.each do |attr|
+          attr.value = replace_macro_strings attr.value, macro_value_pair
+        end
+      end
+    end
+
+    #replaces macro strings  with given values
+    def replace_macro_strings string, macro_value_hash
+      string[macro_value_hash.key] = macro_value_hash.value
+    end
+
+    #had to create my own close parentheses finder
+    def find_close_parens_index string
+      #tracks current index of string
+      pos = 0
+      #tracks how many parentheses deep we're nested
+      parens_depth = 0
+      #looping through each char
+      string.each do |char|
+        case char
+          #found a close parenthesis
+          when ')'
+            #move down a level
+            parens_depth -= 1
+            throw :close
+          #found an open parenthesis
+          when '('
+            #move up a level
+            parens_depth += 1
+            throw :iterate
+          else
+            throw :iterate
+        end
+
+        #do this whenever close parenthesis found
+        catch :close do
+          case parens_depth
+            #depth is 0 - we found it!
+            when 0
+              #return current char index
+              return pos
+            #how'd we go negative?
+            when parens_depth < 0
+              #throw an error - this needs to generate an error if user does not correct!
+              throw :too_many_close_parens, 'parentheses error! too many close parentheses!'
+            else
+          end
+        end
+
+        #increment position index
+        catch :iterate do
+          pos += 1
+        end
+      end #end of string loop
+
+      #method should not get here unless it never found enough close parentheses
+      throw :too_many_open_parens, 'parentheses error! too many open parentheses!'
+    end
+
+    private :find_close_parens_index, :replace_macro_strings
+  end
+
+
+  #Components are Tree nodes where each tree node is a hash of abstract and concrete versions of the Component
+  #They are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   class Component < Tree::TreeNode
 
     #redefining TreeNode::name as Component::id
@@ -551,39 +660,85 @@ end
 module Builder
   include Base_types
 
+  #holds views user can access this iteration
   @views = [nil]
-  #holds original template
+  #holds passed template
   @root_template
+  #holds parameters and their values at the current iteration
   @parameter_hash
 
   #converts xml template file to template tree, prunes unauthorized views, etc.
   def initialize template
     @root_template = template
-    @views = *views
+    @views = template.owners
     @current_template = Build.new @root_template.node_xpath
   end
 
+  #Build objects are Components that can be tracked separately
   class Build < Component
     def initialize current_node
-      #prune current node
+      #each method takes the current tree
       instantiate parameterize prune current_node
     end
   end
 
+  #makes sure this node can be seen by one of the views; returns nil otherwise
   def prune current_node
+    #loop through each view
     @views.each do |view|
+      #return the moment we find a view that can see this node
       return view.can_see current_node
     end
   end
 
+  #find parameter definitions and
   def parameterize current_node
     #find parameter assignments and add to hash
-    #find parameter expressions and evaluate
-    #return resolved XML
+    @parameter_hash << current_node.child(:parameter)
+    #traversing template tree XML and replacing all
+    current_node.node_xpath.traverse do |node|
+      #get an array of macro strings and loop through them
+      Array macro_strings = node.get_macro_strings.each do |macro_string|
+        #looping through each known parameter from hash
+        @parameter_hash.keys.each do |key|
+          #replace parameters with values in given macro string
+          macro_string[key.to_s] = @parameter_hash[key]
+        end
+      end
+      #evaluate macro strings as code and return resolved expressions
+      Array resolved_values = eval_expr(macro_strings)
+      #change element's parameterized content to resolved expressions
+      node.resolve_element resolved_values
+    end
   end
 
+  #take given array of macro strings and evaluate
+  def eval_expr *macro_strings
+    Array resolved_values
+    #loop through each macro string
+    macro_strings.each do |macro_string|
+      #strip macro string wrappers and eval as Ruby code
+      resolved_values << eval(macro_string[2,-1])
+    end
+    resolved_values
+  end
+
+  #what to do if Component consists of array of arrays?
   def instantiate current_node
     #look for if=false
+    current_node.node_xpath.traverse do |node|
+      if node['if'] == 'false'
+        #remove the whole thing
+        throw :deinstantiation
+      end
+      case node.name
+        when 'instance'
+
+          #find reference and import elements
+          #pass on params
+        when 'array'
+        else
+    end
     ##if array loop and create concrete children
     #if instance load ref and iterate
   end
