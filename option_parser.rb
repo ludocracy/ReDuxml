@@ -12,7 +12,7 @@ class Option_Parser
     # We set default values here.
     options = OpenStruct.new
     options.user_info = nil
-    options.templates = ['designos_template.xml', 'registry_template.xml']
+    options.templates = ['designos_template.xml']
     options.verbose = false
 
     opt_parser = OptionParser.new do |opts|

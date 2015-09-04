@@ -157,7 +157,7 @@ module Base_types
     @node_xpath
 
     #rules that govern this Component's visibility or existence
-    @rules
+    @rules = Hash.new
 
     #these attributes can be read and written freely so that the user can modify the design
     #might need to wrap in proper methods to prevent modification of reserved views and rules
@@ -171,7 +171,7 @@ module Base_types
     def set_id
       @id = @node_xpath['id']
       #if XML has no id, give it one from Component's global id
-      if @id.empty?
+      if @id == ''
         @id = @node_xpath['id'] = self.object_id
       end
     end
@@ -205,14 +205,14 @@ module Base_types
 
     #the builder should provide the XML node to be converted to rubytree node
     #also what keywords does this component inherit?
-    def initialize xml_node, *args
+    def initialize xml_node, args
       #only XML nodes (Nokogiri in this case) allowed
-      raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Node
+      raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Nokogiri::XML::Node
       @root = xml_node.name
       #adding inherited key_words
-      @keywords = args[:key_words]
+      @keywords = args['key_words']
       #storing node's XML XPATH
-      @node_xpath = xml_node.xpath
+      @node_xpath = xml_node
       #setting or getting id -- all Components must have a unique global id
       set_id
       #looping through children; repurposing xml_node to be current_xml_node
@@ -319,7 +319,7 @@ module Base_types
     #following methods are private
     #add or create XML document and set up owners
     def set_doc
-      if @file.exist?
+      if File.exist? @file
         @doc = Nokogiri::XML @file
       else
         @doc = Nokogiri::XML::Document.new @file
@@ -355,7 +355,8 @@ module Base_types
     def initialize template_file, *args
       #these reserved elements are there for all templates
       @reserved_components = [:owners, :history]
-      @file = template_file
+      #first item is always done first
+      @file = File.new template_file[0]
 
       #set or create this XML document
       #also finds or creates owners
@@ -686,24 +687,27 @@ module Editor
   require 'optparse'
 
   @user
-  @current_template
+  @editor_template
 
-  def initialize template
+  #load this editor's methods
+  def load_editor editor_template_file
     #load template and load methods
-    @current_template = Template.new template
+    @editor_template = Template.new editor_template_file
+
+    #redo this?!
     #should only make methods in the template public; all else should be made private so that user cannot call them
     @current_template.child('methods').children.each do |method|
       @methods[method['name']] = method.node_xpath.content
     end
     #zeroing out current template so user can load one
     @current_template = nil
-    listen
+    edit @current_template
   end
 
+  #rewrite this!
   #if no current template ask for one; if no owner (default on startup) ask for one
-  def listen
+  def edit open_template
     loop do
-
       file = File.open("data/mconvert.xml", "r")
       hash = Hash.from_xml(file.read)
       yaml = hash.to_yaml
@@ -720,187 +724,187 @@ module Builder
 
   #holds views user can access this iteration
   @views = [nil]
-  #holds passed template
-  @root_template
+  #holds builder template; adds overrides or new methods in addition to the ones defined below
+  @builder_template
+  #current build process
+  @build
   #holds parameters and their values at the current iteration
   @parameter_hash
   #operator hash
   @operator_hash
 
-  #converts xml template file to template tree, prunes unauthorized views, etc.
-  def initialize template
-    @root_template = template
-    @views = template.owners
-    @current_template = Build.new @root_template.node_xpath
-    @operator_hash = @current_template.system.get_system_ops
+  #loads this builder's basic features from builder template file
+  def load_builder builder_template_file
+    @builder_template = Template.new builder_template_file
   end
 
-  #Build objects are Components that can be tracked separately
-  class Build < Component
-    def initialize current_node
-      #each method takes the current tree
-      instantiate parameterize prune current_node
-    end
-    #makes sure this node can be seen by one of the views; returns nil otherwise
-    def prune current_node
-      #loop through each view
-      @views.each do |view|
-        #return the moment we find a view that can see this node
-        return view.can_see current_node
-      end
-    end
+  #basic function of builder - takes a Template and builds it out according it its parameters
+  def build open_template
+    open_template.
+    #each method takes the current tree's system (design) and
+    #removes non-viewable elements, resolves parameters, and instantiates children
+    instantiate parameterize prune open_template.system
+  end
 
-    #find parameter definitions and
-    def parameterize current_node
-      #find parameter assignments and add to hash
-      @parameter_hash << current_node.child(:parameter)
-      #traversing template tree XML and replacing all
-      current_node.node_xpath.traverse do |node|
-        #get an array of macro strings and loop through them
-        Array macro_strings = node.get_macro_strings.each do |macro_string|
-          #looping through each known parameter from hash
-          @parameter_hash.keys.each do |key|
-            #replace parameters with values in given macro string
-            macro_string[key.to_s] = @parameter_hash[key]
+  #makes sure this node can be seen by one of the views; returns nil otherwise
+  def prune current_node
+    #loop through each view
+    @views.each do |view|
+      #return the moment we find a view that can see this node
+      return view.can_see current_node
+    end
+  end
+
+  #find parameter definitions and
+  def parameterize current_node
+    #find parameter assignments and add to hash
+    @parameter_hash << current_node.child(:parameter)
+    #traversing template tree XML and replacing all
+    current_node.node_xpath.traverse do |node|
+      #get an array of macro strings and loop through them
+      Array macro_strings = node.get_macro_strings.each do |macro_string|
+        #looping through each known parameter from hash
+        @parameter_hash.keys.each do |key|
+          #replace parameters with values in given macro string
+          macro_string[key.to_s] = @parameter_hash[key]
+        end
+      end
+      #evaluate macro strings as code and return resolved expressions
+      Hash resolved_values
+      macro_strings.each do |macro_string|
+        #marking up macro string for operators and unresolved parameters and stripping outer delimiters i.e. @(...)
+        marked_up_macro_string = markup(markup(macro_string, @operator_hash.keys, '#'), /\b[a-z][_a-zA-Z0-9]*/, ':')[2...-1]
+        #resolve marked up macro string and add cleaned up expression or value to hash
+        resolved_values[macro_string] = eval_expr marked_up_macro_string
+      end
+
+      #change element's parameterized content to resolved expressions
+      node.resolve_element resolved_values
+    end
+  end
+
+  #take given macro strings and evaluates, returning resolved value - may still contain unresolved parameter expressions!
+  #can we make this recursive so we don't have to worry about parentheses?
+  def eval_expr macro_string
+    #stack of operations (should not ever exceed 2!)
+    operator_stack = []
+    #last parameter found
+    last_parameter_expr = ''
+    #last value expression
+    last_value_expr = ''
+    #array of terms that come in two types: unsolvable (parameter expressions) and resolved expressions (value)
+    expressions = []
+    iterator = 0
+    loop do
+      case macro_string[iterator]
+        #found a subexpression
+        when '('
+          #extract it - subtracting open and close parentheses
+          sub_expr = macro_string[iterator + 1 ... find_close_parens_index(macro_string) - 1]
+          #recurse to evaluate and replace with result
+          resolved_sub_expr = eval_expr sub_expr
+          #replace sub_expr plus parentheses with resolved sub_expr
+          macro_string['(' + sub_expr + ')'] = resolved_sub_expr
+          #bumping iterator up by length of replacement expression/value
+          iterator += resolved_sub_expr.size
+        #found an operator
+        when '#'
+          #find end of operator
+          end_delimiter_index = macro_string[iterator+1...-1].find_index('#')
+          operator = macro_string[iterator...end_delimiter_index]
+          #we have a previous parameter
+          if last_parameter_expr
+            #add this operator to last parameter's expression and add to expressions
+            expressions << last_parameter_expr + operator
+            #empty last_parameter for next one
+            last_parameter_expr.clear
+          #we don't have a previous parameter
+          else
+            #push onto operator stack
+            operator_stack << operator
           end
-        end
-        #evaluate macro strings as code and return resolved expressions
-        Hash resolved_values
-        macro_strings.each do |macro_string|
-          #marking up macro string for operators and unresolved parameters and stripping outer delimiters i.e. @(...)
-          marked_up_macro_string = markup(markup(macro_string, @operator_hash.keys, '#'), /\b[a-z][_a-zA-Z0-9]*/, ':')[2...-1]
-          #resolve marked up macro string and add cleaned up expression or value to hash
-          resolved_values[macro_string] = eval_expr marked_up_macro_string
-        end
-
-        #change element's parameterized content to resolved expressions
-        node.resolve_element resolved_values
-      end
-    end
-
-    #take given macro strings and evaluates, returning resolved value - may still contain unresolved parameter expressions!
-    #can we make this recursive so we don't have to worry about parentheses?
-    def eval_expr macro_string
-      #stack of operations (should not ever exceed 2!)
-      operator_stack = []
-      #last parameter found
-      last_parameter_expr = ''
-      #last value expression
-      last_value_expr = ''
-      #array of terms that come in two types: unsolvable (parameter expressions) and resolved expressions (value)
-      expressions = []
-      iterator = 0
-      loop do
-        case macro_string[iterator]
-          #found a subexpression
-          when '('
-            #extract it - subtracting open and close parentheses
-            sub_expr = macro_string[iterator + 1 ... find_close_parens_index(macro_string) - 1]
-            #recurse to evaluate and replace with result
-            resolved_sub_expr = eval_expr sub_expr
-            #replace sub_expr plus parentheses with resolved sub_expr
-            macro_string['(' + sub_expr + ')'] = resolved_sub_expr
-            #bumping iterator up by length of replacement expression/value
-            iterator += resolved_sub_expr.size
-          #found an operator
-          when '#'
-            #find end of operator
-            end_delimiter_index = macro_string[iterator+1...-1].find_index('#')
-            operator = macro_string[iterator...end_delimiter_index]
-            #we have a previous parameter
-            if last_parameter_expr
-              #add this operator to last parameter's expression and add to expressions
-              expressions << last_parameter_expr + operator
-              #empty last_parameter for next one
-              last_parameter_expr.clear
-            #we don't have a previous parameter
-            else
-              #push onto operator stack
-              operator_stack << operator
-            end
-            #incrementing by size of operator
-            iterator += operator.size
-          #found a parameter
-          when ':'
-            #find end of parameter
-            end_delimiter_index = macro_string[iterator+1...-1].find_index(':')
-            #add each preceding operator before parameter
+          #incrementing by size of operator
+          iterator += operator.size
+        #found a parameter
+        when ':'
+          #find end of parameter
+          end_delimiter_index = macro_string[iterator+1...-1].find_index(':')
+          #add each preceding operator before parameter
+          operator_stack.each do |operator|
+            last_parameter_expr += operator
+          end
+          #emptying stack
+          operator_stack.clear
+          #add parameter
+          last_parameter_expr += macro_string[iterator...end_delimiter_index]
+          #increment iterator by size of parameter
+          iterator += last_parameter_expr.size
+        #ignore whitespace
+        when ' '
+          #do nothing
+        #found something other than an operator or parameter - must be an actual value; lots of code in common with parameter handling! combine somehow??
+        else
+          #empty parameter expression
+          last_parameter_expr.clear
+          #finding end of value (just before beginning of next operator)
+          end_delimiter_index = macro_string[iterator...-1].find_index('#') - 1
+          if last_value_expr
+            #add each preceding operator before value to value expression
             operator_stack.each do |operator|
-              last_parameter_expr += operator
+              last_value_expr += operator
             end
             #emptying stack
             operator_stack.clear
-            #add parameter
-            last_parameter_expr += macro_string[iterator...end_delimiter_index]
-            #increment iterator by size of parameter
-            iterator += last_parameter_expr.size
-          #ignore whitespace
-          when ' '
-            #do nothing
-          #found something other than an operator or parameter - must be an actual value; lots of code in common with parameter handling! combine somehow??
-          else
-            #empty parameter expression
-            last_parameter_expr.clear
-            #finding end of value (just before beginning of next operator)
-            end_delimiter_index = macro_string[iterator...-1].find_index('#') - 1
-            if last_value_expr
-              #add each preceding operator before value to value expression
-              operator_stack.each do |operator|
-                last_value_expr += operator
-              end
-              #emptying stack
-              operator_stack.clear
-            end
-            #adding the value we found
-            last_value_expr += macro_string[iterator...end_delimiter_index]
-            #we now have a resolvable expression - evaluate as code and convert to string
-            result_str = eval(last_value_expr).to_s
-            #overwrite expression with result
-            macro_string[last_value_expr] = result_str
-            #increment iterator by result's size
-            iterator += result_str.size
-            #set last_value_expr to result
-            last_value_expr = result_str
-        end
-        iterator += 1
+          end
+          #adding the value we found
+          last_value_expr += macro_string[iterator...end_delimiter_index]
+          #we now have a resolvable expression - evaluate as code and convert to string
+          result_str = eval(last_value_expr).to_s
+          #overwrite expression with result
+          macro_string[last_value_expr] = result_str
+          #increment iterator by result's size
+          iterator += result_str.size
+          #set last_value_expr to result
+          last_value_expr = result_str
+      end
+      iterator += 1
+    end
+
+  end
+
+  #takes given string and, according to given criteria, marks various substrings with given delimiters
+  def markup macro_string, *criteria, delimiter
+    #go through each criteria string
+    criteria.each do |criterion|
+      #get array of matches
+      macro_string.scan(criterion).each do |match|
+        #add delimiter chars and spacing around each match
+        macro_string[match] = ' ' + delimiter + match + delimiter + ' '
+      end
+    end
+    macro_string
+  end
+
+  #what to do if Component consists of array of arrays?
+  def instantiate current_node
+    #look for if=false
+    current_node.node_xpath.traverse do |node|
+      if node['if'] == 'false'
+        #remove the whole thing
+        throw :deinstantiation
+      end
+      case node.name
+        when 'instance'
+
+          #find reference and import elements
+          #pass on params
+        when 'array'
+        else
       end
 
     end
-
-    #takes given string and, according to given criteria, marks various substrings with given delimiters
-    def markup macro_string, *criteria, delimiter
-      #go through each criteria string
-      criteria.each do |criterion|
-        #get array of matches
-        macro_string.scan(criterion).each do |match|
-          #add delimiter chars and spacing around each match
-          macro_string[match] = ' ' + delimiter + match + delimiter + ' '
-        end
-      end
-      macro_string
-    end
-
-    #what to do if Component consists of array of arrays?
-    def instantiate current_node
-      #look for if=false
-      current_node.node_xpath.traverse do |node|
-        if node['if'] == 'false'
-          #remove the whole thing
-          throw :deinstantiation
-        end
-        case node.name
-          when 'instance'
-
-            #find reference and import elements
-            #pass on params
-          when 'array'
-          else
-        end
-
-      end
-      ##if array loop and create concrete children
+    ##if array loop and create concrete children
       #if instance load ref and iterate
-    end
   end
 end
 
@@ -908,12 +912,16 @@ end
 #Registry queries include inspecting designs for changes and their validity upon commit, or generating analytics
 module Inspector
   include Base_types
-  #collection of files that govern
-  #queries start a trace of a given system to either find a given Component,
-  #or inspect design for validity and generate error messages
+  #holds template for this inspector - children include rules that apply to this session
+  @inspector_template
 
-  def initialize template
+  def load_inspector inspector_template_file
+    @inspector_template = Template.new inspector_template_file
+  end
 
+  #applies rules to given template and returns parts that qualify and errors for parts that don't
+  def inspect open_template
+    #traverse template
   end
 end
 
@@ -928,21 +936,26 @@ class DesignOS < Template
   include Builder
   #Inspector gets triggered by builder at certain points predetermined by OS and by user according to inputs
   include Inspector
-  #this template is actually partial - the rest (version-specific and general global properties)
-  #are contained in the file below
+  #the template that is called by the user
+  alias_method :current_template, :doc
 
   def initialize *args
     #convert arguments into options
     options = Option_Parser.parse args
     super options.templates, options.user
+    #load templates for each os module
+    ['editor', 'builder', 'inspector'].each do |os_module|
+      arg = @system.child(os_module)['ref']
+      send ("load_#{os_module} #{arg}")
+    end
+    #start main loop
     main
   end
 
   #the main loop; default value is nil so process can listen for user input
   def main
-    @current_template = @doc
     until Editor.exit?
-      @current_template = Inspector.new Builder.new Editor.new @current_template
+      @current_template = inspect build edit @current_template
     end
   end
 end
