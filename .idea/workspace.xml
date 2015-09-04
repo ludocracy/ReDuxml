@@ -8,10 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="37b866da-49b3-4128-8c5d-7e5527228571" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DesignOS.rb" afterPath="$PROJECT_DIR$/DesignOS.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DesignOS.xpr" afterPath="$PROJECT_DIR$/DesignOS.xpr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rng/editor.rng" afterPath="$PROJECT_DIR$/rng/editor.rng" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample_template.xml" afterPath="$PROJECT_DIR$/sample_template.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rng/template.rng" afterPath="$PROJECT_DIR$/rng/template.rng" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="DesignOS.iws" />
@@ -26,7 +22,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DesignOS@DesignOS.coverage" NAME="DesignOS Coverage Results" MODIFIED="1441049468831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" MODULE_NAME="DesignOS" />
+    <SUITE FILE_PATH="coverage/DesignOS@DesignOS.coverage" NAME="DesignOS Coverage Results" MODIFIED="1441365017442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@IRB_console__DesignOS.coverage" NAME="IRB console: DesignOS Coverage Results" MODIFIED="1441242409232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="DesignOS" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -38,6 +34,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="DesignOS.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/DesignOS.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.3327338">
+              <caret line="914" column="0" selection-start-line="914" selection-start-column="0" selection-end-line="914" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="kernel_require.rb" pinned="false" current-in-tab="false">
+        <entry file="file://C:/Ruby21-x64/lib/ruby/site_ruby/2.1.0/rubygems/core_ext/kernel_require.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="option_parser.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/option_parser.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="tree.rb" pinned="false" current-in-tab="false">
         <entry file="file://C:/Ruby21-x64/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree.rb">
           <provider selected="true" editor-type-id="text-editor">
@@ -48,41 +74,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DesignOS.rb" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DesignOS.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.57733816">
-              <caret line="201" column="36" selection-start-line="201" selection-start-column="36" selection-end-line="201" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="kernel.rb" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/kernel.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="2038" column="8" selection-start-line="2038" selection-start-column="8" selection-end-line="2038" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="option_parser.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/option_parser.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="40" column="23" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ostruct.rb" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Ruby21-x64/lib/ruby/2.1.0/ostruct.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="237" column="30" selection-start-line="237" selection-start-column="30" selection-end-line="237" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -209,8 +205,9 @@
     <property name="FullScreen" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/DesignOS.rb" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="find_close&#9;null&#9;null" />
   </component>
-  <component name="RunManager" selected="IRB console.IRB console: DesignOS">
+  <component name="RunManager" selected="Ruby.DesignOS">
     <configuration default="false" name="IRB console: DesignOS" type="IrbRunConfigurationType" factoryName="IRB console" temporary="true">
       <module name="DesignOS" />
       <IRB_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
@@ -436,7 +433,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -578,14 +575,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/option_parser.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="23" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/kernel.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -594,10 +583,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Ruby21-x64/lib/ruby/site_ruby/2.1.0/rubygems/core_ext/kernel_require.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/option_parser.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/DesignOS.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57733816">
-          <caret line="201" column="36" selection-start-line="201" selection-start-column="36" selection-end-line="201" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.3327338">
+          <caret line="914" column="0" selection-start-line="914" selection-start-column="0" selection-end-line="914" selection-end-column="0" />
           <folding />
         </state>
       </provider>

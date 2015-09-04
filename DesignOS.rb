@@ -13,11 +13,61 @@
 #could add switch to turn this off
 module Base_types
   #authentication gem
-  require 'devise'
+  #require 'devise'
   #basic tree structure, providing attributes: @name, @children, @siblings, @parent, @content etc.
   require 'rubytree'
   #XML parsing and manipulation
   require 'nokogiri'
+
+  #had to create my own close parentheses finder
+  def find_close_parens_index string
+    #tracks current index of string
+    pos = 0
+    #tracks how many parentheses deep we're nested
+    parens_depth = 0
+    #looping through each char
+    string.each do |char|
+      case char
+        #found a close parenthesis
+        when ')'
+          #move down a level
+          parens_depth -= 1
+          throw :close
+        #found an open parenthesis
+        when '('
+          #move up a level
+          parens_depth += 1
+          throw :iterate
+        else
+          throw :iterate
+      end
+
+      #do this whenever close parenthesis found
+      catch :close do
+        case parens_depth
+          #depth is 0 - we found it!
+          when 0
+            #return current char index
+            return pos
+          #how'd we go negative?
+          when parens_depth < 0
+            #throw an error - this needs to generate an error if user does not correct!
+            throw :too_many_close_parens, 'parentheses error! too many close parentheses!'
+          else
+        end
+      end
+
+      #increment position index
+      catch :iterate do
+        pos += 1
+      end
+    end #end of string loop
+
+    #method should not get here unless it never found enough close parentheses
+    throw :too_many_open_parens, 'parentheses error! too many open parentheses!'
+  end
+
+  private :find_close_parens_index
 
   #Design elements are XML Element Nodes but with the addition of DesignOS attributes
   class Design_element < Nokogiri::XML::Element
@@ -38,7 +88,7 @@ module Base_types
       #looping through total string, looking for macro string wrapper around parameter expression
       loop do
         #looks for macro string start index or returns -1 if not found
-        macro_string_index = self.content.find_index'@(' ||= -1
+        macro_string_index = self.content.find_index'@(' || -1
         #we'll make the current string the start of this macro string
         content_string_stub = self.content[macro_string_index]
         #if passed -1, the resulting stub should be too short to contain any macro strings
@@ -74,55 +124,7 @@ module Base_types
       string[macro_value_hash.key] = macro_value_hash.value
     end
 
-    #had to create my own close parentheses finder
-    def find_close_parens_index string
-      #tracks current index of string
-      pos = 0
-      #tracks how many parentheses deep we're nested
-      parens_depth = 0
-      #looping through each char
-      string.each do |char|
-        case char
-          #found a close parenthesis
-          when ')'
-            #move down a level
-            parens_depth -= 1
-            throw :close
-          #found an open parenthesis
-          when '('
-            #move up a level
-            parens_depth += 1
-            throw :iterate
-          else
-            throw :iterate
-        end
-
-        #do this whenever close parenthesis found
-        catch :close do
-          case parens_depth
-            #depth is 0 - we found it!
-            when 0
-              #return current char index
-              return pos
-            #how'd we go negative?
-            when parens_depth < 0
-              #throw an error - this needs to generate an error if user does not correct!
-              throw :too_many_close_parens, 'parentheses error! too many close parentheses!'
-            else
-          end
-        end
-
-        #increment position index
-        catch :iterate do
-          pos += 1
-        end
-      end #end of string loop
-
-      #method should not get here unless it never found enough close parentheses
-      throw :too_many_open_parens, 'parentheses error! too many open parentheses!'
-    end
-
-    private :find_close_parens_index, :replace_macro_strings
+    private :replace_macro_strings
   end
 
 
@@ -408,50 +410,65 @@ module Base_types
     end
   end
 
-  #part of the template file that actually contains the design or content
-  #also can be independently parameterized according to authorized logics
-  class System < Component
-    #each logic is a set of legal operations
-    @logics
+  #basic means of creating clones of a component; can have its own parameters so it can be a variant; instances point to Components or Templates
+  class Instance < Component
+    #reference design's id
+    @ref
     #hash of parameter name:component pairs
     @parameters
+
+    attr_accessor :ref, :parameters
+
+    def initialize instance_node, *args
+      super instance_node
+      #all instances have a reference, but they do not need to be external - some can reference self
+      @ref = @node_xpath['ref']
+
+      #set parameters pointer
+      @parameters = self.child('parameters').parameter_hash
+    end
+  end
+
+  #part of the template file that actually contains the design or content
+  #specifies logics allowed within itself
+  class System < Instance
+    #key is logic name; value is logic template
+    @logic_hash
+
+    attr_reader :logics
 
     #arguments are parameter name:value pairs from build stack
     def initialize system_node, *args
       #pull in logics
       system_node.attribute('logics').to_s.split(' ').each do |logic|
-        @logics << logic
+        @logics[logic] = Logic.new logic
       end
       #build up Components
       super system_node
-
-      #set parameters pointer
-      @parameters = self.child('parameters').parameter_hash
     end
 
-    #basic means of creating clones of a component; can have its own parameters so it can be a variant; instances point to Components or Templates
-    class Instance < Component
-      #reference design's id
-      @ref
-      def initialize instance_node, *args
-        super instance_node
-        @ref = @node_xpath['ref']
+    #aggregates all operations of all logics of this system and flattens into single hash
+    def get_system_ops
+      Hash operations
+      @logic_hash.values.each do |logic|
+        operations.merge! logic.operator_hash
       end
+      operations
     end
+  end
 
-    #basic means of creating patterned clones of a component; can contain a design or instances
-    class Array < Component
-      #represents size of array but can be a parameter
-      @size
+  #basic means of creating patterned clones of a component; can contain a design or instances
+  class Array < Instance
+    #represents size of array but can be a parameter
+    @size
 
-      attr_accessor :size
+    attr_accessor :size
 
-      def initialize array_node, *args
-        super array_node
-        @size = @node_xpath['size']
-        #automagically creating parameter of type iterator i.e. the array pattern seed
-        @parameters << Parameter.new_iterator
-      end
+    def initialize array_node, *args
+      super array_node
+      @size = @node_xpath['size']
+      #automagically creating parameter of type iterator i.e. the array pattern seed
+      @parameters << Parameter.new_iterator
     end
   end
 
@@ -707,13 +724,15 @@ module Builder
   @root_template
   #holds parameters and their values at the current iteration
   @parameter_hash
+  #operator hash
+  @operator_hash
 
   #converts xml template file to template tree, prunes unauthorized views, etc.
   def initialize template
     @root_template = template
     @views = template.owners
     @current_template = Build.new @root_template.node_xpath
-    @operator_hash = @current_template.system.get_ops
+    @operator_hash = @current_template.system.get_system_ops
   end
 
   #Build objects are Components that can be tracked separately
@@ -747,8 +766,11 @@ module Builder
         end
         #evaluate macro strings as code and return resolved expressions
         Hash resolved_values
-        macro_strings.each do |macro|
-          resolved_values[macros] = eval_expr macro
+        macro_strings.each do |macro_string|
+          #marking up macro string for operators and unresolved parameters and stripping outer delimiters i.e. @(...)
+          marked_up_macro_string = markup(markup(macro_string, @operator_hash.keys, '#'), /\b[a-z][_a-zA-Z0-9]*/, ':')[2...-1]
+          #resolve marked up macro string and add cleaned up expression or value to hash
+          resolved_values[macro_string] = eval_expr marked_up_macro_string
         end
 
         #change element's parameterized content to resolved expressions
@@ -757,40 +779,107 @@ module Builder
     end
 
     #take given macro strings and evaluates, returning resolved value - may still contain unresolved parameter expressions!
+    #can we make this recursive so we don't have to worry about parentheses?
     def eval_expr macro_string
-      #extract remaining parameters and replace with #{} notation
-      process_params macro_string
-      begin loop
-      #strip macro string wrappers and eval as Ruby code
-      return eval(macro_string[2...-1])
-              #if eval fails should produce NameError
-      rescue NoMethodError => nme
-        nme.to_s[]
-      rescue SyntaxError => se
-        puts se.inspect
-      rescue TypeError => te
-        puts te.inspect
-        retry
+      #stack of operations (should not ever exceed 2!)
+      operator_stack = []
+      #last parameter found
+      last_parameter_expr = ''
+      #last value expression
+      last_value_expr = ''
+      #array of terms that come in two types: unsolvable (parameter expressions) and resolved expressions (value)
+      expressions = []
+      iterator = 0
+      loop do
+        case macro_string[iterator]
+          #found a subexpression
+          when '('
+            #extract it - subtracting open and close parentheses
+            sub_expr = macro_string[iterator + 1 ... find_close_parens_index(macro_string) - 1]
+            #recurse to evaluate and replace with result
+            resolved_sub_expr = eval_expr sub_expr
+            #replace sub_expr plus parentheses with resolved sub_expr
+            macro_string['(' + sub_expr + ')'] = resolved_sub_expr
+            #bumping iterator up by length of replacement expression/value
+            iterator += resolved_sub_expr.size
+          #found an operator
+          when '#'
+            #find end of operator
+            end_delimiter_index = macro_string[iterator+1...-1].find_index('#')
+            operator = macro_string[iterator...end_delimiter_index]
+            #we have a previous parameter
+            if last_parameter_expr
+              #add this operator to last parameter's expression and add to expressions
+              expressions << last_parameter_expr + operator
+              #empty last_parameter for next one
+              last_parameter_expr.clear
+            #we don't have a previous parameter
+            else
+              #push onto operator stack
+              operator_stack << operator
+            end
+            #incrementing by size of operator
+            iterator += operator.size
+          #found a parameter
+          when ':'
+            #find end of parameter
+            end_delimiter_index = macro_string[iterator+1...-1].find_index(':')
+            #add each preceding operator before parameter
+            operator_stack.each do |operator|
+              last_parameter_expr += operator
+            end
+            #emptying stack
+            operator_stack.clear
+            #add parameter
+            last_parameter_expr += macro_string[iterator...end_delimiter_index]
+            #increment iterator by size of parameter
+            iterator += last_parameter_expr.size
+          #ignore whitespace
+          when ' '
+            #do nothing
+          #found something other than an operator or parameter - must be an actual value; lots of code in common with parameter handling! combine somehow??
+          else
+            #empty parameter expression
+            last_parameter_expr.clear
+            #finding end of value (just before beginning of next operator)
+            end_delimiter_index = macro_string[iterator...-1].find_index('#') - 1
+            if last_value_expr
+              #add each preceding operator before value to value expression
+              operator_stack.each do |operator|
+                last_value_expr += operator
+              end
+              #emptying stack
+              operator_stack.clear
+            end
+            #adding the value we found
+            last_value_expr += macro_string[iterator...end_delimiter_index]
+            #we now have a resolvable expression - evaluate as code and convert to string
+            result_str = eval(last_value_expr).to_s
+            #overwrite expression with result
+            macro_string[last_value_expr] = result_str
+            #increment iterator by result's size
+            iterator += result_str.size
+            #set last_value_expr to result
+            last_value_expr = result_str
+        end
+        iterator += 1
       end
+
     end
 
-    def process_params macro_string
-      #pulling identifier strings (no capitalized words though) from macro_string
-      Array possible_params = macro_string.scan(/[\b[a-z][_a-zA-Z0-9]*/)
-      #checking each one if its already defined or otherwise reserved
-      possible_params.each do |possible|
-        #word is not already a defined method; use method_missing?
-        if !defined? possible
-          #turn it into a method
-          define_singleton_method
+    #takes given string and, according to given criteria, marks various substrings with given delimiters
+    def markup macro_string, *criteria, delimiter
+      #go through each criteria string
+      criteria.each do |criterion|
+        #get array of matches
+        macro_string.scan(criterion).each do |match|
+          #add delimiter chars and spacing around each match
+          macro_string[match] = ' ' + delimiter + match + delimiter + ' '
         end
       end
+      macro_string
     end
 
-    #checks if the method with the given name is a legally included logic in the current template
-    def defined? string
-      @current_template.system.logics.include? string
-    end
     #what to do if Component consists of array of arrays?
     def instantiate current_node
       #look for if=false
@@ -844,8 +933,8 @@ class DesignOS < Template
 
   def initialize *args
     #convert arguments into options
-    options = Option_Parser.new args
-    self = Template.new options.templates, options.user
+    options = Option_Parser.parse args
+    super options.templates, options.user
     main
   end
 
