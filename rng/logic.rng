@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- extension of template to keep track of a domain (set of rules/views) -->
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- including base template -->
+    <include href="template.rng">
+        
+    </include>
+    
+    <!-- new root node to replace template -->
+    <start>
+        <ref name="template"/>
+    </start>
+    <define name="template" combine="choice">
+        <element name="logic">
+            <ref name="templateComType"/> <!-- using template type -->
+        </element>
+    </define>
+    
+    <!-- overriding excluded system with new element "users" -->
+    <define name="system" combine="choice">
+        <element name="operators">
+            <oneOrMore>
+                <ref name="operator"></ref>
+            </oneOrMore>
+        </element>
+    </define>
+    
+    <!-- user object includes keywords that list which views they are allowed -->
+    <define name="operator">
+        <element name="operator">
+            <!-- contains operation id/name and member keywords -->
+            <ref name="objectAttributes"/>  
+        </element>
+    </define>
+</grammar>

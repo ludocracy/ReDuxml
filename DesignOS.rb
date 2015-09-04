@@ -346,6 +346,7 @@ module Base_types
 
     private :set_doc, :set_name
     attr_reader :doc, :name, :owners
+    attr_accessor :system
 
     #args is a Hash of values to seed a new template file when starting from scratch
     #or pass an argument to sub template
@@ -407,7 +408,7 @@ module Base_types
     end
   end
 
-  #part of the template file that actually contains the design
+  #part of the template file that actually contains the design or content
   #also can be independently parameterized according to authorized logics
   class System < Component
     #each logic is a set of legal operations
@@ -428,7 +429,7 @@ module Base_types
       @parameters = self.child('parameters').parameter_hash
     end
 
-
+    #basic means of creating clones of a component; can have its own parameters so it can be a variant; instances point to Components or Templates
     class Instance < Component
       #reference design's id
       @ref
@@ -438,16 +439,54 @@ module Base_types
       end
     end
 
+    #basic means of creating patterned clones of a component; can contain a design or instances
     class Array < Component
       #represents size of array but can be a parameter
       @size
-      #Parameter that can assign unique properties to each array instance
-      @iterator
+
+      attr_accessor :size
 
       def initialize array_node, *args
         super array_node
         @size = @node_xpath['size']
+        #automagically creating parameter of type iterator i.e. the array pattern seed
         @parameters << Parameter.new_iterator
+      end
+    end
+  end
+
+  class Logic < Template
+    #hash of operators and the code they execute
+    @operator_hash
+
+    attr_reader :operator_hash
+    def initialize logic_template
+      super logic_template
+      #looping through each operator and adding to hash
+      @system.children.each do |operator|
+        @operator_hash[operator.name] = operator.code
+      end
+    end
+  end
+
+  #create operator from methods loaded from logic template
+  class Operator < Component
+    #hash key
+    @name
+    #executable Ruby
+    @code
+
+    attr_accessor :name, :code
+
+    def initialize node
+      #operator name and id are the same
+      @name = node[:id]
+      if respond_to? @name
+        #operator is already defined in Ruby
+        @code = @name
+      else
+        #pulling in operator definition from template
+        @code = node.content
       end
     end
   end
@@ -538,6 +577,8 @@ module Base_types
         @value = nil
       end
     end
+
+
   end
 
   #template file that holds list of DesignOS users and their views
@@ -672,6 +713,7 @@ module Builder
     @root_template = template
     @views = template.owners
     @current_template = Build.new @root_template.node_xpath
+    @operator_hash = @current_template.system.get_ops
   end
 
   #Build objects are Components that can be tracked separately
@@ -680,67 +722,96 @@ module Builder
       #each method takes the current tree
       instantiate parameterize prune current_node
     end
-  end
-
-  #makes sure this node can be seen by one of the views; returns nil otherwise
-  def prune current_node
-    #loop through each view
-    @views.each do |view|
-      #return the moment we find a view that can see this node
-      return view.can_see current_node
+    #makes sure this node can be seen by one of the views; returns nil otherwise
+    def prune current_node
+      #loop through each view
+      @views.each do |view|
+        #return the moment we find a view that can see this node
+        return view.can_see current_node
+      end
     end
-  end
 
-  #find parameter definitions and
-  def parameterize current_node
-    #find parameter assignments and add to hash
-    @parameter_hash << current_node.child(:parameter)
-    #traversing template tree XML and replacing all
-    current_node.node_xpath.traverse do |node|
-      #get an array of macro strings and loop through them
-      Array macro_strings = node.get_macro_strings.each do |macro_string|
-        #looping through each known parameter from hash
-        @parameter_hash.keys.each do |key|
-          #replace parameters with values in given macro string
-          macro_string[key.to_s] = @parameter_hash[key]
+    #find parameter definitions and
+    def parameterize current_node
+      #find parameter assignments and add to hash
+      @parameter_hash << current_node.child(:parameter)
+      #traversing template tree XML and replacing all
+      current_node.node_xpath.traverse do |node|
+        #get an array of macro strings and loop through them
+        Array macro_strings = node.get_macro_strings.each do |macro_string|
+          #looping through each known parameter from hash
+          @parameter_hash.keys.each do |key|
+            #replace parameters with values in given macro string
+            macro_string[key.to_s] = @parameter_hash[key]
+          end
+        end
+        #evaluate macro strings as code and return resolved expressions
+        Hash resolved_values
+        macro_strings.each do |macro|
+          resolved_values[macros] = eval_expr macro
+        end
+
+        #change element's parameterized content to resolved expressions
+        node.resolve_element resolved_values
+      end
+    end
+
+    #take given macro strings and evaluates, returning resolved value - may still contain unresolved parameter expressions!
+    def eval_expr macro_string
+      #extract remaining parameters and replace with #{} notation
+      process_params macro_string
+      begin loop
+      #strip macro string wrappers and eval as Ruby code
+      return eval(macro_string[2...-1])
+              #if eval fails should produce NameError
+      rescue NoMethodError => nme
+        nme.to_s[]
+      rescue SyntaxError => se
+        puts se.inspect
+      rescue TypeError => te
+        puts te.inspect
+        retry
+      end
+    end
+
+    def process_params macro_string
+      #pulling identifier strings (no capitalized words though) from macro_string
+      Array possible_params = macro_string.scan(/[\b[a-z][_a-zA-Z0-9]*/)
+      #checking each one if its already defined or otherwise reserved
+      possible_params.each do |possible|
+        #word is not already a defined method; use method_missing?
+        if !defined? possible
+          #turn it into a method
+          define_singleton_method
         end
       end
-      #evaluate macro strings as code and return resolved expressions
-      Array resolved_values = eval_expr(macro_strings)
-      #change element's parameterized content to resolved expressions
-      node.resolve_element resolved_values
     end
-  end
 
-  #take given array of macro strings and evaluate
-  def eval_expr *macro_strings
-    Array resolved_values
-    #loop through each macro string
-    macro_strings.each do |macro_string|
-      #strip macro string wrappers and eval as Ruby code
-      resolved_values << eval(macro_string[2,-1])
+    #checks if the method with the given name is a legally included logic in the current template
+    def defined? string
+      @current_template.system.logics.include? string
     end
-    resolved_values
-  end
+    #what to do if Component consists of array of arrays?
+    def instantiate current_node
+      #look for if=false
+      current_node.node_xpath.traverse do |node|
+        if node['if'] == 'false'
+          #remove the whole thing
+          throw :deinstantiation
+        end
+        case node.name
+          when 'instance'
 
-  #what to do if Component consists of array of arrays?
-  def instantiate current_node
-    #look for if=false
-    current_node.node_xpath.traverse do |node|
-      if node['if'] == 'false'
-        #remove the whole thing
-        throw :deinstantiation
+            #find reference and import elements
+            #pass on params
+          when 'array'
+          else
+        end
+
       end
-      case node.name
-        when 'instance'
-
-          #find reference and import elements
-          #pass on params
-        when 'array'
-        else
+      ##if array loop and create concrete children
+      #if instance load ref and iterate
     end
-    ##if array loop and create concrete children
-    #if instance load ref and iterate
   end
 end
 

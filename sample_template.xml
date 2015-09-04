@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- this file  -->
-<?xml-model href="rng/template.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="rng/design.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <template xmlns="" id="asdf">
     <!-- sample of template file without any design data (need to namespace in sub schema) -->
     <name>Template example</name>
@@ -21,7 +21,7 @@
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
     </history>
-    <system id="dsdfsdfoo" logics="arithmetic boolean">
+    <design id="dsdfsdfoo" logics="arithmetic boolean">
         <parameters>
             <parameter name="sd" value="ffd" id="gwwgwgw">
                 <description>@(param_value)</description>
@@ -40,5 +40,5 @@
             <instance id="thisid" ref="targetid"></instance>
             
         </array>
-    </system>
+    </design>
 </template>

@@ -21,6 +21,7 @@
 
     <!-- initializing basic editor with reserved words - each one is a key for a method in Ruby  -->
     <define name="system" combine="choice">
+        
         <element name="methods">
             <!-- logic attribute is required here because some default logics (arithmetic, string) are not normally allowed in this template -->
             <ref name="systemComAttr"/>

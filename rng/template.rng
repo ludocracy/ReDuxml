@@ -221,28 +221,11 @@
         <a:documentation>Instance-type Components have their own instance-specific parameter
             values;.</a:documentation>
         <rng:define name="system">
+            <rng:notAllowed/>
             <rng:element name="system">
                 <a:documentation> a system is the content of a template - the digital representation
                     of a design; there is only one per template </a:documentation>
                 <rng:ref name="instanceComType"/>
-                <rng:oneOrMore>
-                    <rng:choice>
-                        <a:documentation> the actual design goes here and it's up to the system's
-                            users how to define its sub schema </a:documentation>
-                        <rng:zeroOrMore>
-                            <rng:element>
-                                <rng:anyName/>
-                                <rng:text/>
-                            </rng:element>
-                        </rng:zeroOrMore>
-                        <rng:zeroOrMore>
-                            <rng:ref name="instance"/>
-                        </rng:zeroOrMore>
-                        <rng:zeroOrMore>
-                            <rng:ref name="array"/>
-                        </rng:zeroOrMore>
-                    </rng:choice>
-                </rng:oneOrMore>
                 <rng:optional>
                     <rng:ref name="systemComAttr"/>
                 </rng:optional>
