@@ -156,8 +156,8 @@ module Base_types
     #points to root element of corresponding XML object
     @node_xpath
 
-    #rules that govern this Component's visibility or existence
-    @rules = Hash.new
+    #rules that govern this Component's visibility or existence; keys are xml_node; value is if statement
+    @rule_hash
 
     #these attributes can be read and written freely so that the user can modify the design
     #might need to wrap in proper methods to prevent modification of reserved views and rules
@@ -210,17 +210,18 @@ module Base_types
       raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Nokogiri::XML::Node
       @root = xml_node.name
       #adding inherited key_words
-      @keywords = args['key_words']
+      @keywords = Array.new args['key_words']
       #storing node's XML XPATH
       @node_xpath = xml_node
+      @rule_hash = Hash.new
       #setting or getting id -- all Components must have a unique global id
       set_id
       #looping through children; repurposing xml_node to be current_xml_node
       while xml_node
         #picking up design conditionals as rules
-        @rules[xml_node] = xml_node['if']
+        @rule_hash[xml_node] = xml_node['if']
         #and picking up view conditions as keywords; adding them to ones inherited
-        @keywords += xml_node[:keywords].split(' ')
+        @keywords << xml_node['keywords'].to_s.split(' ')
         case xml_node.children.size
           #this is a leaf node
           when 0
@@ -421,7 +422,7 @@ module Base_types
     attr_accessor :ref, :parameters
 
     def initialize instance_node, *args
-      super instance_node
+      super instance_node, args
       #all instances have a reference, but they do not need to be external - some can reference self
       @ref = @node_xpath['ref']
 
@@ -518,7 +519,7 @@ module Base_types
 
     #args['parameters'] is a Hash of parameter objects; inherited from higher template usually
     def initialize xml_node, *args
-      super xml_node
+      super xml_node, args
       #loading override params hash; key is parameter name
       overriding_parameters = args['parameters']
       #looping through all parameter children
@@ -558,7 +559,7 @@ module Base_types
 
     def initialize xml_node, value=nil
       #standard Component initializer
-      super xml_node
+      super xml_node, nil
       @name = @node_xpath['name']
       #assigning given value; if none given pulling one from given XML (default behavior)
       @value = value ||= @node_xpath['value']
@@ -638,17 +639,6 @@ module Base_types
     def initialize user_id, *args
       @full_name = args[name]
       @views = args[keywords]
-      if @full_name
-        name_node = "<name>#@full_name</name>"
-      end
-      if @views
-        views_node = '<views>'
-        @views.each do |view|
-          views_node += '<view'
-        end
-      end
-      super ("<user id=\"#{user_id}\"")
-
       @user_id = user_id
     end
 
