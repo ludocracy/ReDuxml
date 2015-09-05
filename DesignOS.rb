@@ -210,7 +210,7 @@ module Base_types
       raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Nokogiri::XML::Node
       @root = xml_node.name
       #adding inherited key_words
-      @keywords = Array.new args['key_words']
+      @keywords = args['key_words'].to_a
       #storing node's XML XPATH
       @node_xpath = xml_node
       @rule_hash = Hash.new
@@ -385,6 +385,125 @@ module Base_types
     #public method to see if a given template is owned by the user - only way to get write access
     def owner? user_id
       @owners.keys.include? user_id
+    end
+  end
+
+  #all templates have histories and objects that have been queried
+  class History < Component
+    #array of changes
+    @changes = Hash.new
+    #associated object or template
+    @referent
+
+    def initialize component
+      @referent = component
+      if @referent.is_template?
+        component.getHistory
+      end
+
+    end
+  end
+
+  #individual change (detected on file save)
+  class Change < Component
+    @object_ref
+    @timestamp
+    @owner
+
+    def initialize()
+    end
+  end
+
+  #Component instantiated
+  class Instantiate < Change
+
+  end
+
+  #error found
+  class Error < Change
+
+  end
+
+  #error corrected
+  class Correction < Change
+    #object ref is to a rule
+  end
+
+  #removal of node can occur when building design from de-instantiation (@if == false)
+  #when inspecting from a given perspective, or from user input when editing
+  class Remove < Change
+    #root change of removed tree; may be same as this change
+    @original_change
+    #children that were removed with this object
+    @old_children
+    #previous change according to @timestamp
+    @previous
+  end
+
+  #insertion of node can occur when building design from instantiation
+  #after inspector reports changes (when historian inserts changes into history)
+  #and from user input when editing
+  class Insert < Change
+    @original_change
+    #children of this object added with this change
+    @new_children
+    #next change according to @timestamp
+    @next
+  end
+
+  #moves occur during editing from user input and from the Inspector traversing conflicting views
+  #for example, in one view, a Component may be in location A, but in another view, it is in location B.
+  #this is not, strictly speaking, movement, but if an object appears to change locations when the Inspector is traversing views
+  #it will record this as a Move. The following example may help: a group of users all agree that tomatoes are vegetables
+  #another group of users is equally adamant that they are fruits. assuming that tomatoes are children of one or the other branch of the produce tree
+  #when switching from one group's view to another, tomatoes will appear to have moved from the fruit to the vegetable branches and vice versa
+  #a hypothetical 'plants' view will never see this change as it is above that dispute
+  class Move < Change
+    #parent prior to move
+    @old_parent
+    #new parent after move
+    @new_parent
+    @previous
+    @next
+  end
+
+  #change to element content or attribute value, essentially the actual content of the Component has changed
+  #this can occur from owner input when editing
+  #or initiated by Builder when dealing with parameters (and nothing else)
+  class Edit < Change
+    #string containing new content
+    @new_content
+    #string containing old content (if content is XML, string can be converted to XML)
+    @old_content
+    #xpath to changed element
+    @xpath
+    #string if empty content change was to element; if non-empty is name of attribute value changed
+    @attributeOrNo
+    @previous
+    @next
+  end
+
+  #changes to changes
+  class Reverse < Change
+    #if the user supplied a time instead of number of changes removed, it can be compared to this timestamp and those of
+    #the new @previous and @next changes. if neither previous or next are equal, then almost certainly the reversion
+    #was not specifically targeted at this object but rather another; if none, then the time/date of a design freeze of some kind
+    @requested_timestamp = false
+    #how many changes back we reverted
+    @num_changes_removed
+    #the change before this reversion is now a dead piece of the design
+    @old_previous
+    #the new previous (simply @previous here to be consistent across classes) will now skip over those dead changes
+    @previous
+    @next
+
+    def initialize(timestamp_or_num_changes)
+      if timestamp_or_num_changes < 100
+        @num_changes_removed = time_stamp_or_num_changes
+      else
+        @requested_timestamp = time_stamp_or_num_changes
+        @num_changes_removed = asdf
+      end
     end
   end
 
@@ -676,6 +795,7 @@ module Editor
   #makes program options available in standard format
   require 'optparse'
 
+  @exit
   @user
   @editor_template
 
@@ -686,22 +806,23 @@ module Editor
 
     #redo this?!
     #should only make methods in the template public; all else should be made private so that user cannot call them
-    @current_template.child('methods').children.each do |method|
+    @editor_template.child('methods').children.each do |method|
       @methods[method['name']] = method.node_xpath.content
     end
     #zeroing out current template so user can load one
     @current_template = nil
-    edit @current_template
   end
 
   #rewrite this!
   #if no current template ask for one; if no owner (default on startup) ask for one
   def edit open_template
+    @current_template = open_template
     loop do
-      file = File.open("data/mconvert.xml", "r")
-      hash = Hash.from_xml(file.read)
-      yaml = hash.to_yaml
-      File.open("data/mirador.yml", "w") { |file| file.write(yaml) }
+      #get user input
+      user_input = gets
+      #execute editor methods
+      #methods we need:
+      #one for each change: insert, remove,
     end
   end
 end
