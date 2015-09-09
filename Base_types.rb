@@ -107,24 +107,14 @@ module Base_types
     end
 
     #replace macro strings in attributes and element content with provided values
-    def resolve_element macro_value_hash
-      #loop through each provided macro_string/value pair
-      macro_value_hash.each do |macro_value_pair|
-        #replacing macro strings in element content
-        self.content = replace_macro_strings self.content, macro_value_pair
-        #looping through each attribute of this element
-        self.attributes.each do |attr|
-          attr.value = replace_macro_strings attr.value, macro_value_pair
-        end
+    def resolve_element macro_value_pair
+      #replacing macro strings in element content
+      self.content[macro_value_pair.key] = macro_value_pair.value
+      #looping through each attribute of this element
+      self.attributes.each do |attr|
+        attr.value[macro_value_pair.key] = macro_value_pair.value
       end
     end
-
-    #replaces macro strings  with given values
-    def replace_macro_strings string, macro_value_hash
-      string[macro_value_hash.key] = macro_value_hash.value
-    end
-
-    private :replace_macro_strings
   end
 
 
@@ -414,17 +404,21 @@ module Base_types
     end
   end
 
-  #Component instantiated
+  #Component instantiated; holds pointers to Edits to parameter values if redefined for this instance
+  #holds pointer to antecedent; generates fresh ID for instance; adds as new child to template
   class Instantiate < Change
 
   end
 
-  #error found
+  #error found during build inspection process (syntax errors) or during general inspection - saved to file if uncorrected on commit
+  #points to rule violated and/or syntax marker and previous error in exception stack
   class Error < Change
 
   end
 
-  #error corrected
+  #build-time, inspection or committed error correction - points to error object
+  #also points to change object that precipitated this one
+  #(could be another correction or other change-type other than Error or Instantiate)
   class Correction < Change
     #object ref is to a rule
   end

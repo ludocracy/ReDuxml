@@ -1,7 +1,12 @@
 #Builder contains methods for converting template files into design Components
 #also has hooks for owners to create, modify, and otherwise manage templates via include File module
 module Builder
+  #all modules need the Base types of DesignOS (Component, Template and their basic subclasses)
   require_relative "Base_types"
+  #Symbolic gem allows evaluation of parameter expressions with unresolved parameters
+  require 'symbolic'
+  #methods include redefines of common algebraic and string methods
+  include Symbolic
   include Base_types
 
   #holds views user can access this iteration
@@ -14,6 +19,8 @@ module Builder
   @parameter_hash
   #operator hash
   @operator_hash
+  #current template file - holds run-time history of parameter redefines and instantiations
+  @current_template
 
   #loads this builder's basic features from builder template file
   def load_builder builder_template_file
@@ -22,7 +29,6 @@ module Builder
 
   #basic function of builder - takes a Template and builds it out according it its parameters
   def build open_template
-    open_template.
         #each method takes the current tree's system (design) and
         #removes non-viewable elements, resolves parameters, and instantiates children
         instantiate parameterize prune open_template.system
@@ -37,10 +43,16 @@ module Builder
     end
   end
 
-  #find parameter definitions and
+  #if this node is an instance type add parameter definitions to hash
+  #replace instances of known parameters in expressions with hashed values, evaluate/simplify expressions
   def parameterize current_node
-    #find parameter assignments and add to hash
-    @parameter_hash << current_node.child(:parameter)
+    #add this nodes parameter hash to the template's -
+    if current_node.is_a? 'Instance'
+      @parameter_hash.merge! current_node.parameters do |param_name, old_value, new_value|
+        #add parameter redefine to run-time history of this template
+        #NOT DONE YET! need to build out history API first!!!
+      end
+    end
     #traversing template tree XML and replacing all
     current_node.node_xpath.traverse do |node|
       #get an array of macro strings and loop through them
@@ -50,121 +62,18 @@ module Builder
           #replace parameters with values in given macro string
           macro_string[key.to_s] = @parameter_hash[key]
         end
+        #simplify result, retaining unknown value parameters as strings
+        node.resolve_element simplify macro_string
       end
-      #evaluate macro strings as code and return resolved expressions
-      Hash resolved_values
-      macro_strings.each do |macro_string|
-        #marking up macro string for operators and unresolved parameters and stripping outer delimiters i.e. @(...)
-        marked_up_macro_string = markup(markup(macro_string, @operator_hash.keys, '#'), /\b[a-z][_a-zA-Z0-9]*/, ':')[2...-1]
-        #resolve marked up macro string and add cleaned up expression or value to hash
-        resolved_values[macro_string] = eval_expr marked_up_macro_string
-      end
-
-      #change element's parameterized content to resolved expressions
-      node.resolve_element resolved_values
     end
   end
 
-  #take given macro strings and evaluates, returning resolved value - may still contain unresolved parameter expressions!
-  #can we make this recursive so we don't have to worry about parentheses?
-  def eval_expr macro_string
-    #stack of operations (should not ever exceed 2!)
-    operator_stack = []
-    #last parameter found
-    last_parameter_expr = ''
-    #last value expression
-    last_value_expr = ''
-    #array of terms that come in two types: unsolvable (parameter expressions) and resolved expressions (value)
-    expressions = []
-    iterator = 0
-    loop do
-      case macro_string[iterator]
-        #found a subexpression
-        when '('
-          #extract it - subtracting open and close parentheses
-          sub_expr = macro_string[iterator + 1 ... find_close_parens_index(macro_string) - 1]
-          #recurse to evaluate and replace with result
-          resolved_sub_expr = eval_expr sub_expr
-          #replace sub_expr plus parentheses with resolved sub_expr
-          macro_string['(' + sub_expr + ')'] = resolved_sub_expr
-          #bumping iterator up by length of replacement expression/value
-          iterator += resolved_sub_expr.size
-        #found an operator
-        when '#'
-          #find end of operator
-          end_delimiter_index = macro_string[iterator+1...-1].find_index('#')
-          operator = macro_string[iterator...end_delimiter_index]
-          #we have a previous parameter
-          if last_parameter_expr
-            #add this operator to last parameter's expression and add to expressions
-            expressions << last_parameter_expr + operator
-            #empty last_parameter for next one
-            last_parameter_expr.clear
-            #we don't have a previous parameter
-          else
-            #push onto operator stack
-            operator_stack << operator
-          end
-          #incrementing by size of operator
-          iterator += operator.size
-        #found a parameter
-        when ':'
-          #find end of parameter
-          end_delimiter_index = macro_string[iterator+1...-1].find_index(':')
-          #add each preceding operator before parameter
-          operator_stack.each do |operator|
-            last_parameter_expr += operator
-          end
-          #emptying stack
-          operator_stack.clear
-          #add parameter
-          last_parameter_expr += macro_string[iterator...end_delimiter_index]
-          #increment iterator by size of parameter
-          iterator += last_parameter_expr.size
-        #ignore whitespace
-        when ' '
-          #do nothing
-          #found something other than an operator or parameter - must be an actual value; lots of code in common with parameter handling! combine somehow??
-        else
-          #empty parameter expression
-          last_parameter_expr.clear
-          #finding end of value (just before beginning of next operator)
-          end_delimiter_index = macro_string[iterator...-1].find_index('#') - 1
-          if last_value_expr
-            #add each preceding operator before value to value expression
-            operator_stack.each do |operator|
-              last_value_expr += operator
-            end
-            #emptying stack
-            operator_stack.clear
-          end
-          #adding the value we found
-          last_value_expr += macro_string[iterator...end_delimiter_index]
-          #we now have a resolvable expression - evaluate as code and convert to string
-          result_str = eval(last_value_expr).to_s
-          #overwrite expression with result
-          macro_string[last_value_expr] = result_str
-          #increment iterator by result's size
-          iterator += result_str.size
-          #set last_value_expr to result
-          last_value_expr = result_str
-      end
-      iterator += 1
-    end
-
-  end
-
-  #takes given string and, according to given criteria, marks various substrings with given delimiters
-  def markup macro_string, *criteria, delimiter
-    #go through each criteria string
-    criteria.each do |criterion|
-      #get array of matches
-      macro_string.scan(criterion).each do |match|
-        #add delimiter chars and spacing around each match
-        macro_string[match] = ' ' + delimiter + match + delimiter + ' '
-      end
-    end
-    macro_string
+  #uses Symbolic gem to leave parameters with unknown values intact while resolving remaining terms
+  #simplify result, retaining unknown value parameters as strings
+  def simplify macro_string
+    #find parameter with unknown values
+    #declare as symbolic vars
+    #evaluate expression and return
   end
 
   #what to do if Component consists of array of arrays?
