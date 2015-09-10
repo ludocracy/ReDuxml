@@ -28,10 +28,10 @@
         </parameters>
         <!-- each of these modules is an instance and can be conditionalized, but there must be at least one module of each kind -->
         <!-- default is console, but plugins (like an XML editor) can override this value -->
-        <editor id="designOS_main_editor_0" ref="console"/>
+        <editor id="designOS_main_editor_0" ref="console.xml"/>
         <!-- default is registry to authenticate new user; during runtime switches to whatever template's assigned inspector -->
-        <inspector id="designOS_main_inspector_0" ref="registry"/>
+        <inspector id="designOS_main_inspector_0" ref="registry.xml"/>
         <!-- default is standard builder; can be overridden by plugins -->
-        <builder id="designOS_main_builder_0" ref="builder"/>        
+        <builder id="designOS_main_builder_0" ref="builder.xml"/>        
     </initialize>
 </designOS>

@@ -4,7 +4,8 @@ module Builder
   #all modules need the Base types of DesignOS (Component, Template and their basic subclasses)
   require_relative "Base_types"
   #Symbolic gem allows evaluation of parameter expressions with unresolved parameters
-  require 'symbolic'
+  #WTF? i have to put full path to get linker to find it!
+  require 'C:/Ruby21-x64/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic.rb'
   #methods include redefines of common algebraic and string methods
   include Symbolic
   include Base_types
@@ -63,7 +64,10 @@ module Builder
           macro_string[key.to_s] = @parameter_hash[key]
         end
         #simplify result, retaining unknown value parameters as strings
-        node.resolve_element simplify macro_string
+        results = simplify macro_string
+        node.resolve_element results[0]
+        #add removal of returned cancelled parameters to template's run-time history
+        #record_remove results[1...-1]
       end
     end
   end
@@ -71,9 +75,30 @@ module Builder
   #uses Symbolic gem to leave parameters with unknown values intact while resolving remaining terms
   #simplify result, retaining unknown value parameters as strings
   def simplify macro_string
-    #find parameter with unknown values
-    #declare as symbolic vars
+    #find potential parameters and remove duplicates
+    potential_vars = macro_string.scan(/\b[a-z][a-zA-Z0-9_]*/).uniq!
+    #remove any that are actually operators
+    #potential_vars.keep_if do |identifier| @operator_hash.keys.include? identifier end
+    #declare them as symbolic vars and add '@' to each in macro string
+    potential_vars.each do |variable|
+      #have to convert into an instance variable name
+      instance_var_name = "@#{variable}"
+      #replace in macro string
+      macro_string.gsub! variable, instance_var_name
+      instance_variable_set(instance_var_name, Variable.new(:name => variable))
+    end
     #evaluate expression and return
+    result_str = (eval macro_string).to_s
+    #check for parameters that were cancelled out and add to array
+    cancelled_parameters = Array.new
+    potential_vars.each do |var|
+      #result string no longer contains variable! return it with result!
+      if !result_str.sub var
+        cancelled_parameters << var
+      end
+    end
+    #return both result and array of cancelled parameters
+    result result_str, cancelled_parameters
   end
 
   #what to do if Component consists of array of arrays?
