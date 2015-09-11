@@ -34,8 +34,8 @@ class Option_Parser
       end
 
       # Boolean switch.
-      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-        options.verbose = v
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do
+        options.verbose = true
       end
 
       opts.separator ""

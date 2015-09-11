@@ -30,9 +30,9 @@ module Builder
 
   #basic function of builder - takes a Template and builds it out according it its parameters
   def build open_template
-        #each method takes the current tree's system (design) and
-        #removes non-viewable elements, resolves parameters, and instantiates children
-        instantiate parameterize prune open_template.system
+    #each method takes the current tree's system (design) and
+    #removes non-viewable elements, resolves parameters, and instantiates children
+    instantiate parameterize prune open_template.system
   end
 
   #makes sure this node can be seen by one of the views; returns nil otherwise
@@ -76,29 +76,33 @@ module Builder
   #simplify result, retaining unknown value parameters as strings
   def simplify macro_string
     #find potential parameters and remove duplicates
-    potential_vars = macro_string.scan(/\b[a-z][a-zA-Z0-9_]*/).uniq!
+    potential_vars = macro_string.scan(/\b[a-z][a-zA-Z0-9_]*/)
+    #remove duplicates
+    potential_vars.uniq!
     #remove any that are actually operators
     #potential_vars.keep_if do |identifier| @operator_hash.keys.include? identifier end
     #declare them as symbolic vars and add '@' to each in macro string
-    potential_vars.each do |variable|
+    potential_vars.to_a.each do |variable|
+      puts variable
       #have to convert into an instance variable name
       instance_var_name = "@#{variable}"
       #replace in macro string
       macro_string.gsub! variable, instance_var_name
+      #declare as instance variable of type Symbolic::Variable
       instance_variable_set(instance_var_name, Variable.new(:name => variable))
     end
     #evaluate expression and return
     result_str = (eval macro_string).to_s
     #check for parameters that were cancelled out and add to array
-    cancelled_parameters = Array.new
+    cancelled_parameters = []
     potential_vars.each do |var|
       #result string no longer contains variable! return it with result!
-      if !result_str.sub var
+      if !result_str.include? var
         cancelled_parameters << var
       end
     end
     #return both result and array of cancelled parameters
-    result result_str, cancelled_parameters
+    return result_str, cancelled_parameters
   end
 
   #what to do if Component consists of array of arrays?
@@ -107,7 +111,7 @@ module Builder
     current_node.node_xpath.traverse do |node|
       if node['if'] == 'false'
         #remove the whole thing
-        throw :deinstantiation
+        throw :deinstantiation, node
       end
       case node.name
         when 'instance'
@@ -122,4 +126,7 @@ module Builder
     ##if array loop and create concrete children
     #if instance load ref and iterate
   end
+
+  #used by build method; not by OS
+  private :simplify, :prune, :parameterize, :instantiate
 end

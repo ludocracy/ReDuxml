@@ -10,6 +10,21 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
+                                    <String>file:////CDE-SMB-TX30/b33791/test_content/caam_doc/caam/spec_resolved/caam_mxulp1/caam_doc.caam/maps/map_caam.ditamap</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>map_caam (PDF)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>DITAMAP</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
                                     <String>../../Downloads/caam_mxulp1/caam_doc.caam/maps/map_caam.ditamap</String>
                                 </field>
                                 <field name="scenarioIds">

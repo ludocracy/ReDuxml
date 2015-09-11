@@ -167,13 +167,13 @@ module Base_types
     end
 
     #adds new concrete child with its name as key to Hash with the key 'view'
-    def add_concrete view, name_component_pair
-      @concretes[view] << name_component_pair
+    def add_concrete view, concrete_xml_node
+      #@concretes[view] << self.class.new(concrete_xml_node, concrete_xml_node)
     end
 
     #adds new abstract child with its name as key to Hash with the key 'view'
-    def add_abstract view, name_component_pair
-      @abstracts[view] << name_component_pair
+    def add_abstract view, abstract_xml_node
+      #@abstracts[view] << self.class.new(abstract_xml_node, {@keywords})
     end
 
     #can a given view see this component?
@@ -189,7 +189,7 @@ module Base_types
     #scrubs keywords of ones that should not be inherited by new children components
     def scrub_reserved key_words
       #list includes: singleton (because child may not be one), element name because child element will surely differ
-      key_words.include [:singleton]
+      key_words.delete :singleton
     end
     private :scrub_reserved, :set_id
 
@@ -206,48 +206,49 @@ module Base_types
       @rule_hash = Hash.new
       #setting or getting id -- all Components must have a unique global id
       set_id
+      puts "building node \"#{@root}\""
       #looping through children; repurposing xml_node to be current_xml_node
       while xml_node
+        puts "processing XML node \"#{xml_node.name}\""
         #picking up design conditionals as rules
         @rule_hash[xml_node] = xml_node['if']
         #and picking up view conditions as keywords; adding them to ones inherited
         @keywords << xml_node['keywords'].to_s.split(' ')
-        case xml_node.children.size
+        case xml_node.element_children.size
           #this is a leaf node
           when 0
+            break
           when 1
             #if it has no siblings, it's a singleton
-            if xml_node.child.siblings.size == 0
-              #add to concrete pointer; create new child based on child's class; indicate it is a singleton
-              #the view is 'xml', an implicit view that includes XML elements that are not properly a part of the data model
-              #in non-XML view (default), traverses will skip these and go straight to children
-              name_component_pair = xml_node.child.name <= self.class.new(xml_node.child, @keywords+'singleton')
-              add_concrete 'xml', name_component_pair
-            end
+            #add to concrete pointer; create new child based on child's class; indicate it is a singleton
+            #the view is 'xml', an implicit view that includes XML elements that are not properly a part of the data model
+            #in non-XML view (default), traverses will skip these and go straight to children
+            add_concrete 'xml', xml_node.element_children[0]
             #traverse
-            xml_node = xml_node.child
+            xml_node = xml_node.element_children[0]
           else
+            #scrub keywords of ones that shouldn't be inherited
+            inheritable_keywords = {:keywords => scrub_reserved(@keywords)}
             #adding each child
-            xml_node.children.each do |child|
+            xml_node.element_children.each do |child|
               #is this XML element name reserved? if so, call subclass constructor (may need to add namespace of template somehow?)
-              if args[:reserved].include? child.name
+              if args[:reserved].to_a.include? child.name
                 #getting class of child
                 child_class = Object.const_set(child.name.classify, Class.new)
                 #calling that class's initializer - should be subclass of Component
-                new_child = {:keywords => scrub_reserved(@keywords)}
-                @children << child_class.new(child, new_child)
+                self << child_class.new(child, inheritable_keywords)
+              else
+                #not a reserved component - create new generic child
+                Component.new(child, inheritable_keywords)
               end
             end
         end
       end
+      puts "node \"#{@root}\" loaded"
     end
 
-    #shortcut method
-    def template?
-      @keywords.include? 'template'
-    end
-
-    #shortcut to name, pulled from XML element name
+    #shortcut to name, pulled from XML element name;
+    #needed because TreeNode already has a 'name' defined that we are using as 'id'
     def name
       @root
     end
@@ -293,10 +294,12 @@ module Base_types
   class Template < Component
     #formal/full name of the template - intended to be outward e.g. customer facing unlike the id (which corresponds to Ruby object ids)
     String @name
+    #template version
+    String @version
     #history Component of given template
     @history
     #Hash of id string : full_name string pairs
-    @owners
+    Hash @owners
     #root component of template design
     @system
     #template's must always correspond to a document Node
@@ -311,9 +314,14 @@ module Base_types
     #add or create XML document and set up owners
     def set_doc
       if File.exist? @file
-        @doc = Nokogiri::XML @file
+        #skipping first three nodes as they are XML-specific and not part of any design
+        doc = Nokogiri::XML @file
+        @doc = doc.root
+        puts "file exists and opening as XML"
       else
+        #empty XML file
         @doc = Nokogiri::XML::Document.new @file
+        puts "file does not exist. created new XML file"
       end
     end
 
@@ -328,6 +336,7 @@ module Base_types
         #pull name from file
         @name = self.child('name').content
       end
+      puts "template full name is #{@name}"
     end
 
     #these will be made into class names to call the appropriate Component's initializer
@@ -344,10 +353,11 @@ module Base_types
     #args is a Hash of values to seed a new template file when starting from scratch
     #or pass an argument to sub template
     def initialize template_file, *args
+      puts "loading template file #{template_file}"
       #these reserved elements are there for all templates
       @reserved_components = [:owners, :history]
       #first item is always done first
-      @file = File.new template_file[0]
+      @file = File.new template_file
 
       #set or create this XML document
       #also finds or creates owners
@@ -355,14 +365,18 @@ module Base_types
 
       #adding class-specific reserved components to the basic ones
       @reserved_components += self.class.get_reserved_components
+      puts "adding reserved components for template subclass #{self.class.to_s}"
 
       #call Component initialize
       @system = super @doc, {reserved: @reserved_components}
+      puts 'found template system'
 
       #setting history pointer
       @history = self.child('history')
+      puts "found template history with #{history.size} changes"
       #getting owner Hash
       @owners = self.child('owners').owner_hash
+      puts "found template owners: #{@owners.values.join (' ')}"
 
       #assigning or getting template formal/full name
       set_name args[name]
@@ -378,19 +392,20 @@ module Base_types
     end
   end
 
+
   #all templates have histories and objects that have been queried
   class History < Component
+    #holds names of change types so they can be reserved
+    @reserved_change_names = ['instantiate', 'error', 'correction', 'remove', 'insert', 'move', 'edit', 'reverse']
     #array of changes
     @changes = Hash.new
-    #associated object or template
-    @referent
 
     def initialize component
-      @referent = component
-      if @referent.is_template?
-        component.getHistory
-      end
+      super component, @reserved_change_names
+    end
 
+    def size
+      @changes.size
     end
   end
 

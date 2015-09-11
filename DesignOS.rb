@@ -7,26 +7,41 @@ class DesignOS < Template
   require_relative 'Editor'
   require_relative 'Builder'
   require_relative 'Inspector'
+
+  #this is a fixed value
+  OS_TEMPLATE_PATH = 'designos_template.xml'
   #Editor can be an XML editor or custom DesignOS interface but can also run in basic console mode (which underlies the other interfaces)
   include Editor
   #Builder constructs design from template, populating its children and applying parameter values
   include Builder
   #Inspector gets triggered by builder at certain points predetermined by OS and by user according to inputs
   include Inspector
-  #the template that is called by the user
+
   alias_method :current_template, :doc
 
   def initialize *args
     #convert arguments into options
     options = Option_Parser.parse args
-    super options.templates, options.user
+    #setting global verbose mode; not sure if this is right!
+    #$verbose = options.verbose
+    super OS_TEMPLATE_PATH
+    #splash text
+    welcome
     #load templates for each os module
     ['editor', 'builder', 'inspector'].each do |os_module|
+      puts "loading #{os_module}... ".chomp!
       arg = @system.child(os_module)['ref']
-      send ("load_#{os_module} #{arg}")
+      if send ("load_#{os_module} #{arg}")
+        puts "successfully loaded #{arg}."
+      end
     end
     #start main loop
     main
+  end
+
+  #welcome text
+  def welcome
+    puts "DesignOS #{@version}"
   end
 
   #the main loop; default value is nil so process can listen for user input
@@ -35,6 +50,8 @@ class DesignOS < Template
       @current_template = inspect build edit @current_template
     end
   end
+
+  private :welcome, :main
 end
 
 #BEGIN block
