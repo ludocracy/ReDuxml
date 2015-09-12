@@ -1,4 +1,11 @@
 #################
+## RubyMine
+#################
+
+#IDE meta data directory
+/DesignOS/
+
+#################
 ## Eclipse
 #################
 

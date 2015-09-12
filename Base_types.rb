@@ -14,7 +14,7 @@
 module Base_types
   #authentication gem
   #require 'devise'
-  #basic tree structure, providing attributes: @name, @children, @siblings, @parent, @content etc.
+  #basic tree structure, providing attributes: @name, @children, @children_hash, @siblings, @parent, @content etc.
   require 'rubytree'
   #XML parsing and manipulation
   require 'nokogiri'
@@ -194,7 +194,6 @@ module Base_types
     private :scrub_reserved, :set_id
 
     #the builder should provide the XML node to be converted to rubytree node
-    #also what keywords does this component inherit?
     def initialize xml_node, args
       #only XML nodes (Nokogiri in this case) allowed
       raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Nokogiri::XML::Node
@@ -207,6 +206,9 @@ module Base_types
       #setting or getting id -- all Components must have a unique global id
       set_id
       puts "building node \"#{@root}\""
+      #initializing Treenode properties - TreeNode contents will be the xml_node
+      #initializes @children, @children_hash, @siblings, etc
+      super @id.to_s, xml_node
       #looping through children; repurposing xml_node to be current_xml_node
       while xml_node
         puts "processing XML node \"#{xml_node.name}\""
@@ -217,6 +219,7 @@ module Base_types
         case xml_node.element_children.size
           #this is a leaf node
           when 0
+            #breaking because this Component is done
             break
           when 1
             #if it has no siblings, it's a singleton
@@ -239,9 +242,11 @@ module Base_types
                 self << child_class.new(child, inheritable_keywords)
               else
                 #not a reserved component - create new generic child
-                Component.new(child, inheritable_keywords)
+                self << Component.new(child, inheritable_keywords)
               end
             end
+            #breaking because this Component is done
+            break
         end
       end
       puts "node \"#{@root}\" loaded"
