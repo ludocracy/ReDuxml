@@ -5,18 +5,17 @@
     <!-- sample of template file without any design data (need to namespace in sub schema) -->
     <name>Template example</name>
     <version>0.9</version>
-    <owner id="fsf">
-        <name>Peter Kong</name>
-    </owner>
-    <owner id="dsd">
-        <name>asdf fdsd</name>
-    </owner>
+    <owners>
+        <owner id="fsf">
+            <name>Peter Kong</name>
+        </owner>
+        <owner id="dsd">
+            <name>asdf fdsd</name>
+        </owner>
+    </owners>
     <description>This should be allowed.</description>
     <history>
-        <insert id="casdfs" change_ids="gggg" previous="" next="">
-            <owner id="b33791">
-                <name>Peter Kong</name>
-            </owner>
+        <insert id="casdfs" change_ids="gggg" previous="" next="" owner="b33791">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
@@ -30,15 +29,15 @@
         <!-- example of where you could add design data -->
         <instance keywords="debug !customer" id="gggg" ref="targetiddxcz" if="@(param_value &gt; 0)">
             <parameters>
-                <parameter name="param" value="true" id="aaaa">
+                <parameter name="sd" value="fff" id="aaaa">
                     <description>what this param is about</description>
                 </parameter>
             </parameters>
         </instance>
         <array size="4" id="dsd">
             <!-- example of where you could add design data -->
-            <instance id="thisid" ref="targetid"></instance>
-            
+            <instance id="thisid" ref="targetid"/>
+            <p>@(iterator + 1)</p>
         </array>
     </design>
 </template>

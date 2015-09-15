@@ -4,16 +4,15 @@
 <editor xmlns="" id="designOS_0">
     <name>Console</name>
     <version>0.1</version>
-    <owner id="designOS">
-        <name>DesignOS</name>
-    </owner>
+    <owners>
+        <owner id="designOS">
+            <name>DesignOS</name>
+        </owner>
+    </owners>
     <description>The base methods for input to DesignOS</description>
     <!-- this history was hand-created since designOS can't write its own history if it never launched -->
     <history>
-        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil">
-            <owner id="b33791">
-                <name>Peter Kong</name>
-            </owner>
+        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil" owner="b33791">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
@@ -23,14 +22,11 @@
         but that only allows the user to instantiate or deinstantiate secondary modules (since arrays require arithmetic and don't make sense here -->
     <methods id="designOS_system_0" logics="Boolean">
         <!-- these parameters are arguments passed to DesignOS on startup -->
-        <parameters>
-        </parameters>
+        <parameters> </parameters>
         <!-- each of these methods is a reserved word in DesignOS; 
             the first ones are permanent and cannot ever be removed; editor extensions may add derivate methods 
             the OS will also add public methods of the current template -->
-        <method name="generate">
-            generates a given view from current template
-        </method>  
+        <method name="generate"> generates a given view from current template </method>
         <method name="add_child"/>
         <method name="add_parent"/>
         <method name="add_sibling"/>

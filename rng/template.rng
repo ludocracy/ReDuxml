@@ -47,9 +47,7 @@
             <rng:ref name="name"/>
         </rng:optional>
         <rng:ref name="version"/>
-        <rng:oneOrMore>
-            <rng:ref name="owner"/>
-        </rng:oneOrMore>
+        <rng:ref name="owners"/>
         <rng:ref name="description"/>
         <rng:ref name="history"/>
         <rng:ref name="system"/>
@@ -63,14 +61,26 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="owner">
+    <rng:define name="owners">
         <a:documentation> every template must have at least one owner </a:documentation>
+        <rng:element name="owners">
+            <rng:oneOrMore>
+                <rng:ref name="owner"/>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="owner">
+        <a:documentation>each owner can have multiple formal names but one id (from
+            Component)</a:documentation>
         <rng:element name="owner">
             <rng:oneOrMore>
                 <rng:ref name="name"/>
             </rng:oneOrMore>
             <rng:optional>
                 <rng:attribute name="role">
+                    <a:documentation>roles define a standard set of views; rarely will a template
+                        have more than one owner with the same role</a:documentation>
                     <rng:data type="string"/>
                 </rng:attribute>
             </rng:optional>
@@ -81,7 +91,7 @@
 
     <rng:div>
         <a:documentation>these Components make up histories</a:documentation>
-        
+
         <rng:define name="history">
             <a:documentation> history of significant changes to this template </a:documentation>
             <rng:element name="history">
@@ -125,7 +135,9 @@
         <rng:define name="change">
             <a:documentation> histories of templates consist of operations on an object by a certain
                 owner on an exact time and date </a:documentation>
-            <rng:ref name="owner"/>
+            <rng:attribute name="owner">
+                <a:documentation>string representing owner id</a:documentation>
+            </rng:attribute>
             <rng:oneOrMore>
                 <rng:ref name="change_ids"/>
             </rng:oneOrMore>

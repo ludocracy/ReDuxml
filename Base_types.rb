@@ -117,7 +117,6 @@ module Base_types
     end
   end
 
-
   #Components are Tree nodes where each tree node is a hash of abstract and concrete versions of the Component
   #They are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   class Component < Tree::TreeNode
@@ -126,28 +125,28 @@ module Base_types
     alias_method :id, :name
 
     #element name for the root of this Component
-    @root
+    @root = ''
 
-    #TreeNode.content will serve many purposes
-    #depending on the Component type it could be the description, full name, or other documentation content
-    #some may be namespaced to allow DITA or other docs XML formats
+    #description of what this component represents in a design; can contain XML e.g. DITA content
+    #at its most basic it is the comment on the subclass of Component or annotation in the schema rules
+    @@description
 
     #concrete object descendants - Hash of Hash of variations of this Component that are more concrete (more specified) than this one
     #outer Hash keys are views, inner Hash keys are names (root elements) of Components; values are Components
-    @concretes
+    @concretes = {}
 
     #abstract ancestors - Hash of Hash of variations of this Component that are more abstract (less specified) than this one
     #outer Hash keys are views, inner Hash keys are names (root elements) of Components; values are Components
-    @abstracts
+    @abstracts = {}
 
     #keyword-sets (views) of this object -  at least one must be true for this Object to be viewable by user
-    @keywords
+    @keywords = []
 
-    #points to root element of corresponding XML object
-    @node_xpath
+    #points to root element of corresponding XML object - type Nokogiri::XML::Node
+    @node_xpath = Nokogiri::XML::Element
 
     #rules that govern this Component's visibility or existence; keys are xml_node; value is if statement
-    @rule_hash
+    @rule_hash = {}
 
     #these attributes can be read and written freely so that the user can modify the design
     #might need to wrap in proper methods to prevent modification of reserved views and rules
@@ -156,6 +155,20 @@ module Base_types
     #the node's xpath is determined by its position in the tree, plus intermediate XML elements
     #the concrete and abstract instances can only be removed by the Inspector (when memory/performance constraints are exceeded)
     attr_reader :node_xpath, :concretes, :abstracts, :id, :root
+
+    #overriding TreeNode::content to point to XML head's content
+    def content
+      @node_xpath.content
+    end
+
+    #initializes component attributes if empty
+    def []= attr, *vals
+      @node_xpath[attr] ||= vals.join ' '
+    end
+
+    def [] attr
+      @node_xpath[attr].content
+    end
 
     #setting id in data object and XML
     def set_id
@@ -167,13 +180,15 @@ module Base_types
     end
 
     #adds new concrete child with its name as key to Hash with the key 'view'
+    #not working! can we create hash of arrays operators?
     def add_concrete view, concrete_xml_node
-      #@concretes[view] << self.class.new(concrete_xml_node, concrete_xml_node)
+      puts self.class.to_s
+      @concretes[view] = self.class.new(concrete_xml_node).to_a
     end
 
     #adds new abstract child with its name as key to Hash with the key 'view'
     def add_abstract view, abstract_xml_node
-      #@abstracts[view] << self.class.new(abstract_xml_node, {@keywords})
+      @abstracts[view] << self.class.new(abstract_xml_node)
     end
 
     #can a given view see this component?
@@ -194,7 +209,7 @@ module Base_types
     private :scrub_reserved, :set_id
 
     #the builder should provide the XML node to be converted to rubytree node
-    def initialize xml_node, args
+    def initialize xml_node, args = {}
       #only XML nodes (Nokogiri in this case) allowed
       raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Nokogiri::XML::Node
       @root = xml_node.name
@@ -206,7 +221,6 @@ module Base_types
       #setting or getting id -- all Components must have a unique global id
       set_id
       puts "building node \"#{@root}\""
-      #initializing Treenode properties - TreeNode contents will be the xml_node
       #initializes @children, @children_hash, @siblings, etc
       super @id.to_s, xml_node
       #looping through children; repurposing xml_node to be current_xml_node
@@ -219,25 +233,30 @@ module Base_types
         case xml_node.element_children.size
           #this is a leaf node
           when 0
+            puts 'done processing node'
             #breaking because this Component is done
             break
           when 1
+            puts 'found singleton'
             #if it has no siblings, it's a singleton
-            #add to concrete pointer; create new child based on child's class; indicate it is a singleton
+            xml_node.element_children[0]['keywords'].to_a << 'singleton'
             #the view is 'xml', an implicit view that includes XML elements that are not properly a part of the data model
             #in non-XML view (default), traverses will skip these and go straight to children
             add_concrete 'xml', xml_node.element_children[0]
+            puts "added concrete: #{@concretes['xml'].to_s}"
             #traverse
             xml_node = xml_node.element_children[0]
           else
+            puts "found #{xml_node.element_children.size} children"
             #scrub keywords of ones that shouldn't be inherited
             inheritable_keywords = {:keywords => scrub_reserved(@keywords)}
             #adding each child
             xml_node.element_children.each do |child|
               #is this XML element name reserved? if so, call subclass constructor (may need to add namespace of template somehow?)
               if args[:reserved].to_a.include? child.name
-                #getting class of child
-                child_class = Object.const_set(child.name.classify, Class.new)
+                #getting class of name
+                child_class = Object::const_get(child.name.classify)
+                puts "constantizing class: #{child_class.to_s}"
                 #calling that class's initializer - should be subclass of Component
                 self << child_class.new(child, inheritable_keywords)
               else
@@ -273,10 +292,10 @@ module Base_types
 
     attr_reader :owner_hash
 
-    def initialize xml_node, *args
+    def initialize xml_node, args = {}
       super xml_node, args
       @children.each do |owner|
-        @owner_hash[owner[id]] = owner.owner_name
+        @owner_hash[owner[id]] = owner
       end
     end
   end
@@ -284,12 +303,13 @@ module Base_types
   #template Owner class
   class Owner < Component
     #owner's full name
-    @owner
-    attr_reader :owner_name
-    def initialize xml_node, *args
+    @full_name
+    attr_reader :full_name
+    def initialize xml_node, args = {}
       super xml_node, args
       #pulling owner's full name from file
-      @owner = @concretes['xml']['name']
+      puts @concretes.inspect
+      @full_name = @concretes['xml'].content
     end
   end
 
@@ -311,15 +331,22 @@ module Base_types
     alias_method :doc, :node_xpath
     #file object
     @file
-    #list of element names reserved by the template (pulled from schema rules)
+    #array of element names reserved by the template (pulled from schema rules)
     #used to call element-specific Component constructors
-    @reserved_components
+    @reserved_components = []
+
+    #these reserved elements are there for all templates and are reserved Component subclasses
+    #that also have ruby-defined initialization behavior (other than being made a child)
+    #later on, pull this from template schema rules
+    @@template_components = %w(owners description history)
 
     #following methods are private
     #add or create XML document and set up owners
     def set_doc
       if File.exist? @file
-        #skipping first three nodes as they are XML-specific and not part of any design
+        #loading file as XML
+        #ADD SAFETY CHECK for invalid XML! could be that user did not use literals in expressions
+        #need to create string parser that will search/replace illegal chars as literals
         doc = Nokogiri::XML @file
         @doc = doc.root
         puts "file exists and opening as XML"
@@ -348,7 +375,7 @@ module Base_types
     #'system' is only the default reserved word for the content portion of a Template
     #should be overridden for subclasses of Template
     def self.get_reserved_components
-      ['system']
+      @@template_components
     end
 
     private :set_doc, :set_name
@@ -357,11 +384,9 @@ module Base_types
 
     #args is a Hash of values to seed a new template file when starting from scratch
     #or pass an argument to sub template
-    def initialize template_file, *args
+    def initialize template_file, args = {}
       puts "loading template file #{template_file}"
-      #these reserved elements are there for all templates
-      @reserved_components = [:owners, :history]
-      #first item is always done first
+      #opening file passed from editor
       @file = File.new template_file
 
       #set or create this XML document
@@ -369,26 +394,29 @@ module Base_types
       set_doc
 
       #adding class-specific reserved components to the basic ones
-      @reserved_components += self.class.get_reserved_components
-      puts "adding reserved components for template subclass #{self.class.to_s}"
+      @reserved_components = self.class.get_reserved_components
+      puts "adding reserved components for template subclass #{self.class.to_s}: #{@reserved_components.join(', ')}"
 
       #call Component initialize
-      @system = super @doc, {reserved: @reserved_components}
-      puts 'found template system'
+      super @doc, {reserved: @reserved_components}
 
-      #setting history pointer
-      @history = self.child('history')
-      puts "found template history with #{history.size} changes"
-      #getting owner Hash
-      @owners = self.child('owners').owner_hash
-      puts "found template owners: #{@owners.values.join (' ')}"
+      set_name args['name']
 
-      #assigning or getting template formal/full name
-      set_name args[name]
+      @version = child('version').content
+
+      @owners = child('owners').owner_hash
+
+      #add new owner to new template
+
+      @description = child('description').content
+
+      @history = child('history')
+
+      #last child is the system design of the template; can't use name because it could be anything!
+      @system = @children[-1]
 
       #loading any template arguments as concrete children
-
-      @system.add_concrete args [:user], args[:templates]
+      #@system.add_concrete args [:user], args[:templates]
     end
 
     #public method to see if a given template is owned by the user - only way to get write access
@@ -729,8 +757,6 @@ module Base_types
         @value = nil
       end
     end
-
-
   end
 
   #template file that holds list of DesignOS users and their views

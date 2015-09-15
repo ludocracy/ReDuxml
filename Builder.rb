@@ -32,7 +32,9 @@ module Builder
   def build open_template
     #each method takes the current tree's system (design) and
     #removes non-viewable elements, resolves parameters, and instantiates children
-    instantiate parameterize prune open_template.system
+    #don't forget to wrap the return value in a template again!
+    open_template.system = instantiate parameterize prune open_template.system
+    open_template
   end
 
   #makes sure this node can be seen by one of the views; returns nil otherwise
@@ -119,6 +121,7 @@ module Builder
           #find reference and import elements
           #pass on params
         when 'array'
+          #loop and create patterned instances
         else
       end
 

@@ -4,16 +4,16 @@
 <inspector xmlns="" id="designOS_0">
     <name>Inspector</name>
     <version>0.1</version>
-    <owner id="designOS">
-        <name>DesignOS</name>
-    </owner>
-    <description>The rules and procedures that DesignOS must apply to the current template.</description>
+    <owners>
+        <owner id="designOS">
+            <name>DesignOS</name>
+        </owner>
+    </owners>
+    <description>The rules and procedures that DesignOS must apply to the current
+        template.</description>
     <!-- this history was hand-created since designOS can't write its own history if it never launched -->
     <history>
-        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil">
-            <owner id="b33791">
-                <name>Peter Kong</name>
-            </owner>
+        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil" owner="b33791">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
@@ -23,8 +23,7 @@
         but that only allows the user to instantiate or deinstantiate secondary modules (since arrays require arithmetic and don't make sense here -->
     <domain id="designOS_system_0" logics="Boolean">
         <!-- these parameters are arguments passed to Builder on startup -->
-        <parameters>
-        </parameters>
+        <parameters> </parameters>
         <!-- each of these rules is a constraint on the validity of any design element
             the rules are invoked top to bottom and are ranked from abstract to concrete - they can be nested to restrict their scope 
             the first rules are inherent and cannot be removed; the name is the key; the content is the description pulled from code

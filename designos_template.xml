@@ -5,16 +5,16 @@
 <designOS xmlns="" id="designOS_0">
     <name>Design OS</name>
     <version>0.1</version>
-    <owner id="b33791">
-        <name>Peter Kong</name>
-    </owner>
+    <owners>
+        <owner id="b33791">
+            <name>Peter Kong</name>
+        </owner>
+    </owners>
     <description>An operating system for designers.</description>
     <!-- this history was hand-created since designOS can't write its own history if it never launched -->
     <history>
-        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil">
-            <owner id="b33791">
-                <name>Peter Kong</name>
-            </owner>
+        <insert id="designOS_history_insert_0" change_ids="designOS_0" previous="nil" next="nil"
+            owner="b33791">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
@@ -24,14 +24,13 @@
         but that only allows the user to instantiate or deinstantiate secondary modules (since arrays require arithmetic and don't make sense here -->
     <initialize id="designOS_system_0" logics="Boolean">
         <!-- these parameters are arguments passed to DesignOS on startup -->
-        <parameters>
-        </parameters>
+        <parameters> </parameters>
         <!-- each of these modules is an instance and can be conditionalized, but there must be at least one module of each kind -->
         <!-- default is console, but plugins (like an XML editor) can override this value -->
         <editor id="designOS_main_editor_0" ref="console.xml"/>
         <!-- default is registry to authenticate new user; during runtime switches to whatever template's assigned inspector -->
         <inspector id="designOS_main_inspector_0" ref="registry.xml"/>
         <!-- default is standard builder; can be overridden by plugins -->
-        <builder id="designOS_main_builder_0" ref="builder.xml"/>        
+        <builder id="designOS_main_builder_0" ref="builder.xml"/>
     </initialize>
 </designOS>

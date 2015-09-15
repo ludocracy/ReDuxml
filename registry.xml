@@ -3,9 +3,11 @@
 <?xml-model href="file:////CDE-SMB-TX30/b33791/schemas/designos/registry.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <registry xmlns="" id="FSL-DesignOS">
     <!-- the owner of this file is the admin of the system -->
-    <owner id="b33791">
-        <name>Peter Kong</name>
-    </owner>
+    <owners>
+        <owner id="b33791">
+            <name>Peter Kong</name>
+        </owner>
+    </owners>
     <description>List of all users of DesignOS</description>
     <!-- history of changes to users and their views -->
     <history>
