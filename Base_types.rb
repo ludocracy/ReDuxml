@@ -14,10 +14,10 @@
 module Base_types
   #authentication gem
   #require 'devise'
-  #basic tree structure, providing attributes: @name, @children, @children_hash, @siblings, @parent, @content etc.
-  require 'rubytree'
   #XML parsing and manipulation
   require 'nokogiri'
+  #abstract/concrete children nodes
+  require_relative 'kansei'
 
   #had to create my own close parentheses finder
   def find_close_parens_index string
@@ -117,10 +117,11 @@ module Base_types
     end
   end
 
-  #Components are Tree nodes where each tree node is a hash of abstract and concrete versions of the Component
-  #They are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
-  class Component < Tree::TreeNode
-
+  #Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
+  #in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
+  #each Kansei object is also a Tree::TreeNode
+  #disabling kansei features until we can architect it properly
+  class Component < Tree::TreeNode # < Kansei
     #redefining TreeNode::name as Component::id
     alias_method :id, :name
 
@@ -131,13 +132,11 @@ module Base_types
     #at its most basic it is the comment on the subclass of Component or annotation in the schema rules
     @@description
 
-    #concrete object descendants - Hash of Hash of variations of this Component that are more concrete (more specified) than this one
-    #outer Hash keys are views, inner Hash keys are names (root elements) of Components; values are Components
-    @concretes = {}
+    #hash of arrays representing concrete and abstract views of this Component
+    #@view_kansei_hash = Kansei_hash.new
 
-    #abstract ancestors - Hash of Hash of variations of this Component that are more abstract (less specified) than this one
-    #outer Hash keys are views, inner Hash keys are names (root elements) of Components; values are Components
-    @abstracts = {}
+    #hash of arrays representing concrete and abstract builds of this Component
+    #@build_kansei_hash = Kansei_hash.new
 
     #keyword-sets (views) of this object -  at least one must be true for this Object to be viewable by user
     @keywords = []
@@ -167,7 +166,7 @@ module Base_types
     end
 
     def [] attr
-      @node_xpath[attr].content
+      @node_xpath[attr]
     end
 
     #setting id in data object and XML
@@ -182,13 +181,12 @@ module Base_types
     #adds new concrete child with its name as key to Hash with the key 'view'
     #not working! can we create hash of arrays operators?
     def add_concrete view, concrete_xml_node
-      puts self.class.to_s
-      @concretes[view] = self.class.new(concrete_xml_node).to_a
+      #@concretes[view] = self.class.new(concrete_xml_node).to_a
     end
 
     #adds new abstract child with its name as key to Hash with the key 'view'
     def add_abstract view, abstract_xml_node
-      @abstracts[view] << self.class.new(abstract_xml_node)
+      #@abstracts[view] << self.class.new(abstract_xml_node)
     end
 
     #can a given view see this component?
@@ -201,12 +199,7 @@ module Base_types
       false
     end
 
-    #scrubs keywords of ones that should not be inherited by new children components
-    def scrub_reserved key_words
-      #list includes: singleton (because child may not be one), element name because child element will surely differ
-      key_words.delete :singleton
-    end
-    private :scrub_reserved, :set_id
+    private :set_id
 
     #the builder should provide the XML node to be converted to rubytree node
     def initialize xml_node, args = {}
@@ -214,18 +207,18 @@ module Base_types
       raise 'Attempted to initialize Component with object other than XML node' unless xml_node.is_a? Nokogiri::XML::Node
       @root = xml_node.name
       #adding inherited key_words
-      @keywords = args['key_words'].to_a
+      @keywords = []
       #storing node's XML XPATH
       @node_xpath = xml_node
       @rule_hash = Hash.new
       #setting or getting id -- all Components must have a unique global id
       set_id
-      puts "building node \"#{@root}\""
+      puts "#{__LINE__}: building node \"#{@root}\""
       #initializes @children, @children_hash, @siblings, etc
       super @id.to_s, xml_node
       #looping through children; repurposing xml_node to be current_xml_node
       while xml_node
-        puts "processing XML node \"#{xml_node.name}\""
+        puts "#{__LINE__}: processing XML node \"#{xml_node.name}\""
         #picking up design conditionals as rules
         @rule_hash[xml_node] = xml_node['if']
         #and picking up view conditions as keywords; adding them to ones inherited
@@ -233,42 +226,44 @@ module Base_types
         case xml_node.element_children.size
           #this is a leaf node
           when 0
-            puts 'done processing node'
+            puts "#{__LINE__}: done processing node"
             #breaking because this Component is done
             break
           when 1
-            puts 'found singleton'
+            puts "#{__LINE__}: found singleton"
             #if it has no siblings, it's a singleton
             xml_node.element_children[0]['keywords'].to_a << 'singleton'
             #the view is 'xml', an implicit view that includes XML elements that are not properly a part of the data model
             #in non-XML view (default), traverses will skip these and go straight to children
-            add_concrete 'xml', xml_node.element_children[0]
-            puts "added concrete: #{@concretes['xml'].to_s}"
+            #add_concrete 'xml', xml_node.element_children[0]
+            #puts "#{__LINE__a: dded concrete: #{@concretes['xml'].to_s}"
             #traverse
             xml_node = xml_node.element_children[0]
           else
-            puts "found #{xml_node.element_children.size} children"
-            #scrub keywords of ones that shouldn't be inherited
-            inheritable_keywords = {:keywords => scrub_reserved(@keywords)}
+            puts "#{__LINE__}: found #{xml_node.element_children.size} children"
+            puts "#{__LINE__}: scanning for reserved elements: #{args[:reserved].to_a.join(' ')}"
             #adding each child
             xml_node.element_children.each do |child|
               #is this XML element name reserved? if so, call subclass constructor (may need to add namespace of template somehow?)
               if args[:reserved].to_a.include? child.name
-                #getting class of name
-                child_class = Object::const_get(child.name.classify)
-                puts "constantizing class: #{child_class.to_s}"
+                puts "#{__LINE__}: '#{child.name}' is reserved"
+                #getting class version of name - should just capitalize element name
+                class_name = child.name
+                class_name[0] = class_name[0].upcase!
+                puts "#{__LINE__}: constantizing class: #{class_name} and calling its initializer"
+                child_class = Object::const_get(class_name)
                 #calling that class's initializer - should be subclass of Component
-                self << child_class.new(child, inheritable_keywords)
+                self << child_class.new(child)
               else
                 #not a reserved component - create new generic child
-                self << Component.new(child, inheritable_keywords)
+                self << Component.new(child)
               end
             end
             #breaking because this Component is done
             break
         end
       end
-      puts "node \"#{@root}\" loaded"
+      puts "#{__LINE__}: node \"#{@root}\" loaded"
     end
 
     #shortcut to name, pulled from XML element name;
@@ -293,7 +288,7 @@ module Base_types
     attr_reader :owner_hash
 
     def initialize xml_node, args = {}
-      super xml_node, args
+      super xml_node, {reserved: ['owner']}
       @children.each do |owner|
         @owner_hash[owner[id]] = owner
       end
@@ -308,8 +303,7 @@ module Base_types
     def initialize xml_node, args = {}
       super xml_node, args
       #pulling owner's full name from file
-      puts @concretes.inspect
-      @full_name = @concretes['xml'].content
+      @full_name = @children_hash['name']
     end
   end
 
@@ -338,7 +332,7 @@ module Base_types
     #these reserved elements are there for all templates and are reserved Component subclasses
     #that also have ruby-defined initialization behavior (other than being made a child)
     #later on, pull this from template schema rules
-    @@template_components = %w(owners description history)
+    @@template_components = %w(owners history)
 
     #following methods are private
     #add or create XML document and set up owners
@@ -349,11 +343,11 @@ module Base_types
         #need to create string parser that will search/replace illegal chars as literals
         doc = Nokogiri::XML @file
         @doc = doc.root
-        puts "file exists and opening as XML"
+        puts "#{__LINE__}: file exists and opening as XML"
       else
         #empty XML file
         @doc = Nokogiri::XML::Document.new @file
-        puts "file does not exist. created new XML file"
+        puts "#{__LINE__}: file does not exist. created new XML file"
       end
     end
 
@@ -368,7 +362,7 @@ module Base_types
         #pull name from file
         @name = self.child('name').content
       end
-      puts "template full name is #{@name}"
+      puts "#{__LINE__}: template full name is #{@name}"
     end
 
     #these will be made into class names to call the appropriate Component's initializer
@@ -385,7 +379,7 @@ module Base_types
     #args is a Hash of values to seed a new template file when starting from scratch
     #or pass an argument to sub template
     def initialize template_file, args = {}
-      puts "loading template file #{template_file}"
+      puts "#{__LINE__}: loading template file #{template_file}"
       #opening file passed from editor
       @file = File.new template_file
 
@@ -395,7 +389,7 @@ module Base_types
 
       #adding class-specific reserved components to the basic ones
       @reserved_components = self.class.get_reserved_components
-      puts "adding reserved components for template subclass #{self.class.to_s}: #{@reserved_components.join(', ')}"
+      puts "#{__LINE__}: adding reserved components for template subclass #{self.class.to_s}: #{@reserved_components.join(', ')}"
 
       #call Component initialize
       super @doc, {reserved: @reserved_components}
@@ -434,7 +428,7 @@ module Base_types
     @changes = Hash.new
 
     def initialize component
-      super component, @reserved_change_names
+      super component, {reserved: @reserved_change_names}
     end
 
     def size

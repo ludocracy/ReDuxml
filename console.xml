@@ -27,31 +27,5 @@
             the first ones are permanent and cannot ever be removed; editor extensions may add derivate methods 
             the OS will also add public methods of the current template -->
         <method name="generate"> generates a given view from current template </method>
-        <method name="add_child"/>
-        <method name="add_parent"/>
-        <method name="add_sibling"/>
-        <method name="remove_child"/>
-        <method name="remove_parent"/>
-        <method name="remove_sibling"/>
-        <method name="remove_concrete"/>
-        <method name="remove_abstract"/>
-        <method name="inspect"/>
-        <method name="open_template"/>
-        <method name="close_template"/>
-        <method name="quit"/>
-        <method name="which_editor"/>
-        <method name="logics"/>
-        <method name="methods"/>
-        <method name="views"/>
-        <method name="owner"/>
-        <method name="name"/>
-        <method name="description"/>
-        <method name="rules"/>
-        <method name="which_inspector"/>
-        <method name="which_builder"/>
-        <method name="save_template"/>
-        <method name="log_in"/>
-        <method name="log_out"/>
-        <method name="find"/>
     </methods>
 </editor>

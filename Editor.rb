@@ -2,15 +2,12 @@
 module Editor
   require_relative "Base_types"
   include Base_types
-  require 'active_support/core_ext/hash/conversions'
-  #
-  require 'yaml'
-  #makes program options available in standard format
-  require 'optparse'
+  require 'io/console'
 
   @exit
   @user
   @editor_template
+  @methods = {}
 
   #load this editor's methods
   def load_editor editor_template_file
@@ -32,8 +29,13 @@ module Editor
     @current_template = open_template
     loop do
       #get user input
-      user_input = gets
+      user_input = STDIN.gets.chomp!
       #execute editor methods
+      case user_input
+        when 'quit'
+          exit
+        else
+      end
       #methods we need:
       #one for each change: insert, remove,
     end

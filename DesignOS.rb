@@ -28,12 +28,11 @@ class DesignOS < Template
     #splash text
     welcome
     #load templates for each os module
-    ['editor', 'builder', 'inspector'].each do |os_module|
+    ['builder'].each do |os_module|
       puts "loading #{os_module}... ".chomp!
       arg = @system.child(os_module)['ref']
-      if send ("load_#{os_module} #{arg}")
-        puts "successfully loaded #{arg}."
-      end
+
+      send("load_#{os_module}", arg)
     end
     #start main loop
     main
@@ -46,7 +45,7 @@ class DesignOS < Template
 
   #the main loop; default value is nil so process can listen for user input
   def main
-    until Editor.exit?
+    loop do
       @current_template = inspect build edit @current_template
     end
   end
