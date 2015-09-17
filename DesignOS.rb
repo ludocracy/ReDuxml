@@ -6,7 +6,7 @@ class DesignOS < Template
   require_relative 'option_parser'
   require_relative 'Editor'
   require_relative 'Builder'
-  require_relative 'Inspector'
+  require_relative 'Tester'
 
   #this is a fixed value
   OS_TEMPLATE_PATH = 'designos_template.xml'
@@ -15,11 +15,11 @@ class DesignOS < Template
   #Builder constructs design from template, populating its children and applying parameter values
   include Builder
   #Inspector gets triggered by builder at certain points predetermined by OS and by user according to inputs
-  include Inspector
+  include Tester
 
-  alias_method :current_template, :doc
+  alias_method :current_template, :xml_node
 
-  def initialize *args
+  def initialize args
     #convert arguments into options
     options = Option_Parser.parse args
     #setting global verbose mode; not sure if this is right!
@@ -29,11 +29,18 @@ class DesignOS < Template
     welcome
     #load templates for each os module
     ['builder'].each do |os_module|
-      puts "loading #{os_module}... ".chomp!
-      arg = @system.child(os_module)['ref']
+      @system.children.each do |child|
+        STDERR.puts "#{__LINE__}: designOS @system=#{child.element}"
+      end
 
-      send("load_#{os_module}", arg)
+      load_arg = @system.child(os_module)['ref']
+
+      send("load_#{os_module}", load_arg)
     end
+    if options.template
+      @current_template = Template.new(options.template)
+    end
+
     #start main loop
     main
   end
@@ -45,9 +52,10 @@ class DesignOS < Template
 
   #the main loop; default value is nil so process can listen for user input
   def main
-    loop do
-      @current_template = inspect build edit @current_template
-    end
+    #loop do
+      @current_template = test build edit @current_template
+      @current_template.save_template 'output.xml'
+    #end
   end
 
   private :welcome, :main
@@ -60,7 +68,7 @@ def BEGIN
 end
 
 #main block
-DesignOS.new
+DesignOS.new ARGV
 
 def END
   #save data?

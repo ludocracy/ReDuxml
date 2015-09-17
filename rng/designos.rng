@@ -34,8 +34,8 @@
                 </element>
             </oneOrMore>
             <oneOrMore>
-                <!-- load inspector module - default view is authenticator -->
-                <element name="inspector">
+                <!-- load tester module - default view is authenticator -->
+                <element name="tester">
                     <ref name="instanceComType"/>
                 </element>
             </oneOrMore>

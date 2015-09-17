@@ -12,17 +12,17 @@ class Option_Parser
     # We set default values here.
     options = OpenStruct.new
     options.user_info = nil
-    options.templates = ['designos_template.xml']
+    options.template = nil
     options.verbose = false
 
     opt_parser = OptionParser.new do |opts|
       opts.separator ""
       opts.separator "Specific options:"
 
-      # templates to pass in; added to queue after launch template
-      opts.on("-t", "--template [TEMPLATE]", Array,
-              "Pass in template file(s)") do |template|
-        options.templates << template
+      # template to pass in; loads after OS template
+      opts.on("-t", "--template [TEMPLATE]", String,
+              "Pass in template file") do |template|
+        options.template = template
       end
 
       # pass in user info: must be Array of [id, password] format
