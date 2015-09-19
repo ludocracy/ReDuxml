@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- this file  -->
 <?xml-model href="rng/design.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<template xmlns="" id="asdf">
+<template xmlns="" id="template_id">
     <!-- sample of template file without any design data (need to namespace in sub schema) -->
     <name>Template example</name>
     <version>0.9</version>
     <owners>
-        <owner id="fsf">
+        <owner id="b33791">
             <name>Peter Kong</name>
         </owner>
-        <owner id="dsd">
+        <owner id="dummy_owner_id">
             <name>asdf fdsd</name>
         </owner>
     </owners>
     <description>This should be allowed.</description>
     <history>
-        <insert id="casdfs" change_ids="gggg" previous="" next="" owner="b33791">
+        <insert id="change_0_id" change_ids="template_id" previous="" next="" owner="b33791">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
     </history>
-    <design id="dsdfsdfoo" logics="arithmetic boolean">
+    <design id="design_id" logics="arithmetic boolean">
         <parameters>
-            <parameter name="param0" value="1" id="gwwgwgw">
+            <parameter name="param0" value="1" id="param_0_id">
                 <description>param0 is an integer and will be tested against the instance below</description>
             </parameter>
         </parameters>
         <!-- example of where you could add design data -->
-        <instance keywords="debug !customer" id="gggg" ref="targetiddxcz" if="@(param0 &gt; 0)">
+        <instance keywords="debug !customer" id="test_instance_0_id" ref="targetiddxcz" if="@(param0 &gt; 0)">
             <parameters>
-                <parameter name="sd" value="fff" id="aaaa">
+                <parameter name="instance_param_0" value="fff" id="instance_param_0_id">
                     <description>what this param is about</description>
                 </parameter>
             </parameters>
         </instance>
-        <array size="4" id="dsd">
+        <array size="4" id="array_id">
             <!-- example of where you could add design data -->
             <instance id="thisid" ref="targetid"/>
             <p>@(iterator + 1)</p>
