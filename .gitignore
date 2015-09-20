@@ -4,6 +4,9 @@
 
 #IDE meta data directory
 /DesignOS/
+#output files
+output*
+scratchpad.rb
 
 #################
 ## Eclipse

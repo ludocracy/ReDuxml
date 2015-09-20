@@ -316,9 +316,6 @@
                 <rng:optional>
                     <rng:ref name="description"/>
                 </rng:optional>
-                <rng:attribute name="name">
-                    <rng:data type="string"/>
-                </rng:attribute>
                 <rng:attribute name="value"/>
                 <rng:ref name="objectAttributes"/>
             </rng:element>
@@ -346,10 +343,17 @@
 
     <rng:define name="objectAttributes">
         <a:documentation> attributes common to any object </a:documentation>
-        <rng:attribute name="id">
-            <a:documentation>unique id within a given template</a:documentation>
-            <rng:data type="string"/>
-        </rng:attribute>
+        <rng:choice>
+            <a:documentation>can only have id or name and both must be unique within the family (parent, siblings, children)</a:documentation>
+            <rng:attribute name="id">
+                <a:documentation>id must be unique throughout entire template. should not be outward facing</a:documentation>
+                <rng:data type="string"/>
+            </rng:attribute>
+            <rng:attribute name="name">
+                <a:documentation>name must only be unique among immediate family. can be outward facing</a:documentation>
+                <rng:data type="string"/>
+            </rng:attribute>
+        </rng:choice>
         <rng:optional>
             <rng:attribute name="keywords">
                 <a:documentation>list of views</a:documentation>

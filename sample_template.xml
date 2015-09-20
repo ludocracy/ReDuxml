@@ -22,14 +22,14 @@
     </history>
     <design id="design_id" logics="arithmetic boolean">
         <parameters>
-            <parameter name="param0" value="1" id="param_0_id">
+            <parameter name="param0" value="1">
                 <description>param0 is an integer and will be tested against the instance below</description>
             </parameter>
         </parameters>
         <!-- example of where you could add design data -->
         <instance keywords="debug !customer" id="test_instance_0_id" ref="targetiddxcz" if="@(param0 &gt; 0)">
             <parameters>
-                <parameter name="instance_param_0" value="fff" id="instance_param_0_id">
+                <parameter name="instance_param_0" value="fff">
                     <description>what this param is about</description>
                 </parameter>
             </parameters>
