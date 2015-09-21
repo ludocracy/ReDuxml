@@ -15,7 +15,7 @@
     </owners>
     <description>This should be allowed.</description>
     <history>
-        <insert id="change_0_id" change_ids="template_id" previous="" next="" owner="b33791">
+        <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
@@ -27,7 +27,7 @@
             </parameter>
         </parameters>
         <!-- example of where you could add design data -->
-        <instance keywords="debug !customer" id="test_instance_0_id" ref="targetiddxcz" if="@(param0 &gt; 0)">
+        <instance visible="debug !customer" id="test_instance_0_id" ref="targetiddxcz" if="@(param0 &gt; 0)">
             <parameters>
                 <parameter name="instance_param_0" value="fff">
                     <description>what this param is about</description>

@@ -355,7 +355,7 @@
             </rng:attribute>
         </rng:choice>
         <rng:optional>
-            <rng:attribute name="keywords">
+            <rng:attribute name="visible">
                 <a:documentation>list of views</a:documentation>
                 <rng:data type="string"/>
             </rng:attribute>

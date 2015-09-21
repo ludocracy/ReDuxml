@@ -11,3 +11,17 @@ def test
   File.write('output_' + filename, xml_doc.to_xml)
 end
 
+class Base
+  def initialize
+    @reserved = Array.new if @reserved.nil?
+    @reserved << 'base'
+  end
+end
+
+class Sub < Base
+  def initialize
+    @reserved = Array.new if @reserved.nil?
+    @reserved << 'sub'
+    super
+  end
+end

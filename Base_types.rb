@@ -16,8 +16,10 @@ module Base_types
   #require 'devise'
   #XML parsing and manipulation
   require 'nokogiri'
-  require_relative 'Builder'
-  include Builder
+  require 'rubytree'
+  include Tree
+  require_relative 'debug'
+  include Debug
 
   #Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   #in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
@@ -25,10 +27,11 @@ module Base_types
   #disabling kansei features until we can architect it properly
 
   class Component < Tree::TreeNode
+    #pull out some of these attributes and make them subclasses - like static vs dynamic members?
     #id or name identify this Component uniquely among its neighbors (template for @id, immediate family for @name)
     @id
-    #points to the XML root of this Component
-    @xml_root_node = Nokogiri::XML::Element
+    #points to the XML element root of this Component
+    @xml_root_node
     #hash of viewings where keys are view settings and values are kansei siblings of this component
     @views = []
     #hash of builds where keys are parameter settings and values are kansei siblings of this component
@@ -56,78 +59,97 @@ module Base_types
       @xml_root_node
     end
 
-    #so we don't get XML gobbledygook
-    def to_s
-      puts "root element: #{element}; children:"
-      i = 0
-      @children.each do |child|
-        puts "#{i}: #{child.content.name}"
-        i += 1
+    def root_name
+      @xml_root_node.name
+    end
+
+    def collect_changes change
+      cur = self.parent
+      while cur
+        if cur.is_a? Template
+          cur.history.register change
+        end
+        cur = cur.parent
       end
     end
 
-    #creating Component by either loading given xml_node, or
-    #if args present, add new Component to given parent xml_node initialized with given args
+    def summarize
+      content = ""
+      if @children.size != 0
+        content = "children: "
+        @children.each do |child|
+          content << "'#{child.root_name}' "
+        end
+      else
+        content = "content: #{self.content}"
+      end
+      puts "Component '#{root_name}' #{content}"
+    end
+
+    #creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args = {}
+      @xml_cursor = xml_node
+      if @xml_cursor.nil?
+        generate_new_xml args
+      end
+      @xml_root_node = @xml_cursor
       @views = Hash.new
       @builds = Hash.new
       @if = []
       @visible = ['admin']
       @parameterized_nodes = Hash.new
       @attributes = Hash.new
-      if args[:name]
-        init_load_xml xml_node
-      else
-        init_create_xml xml_root_node, args
-      end
-    end
-
-    #creates new Component out of given xml node; traverses down singletons and includes them also;
-    #loads attributes and singleton contents into single flattened hash
-    def init_load_xml xml_root_node
-      @xml_cursor = @xml_root_node = xml_root_node
       @reserved_word_array ||= []
+
+      #must happen before traverse to have @children/@children_hash available
       super(self.object_id.to_s, @xml_root_node)
 
-      loading_methods = {born: lambda{load_attributes}, child: lambda{load_child}, died: lambda{load_leaf_content}}
-      traverse_xml @xml_cursor, loading_methods
-
-      @id ||= self.object_id.to_s
+      #loading methods because traverse is used by many different processes
+      loading_methods = {born: lambda{load_attributes}, child: lambda{load_sibling}, grow: lambda{load_child}, died: lambda{load_leaf_content}}
+      #traverse and load Component from xml
+      collect_changes traverse_xml loading_methods
     end
 
-    #creates new Component and adds to xml_parent_node, using args to initialize values
-    #cannot create more than two levels of XML; all attributes are given to the root element
-    def init_create_xml xml_parent_node, args
-      xml_parent_node << @xml_cursor = @xml_root_node = Nokogiri::XML::Element.new(args[:root], args[:parent].document)
-      args[:attributes].each do |attr|
-        @xml_root_node[attr.key] = attr.value
-      end
-      args[:children].each do |child_info|
-        @xml_root_node << child_node = Nokogiri::XML::Element.new(child_info.key, @xml_root_node.document)
-        child_node.content = child_info.value
-        self << Component.new(child_node)
-      end
-      if @children.size == 1
-        @xml_cursor = @xml_cursor.element_children[0]
-      end
+    def generate_new_xml args = {}
+      @xml_cursor.element self.class.to_s, args[:content]
+    end
+
+    def generate_descr
+
     end
 
     #recurses from a given xml element; give it various tasks using method hash
-    def traverse_xml xml_cursor, method_hash
-      @xml_cursor = xml_cursor
+    def traverse_xml method_hash
+      d if @xml_cursor.name == 'version'
+      d if @xml_cursor.name == "description"
       method_hash[:born].call
-      if xml_cursor.element_children.size == 0
+      if @xml_cursor.element_children.size == 0
         method_hash[:died].call
       end
-      if xml_cursor.element_children.size == 1
-        traverse_xml xml_cursor.element_children[0], method_hash
+      if @xml_cursor.element_children.size == 1
+        @xml_cursor = @xml_cursor.element_children[0]
+        method_hash[:grow].call
+        traverse_xml method_hash
       else
-        xml_cursor.element_children.each do |child_xml_node|
+        last_change = nil
+        @xml_cursor.element_children.each do |child_xml_node|
           @xml_cursor = child_xml_node
-          method_hash[:child].call
+          new_change = catch :change do
+            method_hash[:child].call
+          end
+          if new_change
+            d "how did we get here??"
+            if last_change.nil?
+              last_change = new_change
+            else
+              last_change << new_change
+            end
+          end
         end
+        #popping cursor back up to parent so we don't insert new children as grandchildren!
+        @xml_cursor = @xml_cursor.parent if @xml_cursor.parent.element_children.size > 1
+        last_change
       end
-      @xml_cursor = xml_cursor
     end
 
     #adds leaf content as attribute; element name as key
@@ -136,28 +158,46 @@ module Base_types
     end
 
     #loads sub components of this component from xml
-    def load_child
-      child_name = @xml_cursor.name
-      if @reserved_word_array.include? child_name
-        child_class = Object::const_get(child_name.capitalize)
-        self << child_class.new(@xml_cursor)
-      else
-        self << Component.new(@xml_cursor)
+    def load_sibling
+      unless load_child
+        init_generic_child
       end
+    end
+
+    def load_child
+      if @reserved_word_array.include? @xml_cursor.name
+        init_reserved_child
+        true
+      else
+        false
+      end
+    end
+
+    def init_reserved_child
+      child_class = Object::const_get("Base_types::#{@xml_cursor.name.capitalize}")
+      self << child_class.new(@xml_cursor)
+    end
+
+    def init_generic_child
+      self << Component.new(@xml_cursor)
     end
 
     def load_attributes
       @xml_cursor.attribute_nodes.each do |attr|
-        case attr.name
-          when 'id' || 'name'
+        key = attr.name.to_sym
+        case key
+          when :id || :name
             @id = attr.value
-          when 'visible'
+          when :visible
             @visible << " #{attr.value}"
-          when 'if'
+          when :if
             @if << attr
           else
-            @attributes[attr.name] = attr
+            @attributes[attr.name.to_sym] = attr
         end
+      end
+      if @id.nil?
+        @id = self.object_id.to_s
       end
     end
 
@@ -165,7 +205,7 @@ module Base_types
     def get_parameterized_xml_nodes
       @parameterized_nodes = nil
       resolve_methods = {born: lambda{find_parameterized_nodes}, child: lambda{@xml_cursor = nil}}
-      traverse_xml @xml_root_node, resolve_methods
+      traverse_xml resolve_methods
       @parameterized_nodes
     end
 
@@ -181,13 +221,13 @@ module Base_types
 
     #if a given attribute value is parameterized, add to hash with attribute node itself as key
     def add_if_parameterized attr
-      @parameterized_nodes[condition_node] = condition_node.value if condition_node.value.include? '@('
+      @parameterized_nodes[attr] = attr.value if attr.value.include? '@('
     end
 
 
     def view view_hash
       if reconcile view_hash, @visible
-        @views[view_hash] = @cursor.dup
+        #@views[view_hash] = @cursor.dup
       end
     end
 
@@ -200,7 +240,7 @@ module Base_types
 
     def find_child child
       @children.each do |cur_child|
-        return cur_child if cur_child.element == child
+        return cur_child if cur_child.root_name == child
       end
       @children[child]
     rescue TypeError
@@ -209,18 +249,6 @@ module Base_types
 
     def get_attr_val attr
       @attributes[attr].value
-    end
-
-    def element
-      @xml_root_node.name
-    end
-
-    def inspect
-      children_names = ''
-      @children.each do |child|
-        children_names << "'#{child.element}' "
-      end
-      puts "Component '#{element}' with children: #{children_names}"
     end
 
     #redefining TreeNode::name as Component::id
@@ -244,9 +272,30 @@ module Base_types
       get_attr_val attr
     end
 
+    #extending TreeNode's add child to link up XML if for new node
+    def << child_component
+      d "adding #{child_component.root_name} to #{self.root_name}"
+      if child_component.xml.parent.nil?
+        @xml_cursor << child_component.xml
+        super child_component
+        throw :change, Insert.new(nil, {ref: child_component})
+      end
+      super child_component
+      #popping cursor back up to parent so we don't insert new children as grandchildren!
+      @xml_cursor = @xml_cursor.parent
+    end
+
+    def element name, content = nil
+      new_element = Nokogiri::XML::Element.new name, @xml_cursor.document
+      if content
+        new_element.content = content
+      end
+      new_element
+    end
+
     attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor
 
-    private :load_attributes, :traverse_xml, :load_child, :find_parameterized_nodes, :add_if_parameterized, :reconcile
+    private :element, :load_attributes, :traverse_xml, :load_child, :find_parameterized_nodes, :add_if_parameterized, :reconcile, :generate_new_xml
   end
 
   #template Owners class - contains Owner Hash
@@ -259,8 +308,12 @@ module Base_types
 
   #template Owner class
   class Owner < Component
-    def initialize xml_node
+    def initialize xml_node, args ={}
       super xml_node
+    end
+
+    def generate_new_xml args
+
     end
   end
 
@@ -268,21 +321,59 @@ module Base_types
   #They must have owners and always record sub-component changes
   #Element names reserved by the template's schema rules become constructors for sub-components
   class Template < Component
-    def initialize template_root_node
-      @reserved_word_arrays = %w(owners history design)
-      super template_root_node
+    #points to actual xml document. @xml_root_node points to the root element.
+    @xml_doc
+    #users or processes that created this template
+    @owners
+
+    def initialize template_root_node, args = {}
+      @reserved_word_array = %w(owners history design)
+      #creating new template
+      super template_root_node, args
     end
 
     def history
       find_child 'history'
     end
+
+    def owners
+      find_child 'owners'
+    end
+
+    def generate_new_xml args = {}
+      @xml_doc = Nokogiri::XML::Document.new
+      @xml_doc << @xml_root_node = super
+      @xml_root_node['visible'] = args[:owner].object_id.to_s
+    end
   end
 
   #all templates have histories and objects that have been queried
+  #might need to wrap in module to namespace?
   class History < Component
     def initialize xml_node
       @reserved_word_array = %w(insert remove edit error correction instantiate move undo)
       super xml_node
+    end
+
+    #a special register function is used by the History, instead of the usual add child to avoid adding a history of the history to the history
+    def register change, owner
+      current_change = change
+      while current_change do
+        current_change[:owner] = owner
+        #adding to head so latest changes are on top
+        @xml_cursor.children.first.add_previous_sibling
+        @children.add_child current_change
+        current_change.next!
+      end
+    end
+
+    def generate_descr
+
+    end
+
+    def register_with_owner change
+      d "@parent: #{@parent.inspect}"
+      register change, @parent[:owner]
     end
 
     def size
@@ -293,31 +384,74 @@ module Base_types
       @children_hash
     end
 
-    def get_changes arg
+    def get_changes
       #handle cases for searches by: date, date range, owner, type, target,
     end
+
+    private :register
   end
 
   #individual change; not to be used, only for subclassing
   class Change < Component
-    def initialize xml_node
+    def initialize xml_node, args = {}
       super xml_node
     end
+
+    def generate_new_xml args
+      super
+      @previous = args[:previous]
+      @next = nil
+      @xml_cursor['previous'] = @previous.id
+      @ref = args[:ref]
+      @xml_cursor['ref'] = @ref.id
+      @timestamp = Time.now
+      @xml_cursor.element 'date', @timestamp.to_s
+      #description will be generated or input later and only when triggered
+      @xml_cursor.element 'description'
+    end
+
+    def generate_descr
+      @description = " at #{@timestamp}."
+    end
+
+    def << component
+      if component.is_a? Change
+        @next = component
+        component.previous = self
+        component
+      else
+        super component
+      end
+    end
+
+    def previous= ref
+      @previous ||= ref
+    end
+
+    private :generate_descr
+
+    attr_reader :next, :ref, :timestamp, :description
   end
 
   #Component instantiated; holds pointers to Edits to parameter values if redefined for this instance
   #holds pointer to antecedent; generates fresh ID for instance; adds as new child to template
   class Instantiate < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+
+    def generate_new_xml
     end
   end
 
   #error found during build inspection process (syntax errors) or during general inspection - saved to file if uncorrected on commit
   #points to rule violated and/or syntax marker and previous error in exception stack
   class Error < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+
+    def generate_new_xml
     end
   end
 
@@ -325,31 +459,48 @@ module Base_types
   #also points to change object that precipitated this one
   #(could be another correction or other change-type other than Error or Instantiate)
   class Correction < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+
+    def generate_new_xml
     end
   end
 
   #removal of node can occur when building design from de-instantiation (@if == false)
   #when inspecting from a given perspective, or from user input when editing
   class Remove < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+
+    def generate_new_xml
     end
   end
 
   #insertion of node can occur when building design from instantiation
   #after inspector reports changes (when historian inserts changes into history)
   #and from user input when editing
+  #the initialization strings really should be loaded from the RelaxNG. LATER!!!
   class Insert < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
     end
+
+    #because owner is not known until insert is registered with history, this method is kept private
+    def generate_descr
+      self[:description] = "#{self[:owner].to_s} added #{@ref.root_name} (#{@ref.id}) to #{@ref.parent.root_name} (#{@ref.id})" + self[:description]
+    end
+
+    private :generate_descr
   end
 
   class Move < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+
+    def generate_new_xml
     end
   end
 
@@ -369,18 +520,21 @@ module Base_types
     @next
 
 
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
     end
 
-    def old_content
 
+    def generate_new_xml
     end
   end
 
   class Undo < Change
-    def initialize xml_node
-      super xml_node
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+
+    def generate_new_xml
     end
   end
 
@@ -390,29 +544,29 @@ module Base_types
   #wrapper is removed after build; aliases
   class Instance < Component
     #instances can expect reserved component element names AND parameter assignment hash
-    def initialize xml_node
+    def initialize xml_node, args = {}
       @reserved_word_array = %w(parameters array instance)
       super xml_node
     end
 
-    def get_param_hash
+    def get_params
       parameters = find_child'parameters'
       if parameters
-        parameters.children_hash
+        parameters
       else
         {}
       end
     end
 
     def get_param_val arg
-      get_parameter_hash[arg].value
+      get_param_hash[arg].value
     end
   end
 
   #links function as aliases of a given Component; essentially they are the same object but in target location and location of Link object
   #actually implemented by redirecting pointers to target; Link Components must never have children!! any children added will be added to target!!
   class Link < Component
-    def initialize xml_node
+    def initialize xml_node, args = {}
       @reserved_word_array = []
       super xml_node
     end
@@ -425,14 +579,14 @@ module Base_types
   #part of the template file that actually contains the design or content
   #specifies logics allowed within itself
   class Design < Instance
-    def initialize xml_node
+    def initialize xml_node, args = {}
       super xml_node
     end
   end
 
   #basic means of creating patterned clones of a component; can contain a design or instances
   class Array < Instance
-    def initialize xml_node
+    def initialize xml_node, args = {}
       super xml_node
     end
 
@@ -444,20 +598,37 @@ module Base_types
   #container for multiple parameters
   class Parameters < Component
     @reserved_word_array = 'parameter'
-    def initialize xml_node
+    def initialize xml_node, args = {}
       super xml_node
+    end
+
+    def update params
+      last_change = nil
+      @children_hash.merge params.children_hash do |key, old_val, new_val|
+         @children_hash[key] = new_val
+        last_change << (catch :edit)
+      end
+      collect_changes last_change
     end
   end
 
   #specialization of Component holds parameter name, value and description
   #also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
-    def initialize xml_node
+    def initialize xml_node, args = {}
       super xml_node
     end
 
     def value
       self['value']
+    end
+
+    #parameter value assignments must be recorded
+    def value= val
+      if val != self[:value]
+        value = val
+        throw :edit, Edit.new(nil, self)
+      end
     end
   end
 end

@@ -5,8 +5,8 @@ module Builder
   include Base_types
   #points to the component the builder is currently working on
   @cursor
-  #holds parameters and their values
-  @parameter_hash
+  #holds parameters and their values as a smart hash
+  @parameters
   #operator hash
   #@operator_hash
   #current template file - holds run-time history
@@ -136,33 +136,26 @@ module Builder
 
   #basic function of builder - takes a given Component, creates a clone object, then builds that out according it its parameters
   def build reference_node
-    @parameter_hash = Hash.new
+    @parameters = Parameters.new nil
     @cursor = reference_node.dup
-    case
-      when @cursor.is_a? Template
-        @current_template = @cursor
-        @cursor.add_build @current_template
-        @cursor = @current_template.children[-1]
-      #need to create wrapper template for build instance to record run-time histories; wrapper will be ignored when adding this instance as @build
-      when @cursor.is_a? Instance
-        @parameter_hash.merge! @cursor.get_param_hash do |key, old_val, new_val|
-          @parameter_hash[key]['value'] = new_val
-          register :Edit, {ref: @parameter_hash[key], old: old_val, new: new_val}
-        end
+    unless @cursor.is_a? Template
+      #creating new template to wrap around the wrapped component and track run time changes; owner is Builder
+      @current_template = Template.new nil, {owner: self, wrapped: @cursor}
     end
-  end
-
-  def register change, args = {}
-    history = @current_template.history
-    parent_xml_node = history.xml_cursor
-    change_class = Module.const_get change
-    history << change_class.new(parent_xml_node, args)
+    @current_template = @cursor
+    grow @cursor
+    reference_node.add_build @current_template
+    @cursor = @current_template.children[-1]
   end
 
   #recursive method that traverses down system design, pruning and instantiating
   def grow current_node
-    #each node gets put through the loop and emerges as more concrete version of itself
-    current_node = instantiate parameterize current_node
+    if current_node.is_a? Instance
+      @parameters.update @cursor.get_params
+    end
+
+    #each node gets parameterized and instantiated or deinstantiated
+    current_node = parameterize current_node
     if current_node.children
       current_node.children.each do |child|
         grow child
@@ -171,5 +164,5 @@ module Builder
     current_node
   end
 
-  private :register, :grow
+  private :grow
 end
