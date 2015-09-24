@@ -4,7 +4,11 @@ module Debug
   def d str = ''
     context = caller[0]
     context[/.*\//] = ''
-    location = root_name || self.class.to_s
+    begin
+    location = root_name
+    rescue NoMethodError
+    location = self.class.to_s
+    end
     STDERR.puts "#{context}: #{location} => #{str}"
   end
 end

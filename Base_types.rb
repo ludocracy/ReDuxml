@@ -67,7 +67,7 @@ module Base_types
       cur = self.parent
       while cur
         if cur.is_a? Template
-          cur.history.register change
+          cur.history.register_with_owner change
         end
         cur = cur.parent
       end
@@ -88,10 +88,10 @@ module Base_types
 
     #creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args = {}
-      @xml_cursor = xml_node
-      if @xml_cursor.nil?
+      unless xml_node.is_a? Nokogiri::XML::Element
         generate_new_xml args
       end
+      @xml_cursor = xml_node
       @xml_root_node = @xml_cursor
       @views = Hash.new
       @builds = Hash.new
@@ -103,86 +103,78 @@ module Base_types
 
       #must happen before traverse to have @children/@children_hash available
       super(self.object_id.to_s, @xml_root_node)
-
-      #loading methods because traverse is used by many different processes
-      loading_methods = {born: lambda{load_attributes}, child: lambda{load_sibling}, grow: lambda{load_child}, died: lambda{load_leaf_content}}
       #traverse and load Component from xml
-      collect_changes traverse_xml loading_methods
+      collect_changes traverse_xml load_methods %w(load_attributes init_reserved chase_tail init_generic)
+    end
+
+    def load_methods method_names
+      method_hash = {}
+      index = 0
+      %w(top reserved traverse child).each do |key|
+        method_name = method_names[index]
+        if method_name
+          our_method = method(method_names[index].to_sym)
+        else
+          our_method = method(:do_nothing)
+        end
+        method_hash[key.to_sym] = our_method
+        index += 1
+      end
+      method_hash
+    end
+
+    def do_nothing arg = nil
+      #this is silly
     end
 
     def generate_new_xml args = {}
-      @xml_cursor.element self.class.to_s, args[:content]
+      element_name = self.class.to_s.downcase!
+      element_name[/.*(?:(::))/] = ''
+      @xml_root_node = @xml_cursor = element element_name, args[:content]
     end
 
     def generate_descr
 
     end
 
-    #recurses from a given xml element; give it various tasks using method hash
     def traverse_xml method_hash
-      d if @xml_cursor.name == 'version'
-      d if @xml_cursor.name == "description"
-      method_hash[:born].call
-      if @xml_cursor.element_children.size == 0
-        method_hash[:died].call
-      end
-      if @xml_cursor.element_children.size == 1
-        @xml_cursor = @xml_cursor.element_children[0]
-        method_hash[:grow].call
-        traverse_xml method_hash
-      else
-        last_change = nil
-        @xml_cursor.element_children.each do |child_xml_node|
-          @xml_cursor = child_xml_node
-          new_change = catch :change do
-            method_hash[:child].call
-          end
-          if new_change
-            d "how did we get here??"
-            if last_change.nil?
-              last_change = new_change
-            else
-              last_change << new_change
-            end
+      method_hash[:top].call
+      @xml_cursor.element_children.each do |child|
+        if @reserved_word_array.include? child.name
+          method_hash[:reserved].call child
+        else
+          if @xml_cursor.element_children.size == 1
+            method_hash[:traverse].call child
+          else
+            method_hash[:child].call child
           end
         end
-        #popping cursor back up to parent so we don't insert new children as grandchildren!
-        @xml_cursor = @xml_cursor.parent if @xml_cursor.parent.element_children.size > 1
-        last_change
       end
+    end
+
+    #called by method hash when traversing down a Component's trailing XML descendants; its 'tail'
+    def chase_tail child
+      @xml_cursor = child
     end
 
     #adds leaf content as attribute; element name as key
-    def load_leaf_content
-      @attributes[@xml_cursor.name] = @xml_cursor.content
+    def load_content_if_leaf
+      @attributes[@xml_cursor.name] = @xml_cursor.content if @xml_cursor.element_children.size == 0
     end
 
-    #loads sub components of this component from xml
-    def load_sibling
-      unless load_child
-        init_generic_child
-      end
+    #child has a ruby class of its own
+    def init_reserved child
+      child_class = Object::const_get("Base_types::#{child.name.capitalize}")
+      self << child_class.new(child)
     end
 
-    def load_child
-      if @reserved_word_array.include? @xml_cursor.name
-        init_reserved_child
-        true
-      else
-        false
-      end
-    end
-
-    def init_reserved_child
-      child_class = Object::const_get("Base_types::#{@xml_cursor.name.capitalize}")
-      self << child_class.new(@xml_cursor)
-    end
-
-    def init_generic_child
-      self << Component.new(@xml_cursor)
+    #child is just XML - wrap it
+    def init_generic child
+      self << Component.new(child)
     end
 
     def load_attributes
+      load_content_if_leaf
       @xml_cursor.attribute_nodes.each do |attr|
         key = attr.name.to_sym
         case key
@@ -203,9 +195,8 @@ module Base_types
 
     #traverses this Component's xml (and not children's) for parameterized content nodes
     def get_parameterized_xml_nodes
-      @parameterized_nodes = nil
-      resolve_methods = {born: lambda{find_parameterized_nodes}, child: lambda{@xml_cursor = nil}}
-      traverse_xml resolve_methods
+      @parameterized_nodes = {}
+      traverse_xml load_methods ['find_parameterized_nodes', nil, 'chase_tail', nil]
       @parameterized_nodes
     end
 
@@ -214,14 +205,19 @@ module Base_types
       @if.each do |condition_node|
         add_if_parameterized condition_node
       end
-      @attributes.values.each do |attr|
+      @attributes.each do |attr|
         add_if_parameterized attr
       end
     end
 
     #if a given attribute value is parameterized, add to hash with attribute node itself as key
     def add_if_parameterized attr
-      @parameterized_nodes[attr] = attr.value if attr.value.include? '@('
+      if attr.is_a? Nokogiri::XML::Attr
+        value = attr.value
+      else
+         value = attr[1]
+      end
+      @parameterized_nodes[attr] = value if value.include? '@('
     end
 
 
@@ -273,20 +269,18 @@ module Base_types
     end
 
     #extending TreeNode's add child to link up XML if for new node
-    def << child_component
-      d "adding #{child_component.root_name} to #{self.root_name}"
-      if child_component.xml.parent.nil?
-        @xml_cursor << child_component.xml
-        super child_component
-        throw :change, Insert.new(nil, {ref: child_component})
+    def << component_child
+      if component_child.xml.parent.nil?
+        @xml_cursor << component_child.xml
+        super component_child
+        throw :change, Insert.new(nil, {ref: component_child})
       end
-      super child_component
-      #popping cursor back up to parent so we don't insert new children as grandchildren!
-      @xml_cursor = @xml_cursor.parent
+      super component_child
     end
 
     def element name, content = nil
-      new_element = Nokogiri::XML::Element.new name, @xml_cursor.document
+      doc = @xml_doc || @xml_root_node.document
+      new_element = Nokogiri::XML::Element.new name, doc
       if content
         new_element.content = content
       end
@@ -295,7 +289,7 @@ module Base_types
 
     attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor
 
-    private :element, :load_attributes, :traverse_xml, :load_child, :find_parameterized_nodes, :add_if_parameterized, :reconcile, :generate_new_xml
+    private :element, :load_attributes, :init_reserved, :init_generic, :chase_tail, :traverse_xml, :find_parameterized_nodes, :add_if_parameterized, :reconcile, :generate_new_xml, :load_content_if_leaf, :collect_changes, :load_methods
   end
 
   #template Owners class - contains Owner Hash
@@ -313,7 +307,7 @@ module Base_types
     end
 
     def generate_new_xml args
-
+      @xml_cursor
     end
   end
 
@@ -336,13 +330,18 @@ module Base_types
       find_child 'history'
     end
 
+    def design
+      find_child 'design'
+    end
+
     def owners
       find_child 'owners'
     end
 
     def generate_new_xml args = {}
       @xml_doc = Nokogiri::XML::Document.new
-      @xml_doc << @xml_root_node = super
+      super
+      @xml_doc << @xml_cursor
       @xml_root_node['visible'] = args[:owner].object_id.to_s
     end
   end
@@ -372,8 +371,7 @@ module Base_types
     end
 
     def register_with_owner change
-      d "@parent: #{@parent.inspect}"
-      register change, @parent[:owner]
+      register change, @parent.owners
     end
 
     def size
@@ -414,7 +412,7 @@ module Base_types
       @description = " at #{@timestamp}."
     end
 
-    def << component
+    def push component
       if component.is_a? Change
         @next = component
         component.previous = self
@@ -553,8 +551,6 @@ module Base_types
       parameters = find_child'parameters'
       if parameters
         parameters
-      else
-        {}
       end
     end
 
@@ -602,13 +598,19 @@ module Base_types
       super xml_node
     end
 
+    alias_method :parameter_hash, :children_hash
+
+    attr_reader :children_hash
+
     def update params
-      last_change = nil
-      @children_hash.merge params.children_hash do |key, old_val, new_val|
-         @children_hash[key] = new_val
-        last_change << (catch :edit)
+      if params
+        last_change = nil
+        @children_hash.merge params.parameter_hash do |key, old_val, new_val|
+           @children_hash[key] = new_val
+          last_change.push (catch :edit)
+        end
+        collect_changes last_change
       end
-      collect_changes last_change
     end
   end
 

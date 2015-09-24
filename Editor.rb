@@ -2,6 +2,7 @@
 module Editor
   require_relative 'Base_types'
   include Base_types
+  #points to current Component
   @cursor
 
   def respond input
@@ -10,7 +11,8 @@ module Editor
         puts "help check root child parent load quit"
       when 'quit'
         STDERR.puts "quitting"
-        @cursor = nil
+        @cursor =
+        quit
       when 'check'
         puts @cursor.summarize
       when 'root'
@@ -21,7 +23,7 @@ module Editor
       when 'parent'
         @cursor = @cursor.parent
       when 'build'
-        @cursor.build args
+        @cursor.build
       else
         d "unknown command '#{input[0]}'"
     end

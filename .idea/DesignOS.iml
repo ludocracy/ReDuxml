@@ -39,11 +39,9 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="ruby-2.1.5-p273 (2)" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="json (v1.8.1, ruby-2.1.5-p273 (2)) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mini_portile (v0.6.2, ruby-2.1.5-p273 (2)) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.6.4.1, ruby-2.1.5-p273 (2)) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubytree (v0.9.6, ruby-2.1.5-p273 (2)) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="structured_warnings (v0.2.0, ruby-2.1.5-p273 (2)) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="symbolic (v0.3.8, ruby-2.1.5-p273 (2)) [gem]" level="application" />
   </component>
 </module>

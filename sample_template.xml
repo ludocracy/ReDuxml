@@ -37,7 +37,8 @@
         <array size="4" id="array_id">
             <!-- example of where you could add design data -->
             <instance id="thisid" ref="targetid"/>
-            <p>@(iterator + 1)</p>
+            <iterator_test>@(iterator + 1) is an iterator expression</iterator_test>
+            <p_test>@(param0) is a design param expression</p_test>
         </array>
     </design>
 </template>
