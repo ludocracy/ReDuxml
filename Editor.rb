@@ -4,6 +4,10 @@ module Editor
   include Base_types
   #points to current Component
   @cursor
+  #**************use these!!!!****************
+  #ENV['USER']  on Unix
+  #ENV['USERNAME'] on Windows
+
 
   def respond input
     case input[0]

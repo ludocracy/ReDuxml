@@ -1,57 +1,72 @@
+module Test
+  begin
+  relatives = %w(dentaku/lib/dentaku)
+  requires = %w()
+  includes = %w(Dentaku)
+  requires.each do |required|
+    STDERR.puts "requiring #{required}"
+    require required
+  end
+  relatives.each do |relative|
+    STDERR.puts "requiring #{relative}"
+    require_relative relative
+  end
+  includes.each do |included|
+    STDERR.puts "including #{included}"
+    include Module.const_get(included)
+  end
+   end#includes, requires, etc
+  #***********START**************
+
+  def self.start
+    cleared = 13
+    regression_tests = {}
+    dev_tests = {}
+    test_hash=[
+        "var" => "var",
+        "2+2" =>  "4",
+        "var+2" =>  "var+2",
+        "2+var" =>  "2+var",
+        "4-2+var" =>  "2+var",
+        "var+4-2" =>  "var+2",
+        "var+var" =>  "var+var",
+        "var*var" =>  "var*var",
+        "var*2-1" =>  "var*2-1",
+        "var-2*1" =>  "var-2",
+        "2-1*var" =>  "2-1*var",
+        #************************************************HIGH SCORE LINE******************************************************
+        "var-2+var" =>  "var-2+var",
+        "var-2*var" =>  "var-2*var",
+        "var-2+4+var" =>  "var+2+var",
+        "var-2*4*var" =>  "var-8*var",
+        "var/2*4+var" =>  "var*2+var",
+        "1+var/2*4+var" =>  "1+var*2+var"
+    ][0].each_with_index do |test, index|
+      if index < cleared then regression_tests[test[0]] = test[1]
+      else dev_tests[test[0]] = test[1]
+      end
+    end
+
+    (dev_tests.merge regression_tests).each_with_index do |(key, value), index|
+      result = Dentaku.evaluate(key, {}).to_s
+      test_type = index < (test_hash.size-cleared) ? 'dev' : 'regression'
+      STDERR.puts "  passed #{test_type} test: '#{key}'; answer is '#{value}'" if value == result
+      STDERR.puts "\nFAILED #{test_type} test: '#{key}'; '#{result}' was incorrect; answer is '#{value}'" unless value == result
+    end
+  end
+end
+
+Test.start
+
+
+#test_str = ("10 / 5 - var0**(2-4+7*x) >= 3 && !(var1 ? true : false || var2 != false)")
+
+"#{
 def test
-  require_relative 'Editor'
-  require_relative 'Builder'
-  include Editor
-  include Builder
   filename = 'sample_template.xml'
   file = File.open filename
   xml_doc = Nokogiri::XML file
   Editor.load xml_doc.root
   STDERR.puts "saving"
   File.write('output_' + filename, xml_doc.to_xml)
-end
-
-class Base
-  def initialize
-    @reserved = Array.new if @reserved.nil?
-    @reserved << 'base'
-  end
-end
-
-class Sub < Base
-  def initialize
-    @reserved = Array.new if @reserved.nil?
-    @reserved << 'sub'
-    super
-  end
-end
-#copied below off internets - lets you do booleans with non-booleans
-class String
-  def to_bool
-    return true if self == true || self =~ (/^(true|t|yes|y|1)$/i)
-    return false if self == false || self.blank? || self =~ (/^(false|f|no|n|0)$/i)
-    raise ArgumentError.new("invalid value for Boolean: \"#{self}\"")
-  end
-end
-
-class Fixnum
-  def to_bool
-    return true if self == 1
-    return false if self == 0
-    raise ArgumentError.new("invalid value for Boolean: \"#{self}\"")
-  end
-end
-
-class TrueClass
-  def to_i; 1; end
-  def to_bool; self; end
-end
-
-class FalseClass
-  def to_i; 0; end
-  def to_bool; self; end
-end
-
-class NilClass
-  def to_bool; false; end
-end
+end}"

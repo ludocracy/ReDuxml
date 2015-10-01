@@ -25,6 +25,7 @@ module Builder
     end
     @current_template = @cursor
     @parameters = @current_template.design.get_params
+    @logics = @current_template.design.logics
     grow @cursor
     @builds[@current_template.object_id] = @current_template
     @cursor = @current_template.children[-1]
@@ -34,6 +35,7 @@ module Builder
   def grow current_node
     @cursor = current_node
     @parameters.update @cursor.get_params if current_node.is_a? Instance
+    @logics.update @cursor.get_logics if current_node.is_a? Design
 
     #each node gets parameterized and instantiated or deinstantiated
     #parameterize should return the same node if unchanged; if changed return clone with parental preference for build clones and same children as reference

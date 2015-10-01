@@ -1,25 +1,27 @@
 module Resolver
   require_relative 'symbolic_modified/symbolic'
+  require_relative 'debug'
   include Symbolic
+  include Debug
 
-  def get_logics current_node
+  def operators current_node
+    operators = {}
     if current_node.is_a? Design
-      current_node[:logics]
+      logics = current_node[:logics]
     else
-      default_logics
+      logics = default_logics
     end
+    logics.each do |logic|
+      operators[] = @logics[logic]
   end
 
   def default_logics
-    operators = []
-    [:string, :boolean, :arithmetic].each do |logic|
-      operators << @logic_hash[logic]
-    end
-    operators
+    [:string, :boolean, :arithmetic]
   end
 
+  #this is assuming we've been passed
   def parameterize current_node, param_hash
-    @logic_hash = get_logics current_node
+    @logic_hash = operators current_node
     reference_node = current_node
     current_node = reference_node.clone
     changed = false
@@ -125,6 +127,7 @@ module Resolver
       #declare as instance variable of type Symbolic::Variable
       instance_variable_set(instance_var_name, Variable.new(:name => variable))
     end
+    d "about to evaluate #{macro_string}"
     #evaluate expression and return
     result_str = (eval macro_string).to_s
     #check for parameters that were cancelled out and add to array
@@ -139,5 +142,5 @@ module Resolver
     return result_str, cancelled_parameters
   end
 
-  private :parameterize, :find_close_parens_index, :find_expr
+  private :parameterize, :find_close_parens_index, :find_expr, :default_logics
 end

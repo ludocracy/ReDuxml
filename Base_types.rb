@@ -547,14 +547,14 @@ module Base_types
       super xml_node
     end
 
-    def get_params
+    def params
       parameters = find_child'parameters'
       if parameters
         parameters
       end
     end
 
-    def get_param_val arg
+    def param_val arg
       get_param_hash[arg].value
     end
   end
@@ -575,6 +575,9 @@ module Base_types
   #part of the template file that actually contains the design or content
   #specifies logics allowed within itself
   class Design < Instance
+    def logics
+      get_attr_val 'logics'
+    end
     def initialize xml_node, args = {}
       super xml_node
     end
@@ -617,6 +620,24 @@ module Base_types
   #specialization of Component holds parameter name, value and description
   #also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
+    def initialize xml_node, args = {}
+      super xml_node
+    end
+
+    def value
+      self['value']
+    end
+
+    #parameter value assignments must be recorded
+    def value= val
+      if val != self[:value]
+        value = val
+        throw :edit, Edit.new(nil, self)
+      end
+    end
+  end
+
+  class Logic < Component
     def initialize xml_node, args = {}
       super xml_node
     end
