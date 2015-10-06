@@ -19,39 +19,58 @@ module Test
   #***********START**************
 
   def self.start
-    cleared = 13
+    cleared = 5
     regression_tests = {}
     dev_tests = {}
+    test_hash0=[
+    ]
+
     test_hash=[
         "var" => "var",
         "2+2" =>  "4",
+        "2*2" =>  "4",
         "var+2" =>  "var+2",
+        "var*2" =>  "var*2",
+        "var/2" =>  "var/2",
         "2+var" =>  "2+var",
+        "2*var" =>  "2*var",
+        "2/var" =>  "2/var",
         "4-2+var" =>  "2+var",
         "var+4-2" =>  "var+2",
         "var+var" =>  "var+var",
         "var*var" =>  "var*var",
+        "var/var" =>  "var/var",
         "var*2-1" =>  "var*2-1",
-        "var-2*1" =>  "var-2",
+        "var-2*1" =>  "var+-2",
         "2-1*var" =>  "2-1*var",
-        #************************************************HIGH SCORE LINE******************************************************
-        "var-2+var" =>  "var-2+var",
-        "var-2*var" =>  "var-2*var",
+        "2-1/var" => "2-1/var",
+        "var*2/1" =>  "var*2",
+        "var/2-1" =>  "var/2-1",
+        "2/1*var" =>  "2*var",
+        "2/1-var" => "2-var",
+        "var/2*4" => "var*2", #****************breaking from here
+        "var*4/2" => "var*2",
+        "var-2+var" =>  "var+-2+var",
+        "var-2*var" =>  "var+-2*var",
+        "var*2-var" =>  "var*2-var",
+        "var/2+var" => "var/2+var",
         "var-2+4+var" =>  "var+2+var",
-        "var-2*4*var" =>  "var-8*var",
+        "var-2*4*var" =>  "var+-8*var",
+        #************************************************HIGH SCORE LINE******************************************************
         "var/2*4+var" =>  "var*2+var",
         "1+var/2*4+var" =>  "1+var*2+var"
-    ][0].each_with_index do |test, index|
+    ]
+    test_hash[0].each_with_index do |test, index|
       if index < cleared then regression_tests[test[0]] = test[1]
       else dev_tests[test[0]] = test[1]
       end
     end
-
-    (dev_tests.merge regression_tests).each_with_index do |(key, value), index|
+    tests = (regression_tests.any? ? dev_tests.merge(regression_tests) : dev_tests)
+    tests.each_with_index do |(key, value), index|
       result = Dentaku.evaluate(key, {}).to_s
-      test_type = index < (test_hash.size-cleared) ? 'dev' : 'regression'
-      STDERR.puts "  passed #{test_type} test: '#{key}'; answer is '#{value}'" if value == result
-      STDERR.puts "\nFAILED #{test_type} test: '#{key}'; '#{result}' was incorrect; answer is '#{value}'" unless value == result
+      test_type = index < (tests.size-cleared) ? 'dev' : 'regression'
+      STDERR.puts "  passed #{test_type} test #{index+1}: '#{key}'; answer is '#{value}'" if value == result
+      STDERR.puts "\nFAILED #{test_type} test #{index+1}: '#{key}'; '#{result}' was incorrect; answer is '#{value}'" unless value == result
     end
   end
 end

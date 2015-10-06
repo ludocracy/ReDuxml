@@ -6,12 +6,10 @@
 /DesignOS/
 #output files
 output*
-scratchpad.rb
 #trashed dirs
 /extensions/
 /koi-reference-parser*
 /parser*
-/symbolic*
 /dentaku/spec*
 
 
