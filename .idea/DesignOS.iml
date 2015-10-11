@@ -50,6 +50,32 @@
       <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
       <method />
     </configuration>
+    <configuration default="false" name="Run test 'parser_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
+      <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
+      <module name="DesignOS" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+      <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/parser_test.rb" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
+      <method />
+    </configuration>
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
@@ -59,16 +85,12 @@
     </content>
     <orderEntry type="jdk" jdkName="ruby-2.2.2-p95" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.10.6, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.5, ruby-2.2.2-p95) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dentaku (v2.0.4, ruby-2.2.2-p95) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v1.8.1, ruby-2.2.2-p95) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mini_portile (v0.6.2, ruby-2.2.2-p95) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.6.5, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rake (v10.4.2, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec (v3.3.0, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.3.2, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.3.1, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.3.2, ruby-2.2.2-p95) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.3.0, ruby-2.2.2-p95) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="power_assert (v0.2.2, ruby-2.2.2-p95) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="symbolic (v0.3.8, ruby-2.2.2-p95) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="test-unit (v3.0.8, ruby-2.2.2-p95) [gem]" level="application" />
   </component>
 </module>
