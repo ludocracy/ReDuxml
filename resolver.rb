@@ -10,12 +10,18 @@ module Dentaku
     #input scrubbing done here
     safe_expression = expression.dup
     #neat trick here - we're substituting the scalar negate for boolean negate because we overrode them to be one method
-    banned = {'&&' => ' and ', '||' => ' or ', '!' => ' not '}
+    banned = {'&&' => ' and ', '||' => ' or ', /(!)(?=\w|!)/ => 'not '}
     banned.each do |key, val| safe_expression.gsub!(key, val) end
     reply = calculator.evaluate(safe_expression, data).to_s
     banned.each do |key, val|
-      ws = key == '!'? '' : ' '
-      reply = reply.gsub!(val[1..-1],key+ws) if reply.include?(val[1..-1])
+      if key == /(!)(?=\w|!)/
+        replacement = "!"
+        sub_str = val
+      else
+        replacement = key+' '
+        sub_str = val[1..-1]
+      end
+      reply = reply.gsub!(sub_str, replacement) if reply.include?(sub_str)
     end
     return reply.to_s if reply.respond_to?(:to_s)
   end
@@ -39,7 +45,7 @@ module Dentaku
           ne:       AST::NotEqual,
           eq:       AST::Equal,
 
-          not:      AST::Not,
+          not:      AST::Not_,
           and:      AST::And,
           or:       AST::Or,
       }.fetch(token.value)
@@ -57,7 +63,7 @@ module Dentaku
   end
 
   module AST
-  #redef cast to prefer rationals
+    #redef cast to prefer rationals
     class Arithmetic < Operation
       private
       #we prefer rationals
@@ -66,57 +72,6 @@ module Dentaku
         v = Rational(value)
         v = v.to_i if prefer_integer && v.to_i == v
         v
-      end
-    end
-    class Comparator < Operation
-      include Symbolic
-    end
-
-    class LessThan < Comparator
-      def value(context={})
-        left.value(context) < right.value(context)
-      end
-    end
-
-    class LessThanOrEqual < Comparator
-      def value(context={})
-        left.value(context) <= right.value(context)
-      end
-    end
-
-    class GreaterThan < Comparator
-      def value(context={})
-        left.value(context) > right.value(context)
-      end
-    end
-
-    class GreaterThanOrEqual < Comparator
-      def value(context={})
-        left.value(context) >= right.value(context)
-      end
-    end
-
-    class NotEqual < Comparator
-      def value(context={})
-        left.value(context) != right.value(context)
-      end
-    end
-
-    class Equal < Comparator
-      def value(context={})
-        left.value(context) == right.value(context)
-      end
-    end
-
-    def <=> arg
-      op = caller[0]
-      op = op[/(?!`)\w*(?=')/].to_sym
-
-      case op
-        when :==, :<=, :>=
-          case
-            when arg.respond_to?
-          end
       end
     end
 
@@ -130,7 +85,7 @@ module Dentaku
             v.value(context)
           when NilClass
             #this is where we involve Symbolic to replace Identifier with Variable
-            Symbolic::Variable.new :name => identifier
+            Symbolic::Variable.new(:name => identifier)
           else
             v
         end
@@ -138,7 +93,7 @@ module Dentaku
     end
 
     #adding Not Combinator; quite a few overrides because it only has one argument unlike its parent
-    class Not < Combinator
+    class Not_ < Combinator
       attr_reader :node
       def initialize node
         @node = node

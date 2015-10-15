@@ -1,19 +1,7 @@
 require 'symbolic'
 module Symbolic
-  #boolean and/or, etc.
-
-  def <=> arg
-    op = caller[0]
-    op = op[/(?!`)\w*(?=')/]
-
-    case
-      when self == arg then 0
-      when self.value
-      else
-    end
-  end
-
   class Variable
+    include Comparable
     #this may not be true, but for simplification purposes we must assume it is
     def zero?
       false
@@ -45,7 +33,8 @@ module Symbolic
 
       def and *vars
         @identity = AND_IDENTITY
-        simplify *vars
+        result = simplify *vars
+        result
       end
 
       def or *vars
@@ -56,19 +45,19 @@ module Symbolic
       #canceling out terms - boolean expressions should always reduce to a single variable or boolean term
       def simplify *vars
         s = caller[0]
-        @operator = s[/(?!`)\w*(?=')/]
+        @operator = s[/(?!`)\S*(?=')/]
         s.clear
         l,r,i,ni = vars[0].to_s, vars[1].to_s, identity.to_s, (!identity).to_s
         nl = Combinands.not(l)
         b = (nl == r)
         sleep 0
         case r
-          when i, l then l
+          when i, l then vars[0]
           when ni, nl then ni
           else
             case l
-              when i then r
-              when ni then l
+              when i then vars[1]
+              when ni then vars[0]
               else "#{l} #{operator} #{r}"
             end
         end
