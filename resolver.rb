@@ -1,241 +1,182 @@
-require 'symbolic'
-require 'dentaku/parser'
-require 'dentaku/calculator'
+require_relative 'symbolic_wrapper'
+require 'dentaku'
+require 'dentaku/token'
 require 'dentaku/ast/identifier'
+require 'dentaku/ast/operation'
 
-module Symbolic
-  include Comparable
-  #need to add support for boolean parameter operations!
-  def <=> arg
-    operator = caller[0]
-    if self.is_a?(Symbolic::Variable) || arg.is_a?(Symbolic::Variable)
-      0 if self.value == arg.value
-      Variable.new(name: self.value+operator+arg.value)
-    else
-      self.value <=> arg.value
+module Dentaku
+  #overriding evaluate to do some rewriting (we can separate this later)
+  def self.evaluate(expression, data={})
+    #input scrubbing done here
+    safe_expression = expression.dup
+    #neat trick here - we're substituting the scalar negate for boolean negate because we overrode them to be one method
+    banned = {'&&' => ' and ', '||' => ' or ', '!' => ' not '}
+    banned.each do |key, val| safe_expression.gsub!(key, val) end
+    reply = calculator.evaluate(safe_expression, data).to_s
+    banned.each do |key, val|
+      ws = key == '!'? '' : ' '
+      reply = reply.gsub!(val[1..-1],key+ws) if reply.include?(val[1..-1])
     end
-  end
-end
-
-module Resolver_wrapper
-  include Dentaku
-  include AST
-
-  #have to redefine whole class to override the one method below
-  class AST::Arithmetic < Operation
-    def initialize(*)
-      super
-    end
-
-    def type
-      :numeric
-    end
-
-    def value(context={})
-      l = cast(left.value(context))
-      r = cast(right.value(context))
-      l.public_send(operator, r)
-    end
-
-    private
-
-    def cast(value, prefer_integer=true)
-      return value unless value.respond_to?(:to_i)
-      v = Rational(value)
-      v = v.to_i if prefer_integer && v.to_i == v
-      v
-    end
+    return reply.to_s if reply.respond_to?(:to_s)
   end
 
-  class AST::And < Combinator
-    def value(context={})
-      case
-        when left.value === false, right.value === false then false
-        when left.is_a?(Parameter), right.value(context) === true then left.value
-        when right.is_a?(Parameter), left.value(context) === true then right.value
-        else left.value(context) && right.value(context)
+  #adding boolean '!'
+  class Parser
+    def operation(token)
+      {
+          add:      AST::Addition,
+          subtract: AST::Subtraction,
+          multiply: AST::Multiplication,
+          divide:   AST::Division,
+          pow:      AST::Exponentiation,
+          negate:   AST::Negation,
+          mod:      AST::Modulo,
+
+          lt:       AST::LessThan,
+          gt:       AST::GreaterThan,
+          le:       AST::LessThanOrEqual,
+          ge:       AST::GreaterThanOrEqual,
+          ne:       AST::NotEqual,
+          eq:       AST::Equal,
+
+          not:      AST::Not,
+          and:      AST::And,
+          or:       AST::Or,
+      }.fetch(token.value)
+    end
+  end
+
+  #adding new combinator '!'
+  class TokenScanner
+    class << self
+      def combinator
+        #added not
+        new(:combinator, '(and|or|not)\b', lambda { |raw| raw.strip.downcase.to_sym })
       end
     end
   end
 
-  class AST::Or < Combinator
-    def value(context={})
-      case
-        when left.value === true, right.value === true then true
-        when left.is_a?(Parameter), right.value(context) === false then left.value
-        when right.is_a?(Parameter), left.value(context) === false then right.value
-        else left.value(context) || right.value(context)
-      end
-
-    end
-  end
-
-
-  class AST::Division < Arithmetic
-    def value(context={})
-      d = cast(right.value(context), true)
-      raise ZeroDivisionError if d.respond_to?(:zero?) && d.zero?
-      n = cast(left.value(context))
-      cast(n/d)
-    end
-
-    def self.precedence
-      20
-    end
-  end
-
-  class Parameter < Identifier
-    def value(context={})
-      v = context[identifier]
-      case v
-        when Dentaku::AST::Node
-          v.value(context)
-        when NilClass
-          identifier[0..2] = '!' if identifier.length > 3 && identifier[0..2] == 'not'
-          Symbolic::Variable.new :name => identifier
-        else
-          v
+  module AST
+  #redef cast to prefer rationals
+    class Arithmetic < Operation
+      private
+      #we prefer rationals
+      def cast(value, prefer_integer=true)
+        return value unless value.respond_to?(:to_i)
+        v = Rational(value)
+        v = v.to_i if prefer_integer && v.to_i == v
+        v
       end
     end
-  end
-
-  #overriding Dentaku to use Resolver, not Calculator
-
-
-  #overriding Calculator to use Simplifier not Parser
-  class Resolver < Calculator
-    def ast(expression)
-      @ast_cache.fetch(expression) {
-        Simplifier.new(tokenizer.tokenize(expression)).parse.tap do |node|
-          node
-          @ast_cache[expression] = node if Dentaku.cache_ast?
-        end
-      }
+    class Comparator < Operation
+      include Symbolic
     end
 
-    def evaluate(expression, data={})
-      rewritten_expr = expression.dup
-      rewritten_expr.gsub!('||', 'or')
-      rewritten_expr.gsub!('&&', 'and')
-      rewritten_expr.gsub!('!false', 'true')
-      rewritten_expr.gsub!('!true', 'false')
-      rewritten_expr.gsub!('!', 'not')
-      evaluate!(rewritten_expr, data)
-    end
-
-    def evaluate!(expression, data={})
-      results = super(expression, data)
-      case
-        when results.respond_to?(:to_s) then results.to_s
-        when results.respond_to?(:name) then results.name
-        else results
+    class LessThan < Comparator
+      def value(context={})
+        left.value(context) < right.value(context)
       end
     end
-  end
 
-  #overriding Parser parse to replace unknown value Identifiers with Parameters
-  #the method is huge so had to replace it completely
-  class Simplifier < Parser
-    def parse
-      return Dentaku::AST::Nil.new if input.empty?
+    class LessThanOrEqual < Comparator
+      def value(context={})
+        left.value(context) <= right.value(context)
+      end
+    end
 
-      while token = input.shift
-        case token.category
-          when :numeric
-            output.push Dentaku::AST::Numeric.new(token)
+    class GreaterThan < Comparator
+      def value(context={})
+        left.value(context) > right.value(context)
+      end
+    end
 
-          when :logical
-            output.push Dentaku::AST::Logical.new(token)
+    class GreaterThanOrEqual < Comparator
+      def value(context={})
+        left.value(context) >= right.value(context)
+      end
+    end
 
-          when :string
-            output.push Dentaku::AST::String.new(token)
+    class NotEqual < Comparator
+      def value(context={})
+        left.value(context) != right.value(context)
+      end
+    end
 
-          when :identifier
-            output.push Parameter.new(token)
+    class Equal < Comparator
+      def value(context={})
+        left.value(context) == right.value(context)
+      end
+    end
 
-          when :operator, :comparator, :combinator
-            op_class = operation(token)
+    def <=> arg
+      op = caller[0]
+      op = op[/(?!`)\w*(?=')/].to_sym
 
-            if op_class.right_associative?
-              while operations.last && operations.last < Dentaku::AST::Operation && op_class.precedence < operations.last.precedence
-                consume
-              end
+      case op
+        when :==, :<=, :>=
+          case
+            when arg.respond_to?
+          end
+      end
+    end
 
-              operations.push op_class
-            else
-              while operations.last && operations.last < Dentaku::AST::Operation && op_class.precedence <= operations.last.precedence
-                consume
-              end
-
-              operations.push op_class
-            end
-
-          when :function
-            arities.push 0
-            operations.push function(token)
-
-          when :grouping
-            case token.value
-              when :open
-                if input.first && input.first.value == :close
-                  input.shift
-                  consume(0)
-                else
-                  operations.push Dentaku::AST::Grouping
-                end
-
-              when :close
-                while operations.any? && operations.last != Dentaku::AST::Grouping
-                  consume
-                end
-
-                lparen = operations.pop
-                fail "Unbalanced parenthesis" unless lparen == Dentaku::AST::Grouping
-
-                if operations.last && operations.last < Dentaku::AST::Function
-                  consume(arities.pop.succ)
-                end
-
-              when :comma
-                arities[-1] += 1
-                while operations.any? && operations.last != Dentaku::AST::Grouping
-                  consume
-                end
-
-              else
-                fail "Unknown grouping token #{ token.value }"
-            end
-
+    #redefining value to handle unknown value variables
+    class Identifier < Node
+      #changing NilClass behavior
+      def value(context={})
+        v = context[identifier]
+        case v
+          when Node
+            v.value(context)
+          when NilClass
+            #this is where we involve Symbolic to replace Identifier with Variable
+            Symbolic::Variable.new :name => identifier
           else
-            fail "Not implemented for tokens of category #{ token.category }"
+            v
         end
       end
+    end
 
-      while operations.any?
-        consume
+    #adding Not Combinator; quite a few overrides because it only has one argument unlike its parent
+    class Not < Combinator
+      attr_reader :node
+      def initialize node
+        @node = node
+        fail "#{ self.class } requires logical operand" unless valid_node?(node)
       end
 
-      unless output.count == 1
-        fail "Parse error"
+      def dependencies(context={})
+        node.dependencies(context)
       end
 
-      output.first
-    end
-  end
+      def value(context={})
+        Symbolic::Combinands.not(node.value(context))
+      end
 
-  def operators current_node
-    operators = {}
-    if current_node.is_a? Design
-      logics = current_node[:logics]
-    else
-      logics = default_logics
-    end
-    logics.each do |logic|
-      operators[] = @logics[logic]
-    end
-  end
+      def self.arity
+        1
+      end
 
-  def default_logics
-    [:string, :boolean, :arithmetic]
+      def self.right_associative?
+        true
+      end
+
+      def self.precedence
+        40
+      end
+    end
+
+    #overriding each Combinator so they use Symbolic's methods
+    class And < Combinator
+      def value(context={})
+        Symbolic::Combinands.and(left.value(context),right.value(context))
+      end
+    end
+
+    class Or < Combinator
+      def value(context={})
+        Symbolic::Combinands.or(left.value(context),right.value(context))
+      end
+    end
   end
 end
