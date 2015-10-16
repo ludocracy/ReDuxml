@@ -9,8 +9,8 @@ module Dentaku
   def self.evaluate(expression, data={})
     #input scrubbing done here
     safe_expression = expression.dup
-    #neat trick here - we're substituting the scalar negate for boolean negate because we overrode them to be one method
-    banned = {'&&' => ' and ', '||' => ' or ', /(!)(?=\w|!)/ => 'not '}
+    banned = {'==' => ' eq ', '!=' => ' ne ', '>=' => ' ge ', '<=' => ' le ', '>' => ' gt ' , '<' => ' lt ',
+              '&&' => ' and ', '||' => ' or ', /(!)(?=\w|!)/ => 'not '}
     banned.each do |key, val| safe_expression.gsub!(key, val) end
     reply = calculator.evaluate(safe_expression, data).to_s
     banned.each do |key, val|
@@ -52,9 +52,14 @@ module Dentaku
     end
   end
 
-  #adding new combinator '!'
   class TokenScanner
     class << self
+      #adding replacement symbols because the overrides are too complicated
+      def comparator
+        new(:comparator, 'le|ge|ne|lt|gt|eq', lambda { |raw| raw.to_sym })
+      end
+
+      #adding new combinator '!'
       def combinator
         #added not
         new(:combinator, '(and|or|not)\b', lambda { |raw| raw.strip.downcase.to_sym })
@@ -63,18 +68,8 @@ module Dentaku
   end
 
   module AST
-    #redef cast to prefer rationals
-    class Arithmetic < Operation
-      private
-      #we prefer rationals
-      def cast(value, prefer_integer=true)
-        return value unless value.respond_to?(:to_i)
-        v = Rational(value)
-        v = v.to_i if prefer_integer && v.to_i == v
-        v
-      end
-    end
-
+    require_relative 'comparable'
+    include Symbolic_comparable
     #redefining value to handle unknown value variables
     class Identifier < Node
       #changing NilClass behavior
@@ -89,6 +84,54 @@ module Dentaku
           else
             v
         end
+      end
+    end
+
+    #redef cast to prefer rationals
+    class Arithmetic < Operation
+      private
+      #we prefer rationals
+      def cast(value, prefer_integer=true)
+        return value unless value.respond_to?(:to_i)
+        v = Rational(value)
+        v = v.to_i if prefer_integer && v.to_i == v
+        v
+      end
+    end
+
+    class LessThan < Comparator
+      def value(context={})
+        Symbolic_comparable.lt left.value(context), right.value(context)
+      end
+    end
+
+    class LessThanOrEqual < Comparator
+      def value(context={})
+        Symbolic_comparable.le left.value(context), right.value(context)
+      end
+    end
+
+    class GreaterThan < Comparator
+      def value(context={})
+        Symbolic_comparable.gt left.value(context), right.value(context)
+      end
+    end
+
+    class GreaterThanOrEqual < Comparator
+      def value(context={})
+        Symbolic_comparable.ge left.value(context), right.value(context)
+      end
+    end
+
+    class NotEqual < Comparator
+      def value(context={})
+        Symbolic_comparable.ne left.value(context), right.value(context)
+      end
+    end
+
+    class Equal < Comparator
+      def value(context={})
+        Symbolic_comparable.eq left.value(context), right.value(context)
       end
     end
 

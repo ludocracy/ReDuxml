@@ -1,10 +1,40 @@
 require 'symbolic'
 module Symbolic
   class Variable
-    include Comparable
+    #remembers primitive type of last operation; variables can take any value,
+    #but once a value is set it cannot be overridden by a value of an incompatible type
+    @type
+
+    attr_reader :type
+
+    # Create a new Symbolic::Variable, with optional name, value and proc
+    def initialize(options={}, &proc)
+      (@name, @value), @proc = options.values_at(:name, :value), proc
+      @name = @name.to_s if @name
+      c = @value.class
+      if @value
+        case @value.class
+          when Fixnum, Rational then @type = :numeric
+          when Float then :float
+          when FalseClass, TrueClass then @type = :boolean
+          when String then @type = :string
+          else @type = @value
+        end
+      end
+    end
+
+    def set_type sym
+      @type = sym
+    end
+
     #this may not be true, but for simplification purposes we must assume it is
     def zero?
       false
+    end
+
+    #don't need proc value for now; just need it to return its name
+    def value
+      name
     end
   end
 
@@ -28,7 +58,7 @@ module Symbolic
         else raise Exception, "cannot boolean negate a non-boolean expression!"
         end
         s[0..3].include?('not ') ? s[0..3] = '' : s = 'not '+s
-        s
+        Variable.new name: s, value: :boolean
       end
 
       def and *vars
@@ -48,9 +78,7 @@ module Symbolic
         @operator = s[/(?!`)\S*(?=')/]
         s.clear
         l,r,i,ni = vars[0].to_s, vars[1].to_s, identity.to_s, (!identity).to_s
-        nl = Combinands.not(l)
-        b = (nl == r)
-        sleep 0
+        nl = Combinands.not(l).to_s
         case r
           when i, l then vars[0]
           when ni, nl then ni
