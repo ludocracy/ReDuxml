@@ -1,10 +1,12 @@
 require_relative 'symbolic_wrapper'
+require_relative 'Base_types'
 require 'dentaku'
 require 'dentaku/token'
 require 'dentaku/ast/identifier'
 require 'dentaku/ast/operation'
 
 module Dentaku
+  include Base_types::Operator
   #overriding evaluate to do some rewriting (we can separate this later)
   def self.evaluate(expression, data={})
     #input scrubbing done here

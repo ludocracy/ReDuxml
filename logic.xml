@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- this file  -->
+<?xml-model href="rng/logic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<logic xmlns="" id="template_id">
+    <name>logic example</name>
+    <version>0.9</version>
+    <owners>
+        <owner id="b33791">
+            <name>Peter Kong</name>
+        </owner>
+    </owners>
+    <description>example of basic logic set</description>
+    <history>
+        <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
+            <description>created file</description>
+            <date>2015-10-20T19:20:30+01:00</date>
+        </insert>
+    </history>
+    <operators>
+        <!-- combinators -->
+        <operator id="ternary">
+            <names>
+                <name>?</name>
+                <name>if</name>
+                <name>then</name>
+            </names>
+            <arity>2</arity>
+        </operator>
+        <operator id="and">
+            <names>
+                <name>&amp;&amp;</name>
+                <name>also</name>
+            </names>
+        </operator>
+        <operator id="or">
+            <names>
+                <name>||</name>
+                <name>else</name>
+            </names>
+        </operator>
+        <operator id="not">
+            <names>
+                <name>!</name>
+            </names>
+            <arity>1</arity>
+            <right_associative>true</right_associative>
+            <inverse>not</inverse>
+        </operator>
+        
+        <!-- comparators -->
+        <operator id="eq">
+            <names>
+                <name>==</name>
+                <name>is</name>
+                <name>the same as</name>
+            </names>
+            <reverse>eq</reverse>
+            <inverse>ne</inverse>
+        </operator>
+        <operator id="lt">
+            <names>
+                <name>&lt;</name>
+                <name>less than</name>
+                <name>smaller than</name>
+            </names>
+            <reverse>gt</reverse>
+            <inverse>ge</inverse>
+        </operator>
+        <operator id="gt">
+            <names>
+                <name>></name>
+                <name>greater than</name>
+                <name>bigger than</name>
+            </names>
+            <reverse>lt</reverse>
+            <inverse>le</inverse>
+        </operator>
+        <operator id="le">
+            <names>
+                <name>&lt;=</name>
+                <name>less than or equal</name>
+                <name>the same or smaller than</name>
+            </names>
+            <reverse>ge</reverse>
+            <inverse>gt</inverse>
+        </operator>
+        <operator id="ge">
+            <names>
+                <name>>=</name>
+                <name>greater than or equal</name>
+                <name>the same or bigger than</name>
+            </names>
+            <reverse>le</reverse>
+            <inverse>lt</inverse>
+        </operator>
+        <operator id="ne">
+            <names>
+                <name>!=</name>
+                <name>&lt;></name>
+                <name>=/=</name>
+                <name>not equal</name>
+                <name>not the same as</name>
+            </names>
+            <reverse>ne</reverse>
+            <inverse>eq</inverse>
+        </operator>
+        
+        <!-- arithmetic -->
+        <operator id="plus">
+            <names>
+                <name>+</name>
+                <name>added to</name>
+            </names>
+            <identity>0</identity>
+            <inverse>minus</inverse>
+        </operator>
+        <operator id="minus">
+            <names>
+                <name>-</name>
+                <name>subtract from</name>
+                <name>less</name>
+            </names>
+            <identity>0</identity>
+            <inverse>plus</inverse>
+        </operator>
+        <operator id="times">
+            <names>
+                <name>*</name>
+                <name>×</name>
+                <name>multiplied by</name>
+                <name>by</name>
+            </names>
+            <identity>1</identity>
+            <inverse>divided_by</inverse>
+        </operator>
+        <operator id="divided_by">
+            <names>
+                <name>/</name>
+                <name>÷</name>
+                <name>over</name>
+            </names>
+            <identity>1</identity>
+            <inverse>times</inverse>
+        </operator>
+        <operator id="modulus">
+            <names>
+                <name>%</name>
+                <name>mod</name>
+            </names>
+        </operator>
+        <operator id="exponent">
+            <names>
+                <name>**</name>
+                <name>power</name>
+                <name>to the power of</name>
+                <name>^</name>
+            </names>
+            <identity>1</identity>
+            <inverse>log</inverse>
+        </operator>
+        <operator id="log">
+            <names>
+                <name>logarithm</name>
+            </names>
+            <inverse>exponent</inverse>
+        </operator>
+    </operators>
+</logic>

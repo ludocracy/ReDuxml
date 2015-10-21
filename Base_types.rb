@@ -522,8 +522,8 @@ module Base_types
       super xml_node, args
     end
 
-
     def generate_new_xml
+
     end
   end
 
@@ -567,6 +567,7 @@ module Base_types
       super xml_node
     end
 
+    #is link live? links can be broken if the target object is removed after the link is created
     def link?
       true
     end
@@ -595,6 +596,7 @@ module Base_types
   end
 
   #container for multiple parameters
+  #NOT DONE YET - how to load values into Dentaku memory?
   class Parameters < Component
     @reserved_word_array = 'parameter'
     def initialize xml_node, args = {}
@@ -642,16 +644,71 @@ module Base_types
       super xml_node
     end
 
-    def value
-      self['value']
+    #searches for operator that matches arg, which can be a symbol, string (name or sign), or proc
+    def [] arg
+      case arg.class
+        when Symbol then @attributes[:operators].symbol
+        when String then @attributes[:names]
+      end
     end
 
-    #parameter value assignments must be recorded
-    def value= val
-      if val != self[:value]
-        value = val
-        throw :edit, Edit.new(nil, self)
+    #logics required for this logic to work i.e. definitions of these operations use operators defined in another logic
+    def dependencies
+
+    end
+  end
+
+  #container for every possible property of an operator
+  class Operator < Component
+    #any of the following can be used as a key to retrieve this operator
+    #symbol that most commonly represents operator e.g. +,-
+    @symbol
+    #alternate name hash; keys are domains in which names are used
+    @names
+    #actual method to call when operator invoked
+    @proc
+
+    #looks up arg and returns this operator if match found
+    def key arg
+      [@symbol+@names+@proc].each do |obj|
+        return self if obj == arg || obj.to_s == arg
       end
+    end
+
+    #whether first argument appears before (true) or after (false) operator
+    def pre_pos?
+      @attributes[:pos] || true
+    end
+
+    #number of arguments
+    def arity
+      @attributes[:arity] || 2
+    end
+
+    #logics that include this operator; default is system's logic
+    def logics
+      @attributes[:logics] || :system
+    end
+
+    #is operator bound to term on its right? e.g. -x, !x
+    def right_associative?
+      @attributes[:right_associate] || false
+    end
+
+    #constant 'I' that for this operator 'op' meets definition: x op I == x; not all operators have identities
+    def identity
+      @attributes[:identity]
+    end
+
+    #only applies to inequalities; flips direction of operator when expression is negated
+    def reverse
+      @attributes[:reverse] || self
+    end
+
+    #operation that cancels out this operation; some operations' inverses may not be members of the same logics
+    #will return nil if no inverse available
+    def inverse
+      @attributes[:inverse]
     end
   end
 end
