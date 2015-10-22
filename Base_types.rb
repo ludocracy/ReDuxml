@@ -1,60 +1,57 @@
-#the component is the base of every object in DesignOS and any designs produced in it.
-#components consist of components and never overlap. therefore a general tree structure is perfect
-#for representing component structures and also works perfectly with XML
-#however, DesignOS needs to be able to traverse concreteward and abstractward
-#and there are up to as many of each as there are views; change timestamps are a view (concrete if after a change, abstract if before);
-#for example: when a parameter is set, the resulting design is a concrete child
-#if that parameter value is overridden by a subtemplate, that produces a concrete grandchild
-#therefore, every node in this new type of tree is also a member of a hash of arrays - one hash for each query, and
-#view hashes are only constructed upon query except for those needed by DesignOS to perform
+# the component is the base of every object in DesignOS and any designs produced in it.
+# components consist of components and never overlap. therefore a general tree structure is perfect
+# for representing component structures and also works perfectly with XML
+# however, DesignOS needs to be able to traverse concreteward and abstractward
+# and there are up to as many of each as there are views; change timestamps are a view (concrete if after a change, abstract if before);
+# for example: when a parameter is set, the resulting design is a concrete child
+# if that parameter value is overridden by a subtemplate, that produces a concrete grandchild
+# therefore, every node in this new type of tree is also a member of a hash of arrays - one hash for each query, and
+# view hashes are only constructed upon query except for those needed by DesignOS to perform
 #
-#changes made to Components are made to both the XML node and data node simultaneously
-#in order to provide real-time feedback to XML editor
-#could add switch to turn this off
+# changes made to Components are made to both the XML node and data node simultaneously
+# in order to provide real-time feedback to XML editor
+# could add switch to turn this off
 module Base_types
-  #authentication gem
-  #require 'devise'
-  #XML parsing and manipulation
-  require 'nokogiri'
+  # authentication gem
+  # require 'devise'
+  # XML parsing and manipulation
   require 'rubytree'
   include Tree
-  require_relative 'debug'
-  include Debug
 
-  #Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
-  #in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
-  #each Kansei object is also a Tree::TreeNode
-  #disabling kansei features until we can architect it properly
+  # Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
+  # in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
+  # each Kansei object is also a Tree::TreeNode
+  # disabling kansei features until we can architect it properly
 
   class Component < Tree::TreeNode
-    #pull out some of these attributes and make them subclasses - like static vs dynamic members?
-    #id or name identify this Component uniquely among its neighbors (template for @id, immediate family for @name)
+    # pull out some of these attributes and make them subclasses - like static vs dynamic members?
+    # id or name identify this Component uniquely among its neighbors (template for @id, immediate family for @name)
     @id
-    #points to the XML element root of this Component
+    # points to the XML element root of this Component
     @xml_root_node
-    #hash of viewings where keys are view settings and values are kansei siblings of this component
+    # hash of viewings where keys are view settings and values are kansei siblings of this component
     @views = []
-    #hash of builds where keys are parameter settings and values are kansei siblings of this component
+    # hash of builds where keys are parameter settings and values are kansei siblings of this component
     @builds = {}
-    #array of words that indicate reserved classes
+    # array of words that indicate reserved classes
     @reserved_word_array = []
-    #hash of attribute name keys and attribute node values derived from XML attributes and leaf singletons
-    #hash values are of type Nokogiri::XML:Attr
+    # hash of attribute name keys and attribute node values derived from XML attributes and leaf singletons
+    # hash values are of type Nokogiri::XML:Attr
     @attributes = {}
-    #tracks where to add children; on initializing traverse, leave it at the last singleton child
+    # tracks where to add children; on initializing traverse, leave it at the last singleton child
     @xml_cursor
-    #lists all views that can see this Component
+    # lists all views that can see this Component
     @visible = []
-    #array of Nokogiri::XML::Attr whose values must all be true for this Component to build
+    # array of Nokogiri::XML::Attr whose values must all be true for this Component to build
     @if = []
-    #tracks all content nodes that contain parameterized expressions for quick retrieval and resolution
-    #keys are the nodes themselves, values are the strings that contain the parameter expressions
+    # tracks all content nodes that contain parameterized expressions for quick retrieval and resolution
+    # keys are the nodes themselves, values are the strings that contain the parameter expressions
     @parameterized_nodes = {}
-    #description of what this component represents in a design; can contain XML e.g. DITA content
-    #at its most basic it is the comment on the subclass of Component or annotation in the schema rules
+    # description of what this component represents in a design; can contain XML e.g. DITA content
+    # at its most basic it is the comment on the subclass of Component or annotation in the schema rules
     @@description
 
-    #shortcut
+    # shortcut
     def xml
       @xml_root_node
     end
@@ -86,7 +83,7 @@ module Base_types
       puts "Component '#{root_name}' #{content}"
     end
 
-    #creating new Component from XML node (from file) or input in the form of XML string
+    # creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args = {}
       unless xml_node.is_a? Nokogiri::XML::Element
         generate_new_xml args
@@ -101,9 +98,11 @@ module Base_types
       @attributes = Hash.new
       @reserved_word_array ||= []
 
-      #must happen before traverse to have @children/@children_hash available
+      attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor, :if
+
+      # must happen before traverse to have @children/@children_hash available
       super(self.object_id.to_s, @xml_root_node)
-      #traverse and load Component from xml
+      # traverse and load Component from xml
       collect_changes traverse_xml load_methods %w(load_attributes init_reserved chase_tail init_generic)
     end
 
@@ -124,7 +123,7 @@ module Base_types
     end
 
     def do_nothing arg = nil
-      #this is silly
+      # this is silly
     end
 
     def generate_new_xml args = {}
@@ -152,23 +151,23 @@ module Base_types
       end
     end
 
-    #called by method hash when traversing down a Component's trailing XML descendants; its 'tail'
+    # called by method hash when traversing down a Component's trailing XML descendants; its 'tail'
     def chase_tail child
       @xml_cursor = child
     end
 
-    #adds leaf content as attribute; element name as key
+    # adds leaf content as attribute; element name as key
     def load_content_if_leaf
       @attributes[@xml_cursor.name] = @xml_cursor.content if @xml_cursor.element_children.size == 0
     end
 
-    #child has a ruby class of its own
+    # child has a ruby class of its own
     def init_reserved child
       child_class = Object::const_get("Base_types::#{child.name.capitalize}")
       self << child_class.new(child)
     end
 
-    #child is just XML - wrap it
+    # child is just XML - wrap it
     def init_generic child
       self << Component.new(child)
     end
@@ -193,14 +192,14 @@ module Base_types
       end
     end
 
-    #traverses this Component's xml (and not children's) for parameterized content nodes
+    # traverses this Component's xml (and not children's) for parameterized content nodes
     def get_parameterized_xml_nodes
       @parameterized_nodes = {}
       traverse_xml load_methods ['find_parameterized_nodes', nil, 'chase_tail', nil]
       @parameterized_nodes
     end
 
-    #looks through all attributes for parameter expressions
+    # looks through all attributes for parameter expressions
     def find_parameterized_nodes
       @if.each do |condition_node|
         add_if_parameterized condition_node
@@ -210,7 +209,7 @@ module Base_types
       end
     end
 
-    #if a given attribute value is parameterized, add to hash with attribute node itself as key
+    # if a given attribute value is parameterized, add to hash with attribute node itself as key
     def add_if_parameterized attr
       if attr.is_a? Nokogiri::XML::Attr
         value = attr.value
@@ -223,7 +222,7 @@ module Base_types
 
     def view view_hash
       if reconcile view_hash, @visible
-        #@views[view_hash] = @cursor.dup
+        # @views[view_hash] = @cursor.dup
       end
     end
 
@@ -247,19 +246,19 @@ module Base_types
       @attributes[attr].value
     end
 
-    #redefining TreeNode::name as Component::id
+    # redefining TreeNode::name as Component::id
     alias_method :id, :name
 
     def children?
       @children.size.to_s
     end
 
-    #overriding TreeNode::content to point to XML head's content
+    # overriding TreeNode::content to point to XML head's content
     def content
       xml.content
     end
 
-    #initializes component attributes if empty
+    # initializes component attributes if empty
     def []= attr, *vals
       @attributes[attr] ||= vals.join ' '
     end
@@ -268,7 +267,7 @@ module Base_types
       get_attr_val attr
     end
 
-    #extending TreeNode's add child to link up XML if for new node
+    # extending TreeNode's add child to link up XML if for new node
     def << component_child
       if component_child.xml.parent.nil?
         @xml_cursor << component_child.xml
@@ -287,12 +286,11 @@ module Base_types
       new_element
     end
 
-    attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor
 
     private :element, :load_attributes, :init_reserved, :init_generic, :chase_tail, :traverse_xml, :find_parameterized_nodes, :add_if_parameterized, :reconcile, :generate_new_xml, :load_content_if_leaf, :collect_changes, :load_methods
   end
 
-  #template Owners class - contains Owner Hash
+  # template Owners class - contains Owner Hash
   class Owners < Component
     def initialize xml_node
       @reserved_word_array = 'owner'
@@ -300,7 +298,7 @@ module Base_types
     end
   end
 
-  #template Owner class
+  # template Owner class
   class Owner < Component
     def initialize xml_node, args ={}
       super xml_node
@@ -311,18 +309,18 @@ module Base_types
     end
   end
 
-  #Templates are components that constitute a distinct technology
-  #They must have owners and always record sub-component changes
-  #Element names reserved by the template's schema rules become constructors for sub-components
+  # Templates are components that constitute a distinct technology
+  # They must have owners and always record sub-component changes
+  # Element names reserved by the template's schema rules become constructors for sub-components
   class Template < Component
-    #points to actual xml document. @xml_root_node points to the root element.
+    # points to actual xml document. @xml_root_node points to the root element.
     @xml_doc
-    #users or processes that created this template
+    # users or processes that created this template
     @owners
 
     def initialize template_root_node, args = {}
       @reserved_word_array = %w(owners history design)
-      #creating new template
+      # creating new template
       super template_root_node, args
     end
 
@@ -346,20 +344,20 @@ module Base_types
     end
   end
 
-  #all templates have histories and objects that have been queried
-  #might need to wrap in module to namespace?
+  # all templates have histories and objects that have been queried
+  # might need to wrap in module to namespace?
   class History < Component
     def initialize xml_node
       @reserved_word_array = %w(insert remove edit error correction instantiate move undo)
       super xml_node
     end
 
-    #a special register function is used by the History, instead of the usual add child to avoid adding a history of the history to the history
+    # a special register function is used by the History, instead of the usual add child to avoid adding a history of the history to the history
     def register change, owner
       current_change = change
       while current_change do
         current_change[:owner] = owner
-        #adding to head so latest changes are on top
+        # adding to head so latest changes are on top
         @xml_cursor.children.first.add_previous_sibling
         @children.add_child current_change
         current_change.next!
@@ -383,13 +381,13 @@ module Base_types
     end
 
     def get_changes
-      #handle cases for searches by: date, date range, owner, type, target,
+      # handle cases for searches by: date, date range, owner, type, target,
     end
 
     private :register
   end
 
-  #individual change; not to be used, only for subclassing
+  # individual change; not to be used, only for subclassing
   class Change < Component
     def initialize xml_node, args = {}
       super xml_node
@@ -404,7 +402,7 @@ module Base_types
       @xml_cursor['ref'] = @ref.id
       @timestamp = Time.now
       @xml_cursor.element 'date', @timestamp.to_s
-      #description will be generated or input later and only when triggered
+      # description will be generated or input later and only when triggered
       @xml_cursor.element 'description'
     end
 
@@ -431,8 +429,8 @@ module Base_types
     attr_reader :next, :ref, :timestamp, :description
   end
 
-  #Component instantiated; holds pointers to Edits to parameter values if redefined for this instance
-  #holds pointer to antecedent; generates fresh ID for instance; adds as new child to template
+  # Component instantiated; holds pointers to Edits to parameter values if redefined for this instance
+  # holds pointer to antecedent; generates fresh ID for instance; adds as new child to template
   class Instantiate < Change
     def initialize xml_node, args = {}
       super xml_node, args
@@ -442,8 +440,8 @@ module Base_types
     end
   end
 
-  #error found during build inspection process (syntax errors) or during general inspection - saved to file if uncorrected on commit
-  #points to rule violated and/or syntax marker and previous error in exception stack
+  # error found during build inspection process (syntax errors) or during general inspection - saved to file if uncorrected on commit
+  # points to rule violated and/or syntax marker and previous error in exception stack
   class Error < Change
     def initialize xml_node, args = {}
       super xml_node, args
@@ -453,9 +451,9 @@ module Base_types
     end
   end
 
-  #build-time, inspection or committed error correction - points to error object
-  #also points to change object that precipitated this one
-  #(could be another correction or other change-type other than Error or Instantiate)
+  # build-time, inspection or committed error correction - points to error object
+  # also points to change object that precipitated this one
+  # (could be another correction or other change-type other than Error or Instantiate)
   class Correction < Change
     def initialize xml_node, args = {}
       super xml_node, args
@@ -465,8 +463,8 @@ module Base_types
     end
   end
 
-  #removal of node can occur when building design from de-instantiation (@if == false)
-  #when inspecting from a given perspective, or from user input when editing
+  # removal of node can occur when building design from de-instantiation (@if == false)
+  # when inspecting from a given perspective, or from user input when editing
   class Remove < Change
     def initialize xml_node, args = {}
       super xml_node, args
@@ -476,16 +474,16 @@ module Base_types
     end
   end
 
-  #insertion of node can occur when building design from instantiation
-  #after inspector reports changes (when historian inserts changes into history)
-  #and from user input when editing
-  #the initialization strings really should be loaded from the RelaxNG. LATER!!!
+  # insertion of node can occur when building design from instantiation
+  # after inspector reports changes (when historian inserts changes into history)
+  # and from user input when editing
+  # the initialization strings really should be loaded from the RelaxNG. LATER!!!
   class Insert < Change
     def initialize xml_node, args = {}
       super xml_node, args
     end
 
-    #because owner is not known until insert is registered with history, this method is kept private
+    # because owner is not known until insert is registered with history, this method is kept private
     def generate_descr
       self[:description] = "#{self[:owner].to_s} added #{@ref.root_name} (#{@ref.id}) to #{@ref.parent.root_name} (#{@ref.id})" + self[:description]
     end
@@ -502,17 +500,17 @@ module Base_types
     end
   end
 
-  #change to element content or attribute value, essentially the actual content of the Component has changed
-  #this can occur from owner input when editing
-  #or initiated by Builder when dealing with parameters (and nothing else)
+  # change to element content or attribute value, essentially the actual content of the Component has changed
+  # this can occur from owner input when editing
+  # or initiated by Builder when dealing with parameters (and nothing else)
   class Edit < Change
-    #string containing new content
+    # string containing new content
     @new_content
-    #string containing old content (if content is XML, string can be converted to XML)
+    # string containing old content (if content is XML, string can be converted to XML)
     @old_content
-    #xpath to changed element
+    # xpath to changed element
     @xpath
-    #string if empty content change was to element; if non-empty is name of attribute value changed
+    # string if empty content change was to element; if non-empty is name of attribute value changed
     @attributeOrNo
     @previous
     @next
@@ -536,12 +534,12 @@ module Base_types
     end
   end
 
-  #instances are copies (dclones) or aliases (clones) of a given Component; if copies, they get Instances of the children also
-  #when used to wrap a Component or set of Components, allows use of locally-namespaced parameters
-  #when empty but given a target Component, creates copy and added as new child or creates alias and added as mirror child
-  #wrapper is removed after build; aliases
+  # instances are copies (dclones) or aliases (clones) of a given Component; if copies, they get Instances of the children also
+  # when used to wrap a Component or set of Components, allows use of locally-namespaced parameters
+  # when empty but given a target Component, creates copy and added as new child or creates alias and added as mirror child
+  # wrapper is removed after build; aliases
   class Instance < Component
-    #instances can expect reserved component element names AND parameter assignment hash
+    # instances can expect reserved component element names AND parameter assignment hash
     def initialize xml_node, args = {}
       @reserved_word_array = %w(parameters array instance)
       super xml_node
@@ -559,53 +557,53 @@ module Base_types
     end
   end
 
-  #links function as aliases of a given Component; essentially they are the same object but in target location and location of Link object
-  #actually implemented by redirecting pointers to target; Link Components must never have children!! any children added will be added to target!!
+  # links function as aliases of a given Component; essentially they are the same object but in target location and location of Link object
+  # actually implemented by redirecting pointers to target; Link Components must never have children!! any children added will be added to target!!
   class Link < Component
     def initialize xml_node, args = {}
       @reserved_word_array = []
       super xml_node
     end
 
-    #is link live? links can be broken if the target object is removed after the link is created
+    # is link live? links can be broken if the target object is removed after the link is created
     def link?
       true
     end
   end
 
-  #part of the template file that actually contains the design or content
-  #specifies logics allowed within itself
+  # part of the template file that actually contains the design or content
+  # specifies logics allowed within itself
   class Design < Instance
     def logics
-      get_attr_val 'logics'
+      get_attr_val :logics
     end
     def initialize xml_node, args = {}
       super xml_node
     end
   end
 
-  #basic means of creating patterned clones of a component; can contain a design or instances
+  # basic means of creating patterned clones of a component; can contain a design or instances
   class Array < Instance
     def initialize xml_node, args = {}
       super xml_node
     end
 
     def size
-      get_attr_val 'size'
+      get_attr_val :size
     end
   end
 
-  #container for multiple parameters
-  #NOT DONE YET - how to load values into Dentaku memory?
+  # container for multiple parameters
+  # NOT DONE YET - how to load values into Dentaku memory?
   class Parameters < Component
     @reserved_word_array = 'parameter'
     def initialize xml_node, args = {}
       super xml_node
     end
 
-    alias_method :parameter_hash, :children_hash
-
-    attr_reader :children_hash
+    def parameter_hash
+      @children_hash
+    end
 
     def update params
       if params
@@ -619,8 +617,8 @@ module Base_types
     end
   end
 
-  #specialization of Component holds parameter name, value and description
-  #also, during Build, its abstracts and concretes track parameter value overrides
+  # specialization of Component holds parameter name, value and description
+  # also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
     def initialize xml_node, args = {}
       super xml_node
@@ -630,7 +628,7 @@ module Base_types
       self['value']
     end
 
-    #parameter value assignments must be recorded
+    # parameter value assignments must be recorded
     def value= val
       if val != self[:value]
         value = val
@@ -640,75 +638,113 @@ module Base_types
   end
 
   class Logic < Component
-    def initialize xml_node, args = {}
-      super xml_node
-    end
-
-    #searches for operator that matches arg, which can be a symbol, string (name or sign), or proc
-    def [] arg
-      case arg.class
-        when Symbol then @attributes[:operators].symbol
-        when String then @attributes[:names]
+    # returns operator or operators that match arg; returns all if no arg
+    def [] *args
+      ops = []
+      args.each do |arg|
+        children.each do |operator|
+          ops << operator.key(arg)
+        end
+        ops.size > 1 ? ops : ops[0]
       end
+      args ? ops : children
     end
 
-    #logics required for this logic to work i.e. definitions of these operations use operators defined in another logic
-    def dependencies
+    # returns array of operator names starting in priority from the given symbol and working down if none found
+    # in other words, this method will always return an array with an index for each operator,
+    # even if the operator does not have a name that matches the given symbol
+    def names sym
+      a = []
+      children.each do |operator|
+        case sym
+          when :regexp then a << (operator.regexp ? operator.regexp : operator.symbol)
+          when :symbol then a << operator.symbol
+          when :name then a << operator.names[sym][0]
+          else a << operator.names[sym]
+        end
+      end
+      a
+    end
 
+      private
+
+    # logics required for this logic to work i.e. definitions of these operations use operators defined in another logic
+    def dependencies
+      find_child('dependencies')
     end
   end
 
-  #container for every possible property of an operator
+  # container for every possible property of an operator
   class Operator < Component
-    #any of the following can be used as a key to retrieve this operator
-    #symbol that most commonly represents operator e.g. +,-
+    # any of the following can be used as a key to retrieve this operator
+    # symbol that most commonly represents operator e.g. +,-
     @symbol
-    #alternate name hash; keys are domains in which names are used
+    # regexp used to find this operator in standard parameterized string
+    @regexp
+    # alternate name hash; keys are domains in which names are used
     @names
-    #actual method to call when operator invoked
+    # actual method to call when operator invoked
     @proc
 
-    #looks up arg and returns this operator if match found
+    attr_reader :symbol, :names
+
+    def initialize args={}
+      super args
+
+      # this name is guaranteed to be safe in any context (C-identifier string)
+      @names[:safe] = id
+      find_child('names').each do |name|
+        case name.element.to_sym
+          when :symbol then @symbol = name
+          when :regexp then @regexp = name
+          when :name
+            @names[:name].is_a?(Array) ? (@names[:name] << name) : (@names[:name] = [name])
+          else @names[name.element.to_sym] = name
+        end
+      end
+    end
+
+    # looks up arg and returns this operator if match found
     def key arg
-      [@symbol+@names+@proc].each do |obj|
+      [@symbol+@names+@proc+@attributes[:type].value].each do |obj|
         return self if obj == arg || obj.to_s == arg
       end
     end
 
-    #whether first argument appears before (true) or after (false) operator
-    def pre_pos?
-      @attributes[:pos] || true
-    end
-
-    #number of arguments
+    # number of arguments
     def arity
       @attributes[:arity] || 2
     end
 
-    #logics that include this operator; default is system's logic
+    # logics that include this operator; default is system's logic
     def logics
       @attributes[:logics] || :system
     end
 
-    #is operator bound to term on its right? e.g. -x, !x
+    # is operator bound to term on its right? e.g. -x, !x
     def right_associative?
-      @attributes[:right_associate] || false
+      @attributes[:right_associate]
     end
 
-    #constant 'I' that for this operator 'op' meets definition: x op I == x; not all operators have identities
+    # constant 'I' that for this operator 'op' meets definition: x op I == x; not all operators have identities
     def identity
       @attributes[:identity]
     end
 
-    #only applies to inequalities; flips direction of operator when expression is negated
+    # only applies to inequalities; flips direction of operator when expression is negated
     def reverse
       @attributes[:reverse] || self
     end
 
-    #operation that cancels out this operation; some operations' inverses may not be members of the same logics
-    #will return nil if no inverse available
+    # operation that cancels out this operation; some operations' inverses may not be members of the same logics
+    # will return nil if no inverse available
     def inverse
       @attributes[:inverse]
+    end
+
+    # order of operations (higher integer is first)
+    def precedence
+      @attributes[:precedence] || 0
     end
   end
 end

@@ -20,7 +20,7 @@
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
     </history>
-    <design id="design_id" logics="arithmetic boolean">
+    <design id="design_id" logics="logic">
         <parameters>
             <parameter name="param0" value="1">
                 <description>param0 is an integer and will be tested against the instance below</description>
@@ -37,7 +37,7 @@
         <array size="4" id="array_id">
             <!-- example of where you could add design data -->
             <instance id="thisid" ref="targetid"/>
-            <iterator_test>@(iterator + 1) is an iterator expression</iterator_test>
+            <iterator_test>@(iterator+1) is an iterator expression</iterator_test>
             <p_test>@(param0) is a design param expression</p_test>
         </array>
     </design>

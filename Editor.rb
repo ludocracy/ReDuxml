@@ -1,12 +1,12 @@
-#Editor contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
+# Editor contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
 module Editor
   require_relative 'Base_types'
   include Base_types
-  #points to current Component
+  # points to current Component
   @cursor
-  #**************use these!!!!****************
-  #ENV['USER']  on Unix
-  #ENV['USERNAME'] on Windows
+  # **************use these!!!!****************
+  # ENV['USER']  on Unix
+  # ENV['USERNAME'] on Windows
 
 
   def respond input
@@ -29,7 +29,7 @@ module Editor
       when 'build'
         @cursor.build
       else
-        d "unknown command '#{input[0]}'"
+        d "unknown command '# {input[0]}'"
     end
   end
 
@@ -42,7 +42,7 @@ module Editor
 
   def load root_xml_node, *args
     @cursor = @root_template = Template.new(root_xml_node)
-    #temporarily bypassing Editor template
+    # temporarily bypassing Editor template
     listen
   end
 

@@ -30,18 +30,60 @@
     <!-- user object includes keywords that list which views they are allowed -->
     <define name="operator">
         <element name="operator">
+            <attribute name="precedence"><data type="integer"/></attribute>
+            <optional>
+                <attribute name="type">
+                    <data type="NMTOKEN"/>
+                </attribute>
+            </optional>
             <element name="names">
-                <oneOrMore>
+                <zeroOrMore>
                     <element name="name">
+                        <a:documentation/>
                         <data type="string"/>
                     </element>
-                </oneOrMore>
+                </zeroOrMore>
+                <optional>
+                    <element name="symbol">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="regexp">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="ruby">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
-            <optional><element name="arity"><data type="integer"/></element></optional>
-            <optional><element name="right_associative"><data type="boolean"/></element></optional>
-            <optional><element name="identity"><data type="NMTOKEN"/></element></optional>
-            <optional><element name="reverse"><data type="NMTOKEN"/></element></optional>
-            <optional><element name="inverse"><data type="NMTOKEN"/></element></optional>
+            <optional>
+                <element name="arity">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="right_associative">
+                    <data type="boolean"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="identity">
+                    <data type="NMTOKEN"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="reverse">
+                    <data type="NMTOKEN"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="inverse">
+                    <data type="NMTOKEN"/>
+                </element>
+            </optional>
 
             <!-- contains operation id/name and member keywords -->
             <ref name="objectAttributes"/>

@@ -1,8 +1,8 @@
 require 'symbolic'
 module Symbolic
   class Variable
-    #remembers primitive type of last operation; variables can take any value,
-    #but once a value is set it cannot be overridden by a value of an incompatible type
+    # remembers primitive type of last operation; variables can take any value,
+    # but once a value is set it cannot be overridden by a value of an incompatible type
     @type
 
     attr_reader :type
@@ -27,15 +27,31 @@ module Symbolic
       @type = sym
     end
 
-    #this may not be true, but for simplification purposes we must assume it is
+    # this may not be true, but for simplification purposes we must assume it is
     def zero?
       false
     end
 
-    #don't need proc value for now; just need it to return its name
+    # don't need proc value for now; just need it to return its name
     def value
       name
     end
+  end
+
+  # needed to automate creation of operator methods
+  class Class
+    def self.def_each(*method_names, &block)
+      method_names.each do |method_name|
+        define_method method_name do |vars|
+          instance_exec method_name, do block.call vars end
+        end
+      end
+    end
+  end
+
+  # this may prove redundant since :logic here already seems to point to Dentaku.logic
+  def set logic
+    @logic = logic
   end
 
   class Combinands < Expression
@@ -44,39 +60,31 @@ module Symbolic
     @left
     @right
 
-    AND_IDENTITY = true
-    OR_IDENTITY = false
+    attr_reader :operator, :identity
 
     class << self
-      attr_reader :operator, :identity
-
-      def not var
-        #my admittedly hideous solution to making boolean variables negatable
-        if var.is_a?(FalseClass || TrueClass) then return !var
-        elsif var.is_a?(Variable) then s = var.name.dup
-        elsif var.is_a?(String) then s = var.dup
-        else raise Exception, "cannot boolean negate a non-boolean expression!"
+      def initialize
+        def_each *logic[:combinators, :safe] do |op_name|
+          @identity = logic[op_name].identity
+          @operator = op_name
+          simplify *vars
         end
-        s[0..3].include?('not ') ? s[0..3] = '' : s = 'not '+s
-        Variable.new name: s, value: :boolean
       end
 
-      def and *vars
-        @identity = AND_IDENTITY
-        result = simplify *vars
-        result
-      end
-
-      def or *vars
-        @identity = OR_IDENTITY
-        simplify *vars
-      end
-
-      #canceling out terms - boolean expressions should always reduce to a single variable or boolean term
+      # canceling out terms - boolean expressions should always reduce to a single variable or boolean term
+      # we merged in not's simplification rule; but maybe all of these need to become separate rules in the logic template?
       def simplify *vars
-        s = caller[0]
-        @operator = s[/(?!`)\S*(?=')/]
-        s.clear
+        if operator == 'not'
+          # my admittedly hideous solution to making boolean variables negatable
+          if vars[0].is_a?(FalseClass || TrueClass)
+            return !vars[0]
+          elsif vars[0].is_a?(Variable) then s = vars[0].name.dup
+          elsif vars[0].is_a?(String) then s = vars[0].dup
+          else raise Exception, "cannot boolean negate a non-boolean expression!"
+          end
+          s[0..3].include?('not ') ? s[0..3] = '' : s = 'not '+s
+          Variable.new name: s, value: :boolean
+        end
         l,r,i,ni = vars[0].to_s, vars[1].to_s, identity.to_s, (!identity).to_s
         nl = Combinands.not(l).to_s
         case r

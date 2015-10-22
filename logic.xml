@@ -9,7 +9,7 @@
             <name>Peter Kong</name>
         </owner>
     </owners>
-    <description>example of basic logic set</description>
+    <description format="DITA">example of basic logic set: contains boolean, comparisons, and arithmetic.</description>
     <history>
         <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
             <description>created file</description>
@@ -18,29 +18,30 @@
     </history>
     <operators>
         <!-- combinators -->
-        <operator id="ternary">
+        <!--<operator id="ternary" type="combinator" precedence="10">
             <names>
-                <name>?</name>
                 <name>if</name>
                 <name>then</name>
+                <symbol>?</symbol>
             </names>
             <arity>2</arity>
-        </operator>
-        <operator id="and">
+        </operator>-->
+        <operator id="and" type="combinator" precedence="0">
             <names>
-                <name>&amp;&amp;</name>
                 <name>also</name>
+                <symbol>&amp;&amp;</symbol>
             </names>
         </operator>
-        <operator id="or">
+        <operator id="or" type="combinator" precedence="0">
             <names>
-                <name>||</name>
                 <name>else</name>
+                <symbol>||</symbol>
             </names>
         </operator>
-        <operator id="not">
+        <operator id="not" type="combinator" precedence="1">
             <names>
-                <name>!</name>
+                <symbol>!</symbol>
+                <regexp>(!)(?=\w|!)</regexp>
             </names>
             <arity>1</arity>
             <right_associative>true</right_associative>
@@ -48,121 +49,132 @@
         </operator>
         
         <!-- comparators -->
-        <operator id="eq">
+        <operator id="eq" type="comparator" precedence="30">
             <names>
-                <name>==</name>
                 <name>is</name>
                 <name>the same as</name>
+                <symbol>==</symbol>
             </names>
             <reverse>eq</reverse>
             <inverse>ne</inverse>
         </operator>
-        <operator id="lt">
+        <operator id="lt" type="comparator" precedence="35">
             <names>
-                <name>&lt;</name>
                 <name>less than</name>
                 <name>smaller than</name>
+                <symbol>&lt;</symbol>
             </names>
             <reverse>gt</reverse>
             <inverse>ge</inverse>
         </operator>
-        <operator id="gt">
+        <operator id="gt" type="comparator" precedence="35">
             <names>
-                <name>></name>
                 <name>greater than</name>
                 <name>bigger than</name>
+                <symbol>></symbol>
             </names>
             <reverse>lt</reverse>
             <inverse>le</inverse>
         </operator>
-        <operator id="le">
+        <operator id="le" type="comparator" precedence="35">
             <names>
-                <name>&lt;=</name>
                 <name>less than or equal</name>
                 <name>the same or smaller than</name>
+                <symbol>&lt;=</symbol>
             </names>
             <reverse>ge</reverse>
             <inverse>gt</inverse>
         </operator>
-        <operator id="ge">
+        <operator id="ge" type="comparator" precedence="35">
             <names>
-                <name>>=</name>
                 <name>greater than or equal</name>
                 <name>the same or bigger than</name>
+                <symbol>>=</symbol>
             </names>
             <reverse>le</reverse>
             <inverse>lt</inverse>
         </operator>
-        <operator id="ne">
+        <operator id="ne" type="comparator" precedence="30">
             <names>
-                <name>!=</name>
-                <name>&lt;></name>
-                <name>=/=</name>
                 <name>not equal</name>
+                <name>=/=</name>
                 <name>not the same as</name>
+                <symbol>!=</symbol>
+                <ruby>&lt;></ruby>
             </names>
             <reverse>ne</reverse>
             <inverse>eq</inverse>
         </operator>
         
         <!-- arithmetic -->
-        <operator id="plus">
+        <operator id="add" precedence="55" type="arithmetic">
             <names>
-                <name>+</name>
-                <name>added to</name>
+                <name>plus</name>
+                <symbol>+</symbol>
             </names>
             <identity>0</identity>
-            <inverse>minus</inverse>
+            <inverse>subtract</inverse>
         </operator>
-        <operator id="minus">
+        <operator id="subtract" precedence="55" type="arithmetic">
             <names>
-                <name>-</name>
-                <name>subtract from</name>
+                <name>minus</name>
                 <name>less</name>
+                <symbol>-</symbol>
             </names>
             <identity>0</identity>
             <inverse>plus</inverse>
         </operator>
-        <operator id="times">
+        <operator id="negate" precedence="65" type="arithmetic">
             <names>
-                <name>*</name>
-                <name>×</name>
-                <name>multiplied by</name>
+                <name>negation</name>
+                <symbol>-</symbol>
+                <regexp>(!)(?=\w|!)</regexp>
+            </names>
+            <arity>1</arity>
+            <right_associative>true</right_associative>
+            <identity>0</identity>
+            <inverse>negate</inverse>
+        </operator>
+        <operator id="multiply" precedence="60" type="arithmetic">
+            <names>
+                <name>times</name>
                 <name>by</name>
+                <symbol>×</symbol>
+                <ruby>*</ruby>
             </names>
             <identity>1</identity>
             <inverse>divided_by</inverse>
         </operator>
-        <operator id="divided_by">
+        <operator id="divide" precedence="60" type="arithmetic">
             <names>
-                <name>/</name>
-                <name>÷</name>
                 <name>over</name>
+                <symbol>÷</symbol>
+                <ruby>/</ruby>
             </names>
             <identity>1</identity>
             <inverse>times</inverse>
         </operator>
-        <operator id="modulus">
+        <operator id="modulus" precedence="60" type="arithmetic">
             <names>
-                <name>%</name>
                 <name>mod</name>
+                <symbol>%</symbol>
             </names>
         </operator>
-        <operator id="exponent">
+        <operator id="exponent" precedence="70" type="arithmetic">
             <names>
-                <name>**</name>
                 <name>power</name>
-                <name>to the power of</name>
-                <name>^</name>
+                <name>power</name>
+                <symbol>^</symbol>
+                <ruby>**</ruby>
             </names>
             <identity>1</identity>
             <inverse>log</inverse>
         </operator>
-        <operator id="log">
+        <!--<operator id="log" precedence="70" type="arithmetic">
             <names>
                 <name>logarithm</name>
             </names>
             <inverse>exponent</inverse>
-        </operator>
+        </operator>-->
     </operators>
 </logic>

@@ -328,6 +328,9 @@
             documentation content </a:documentation>
         <rng:element name="description">
             <rng:zeroOrMore>
+                <rng:attribute><rng:anyName></rng:anyName></rng:attribute>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
                 <rng:choice>
                     <rng:element>
                         <!-- either plain text or documentation XML (e.g. DITA) -->

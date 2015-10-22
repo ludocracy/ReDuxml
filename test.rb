@@ -1,4 +1,5 @@
 begin
+  requires = %w(test/unit parser)
   relatives = %w(symbolic dentaku)
   includes = %w(Symbolic Dentaku)
   requires.each do |required|
@@ -13,15 +14,37 @@ begin
     STDERR.puts "including #{included}"
     include Module.const_get(included)
   end
-end #includes, requires, etc
+end # includes, requires, etc
+require 'test/unit'
+require_relative 'test'
+require 'parser'
+
+class ParseTest < Test::Unit::TestCase
+  include Dentaku
+  # Called before every test method runs. Can be used
+  # to set up fixture information.
+  def setup
+  end
+
+  # tests main interface, opening, building and saving file
+  # skipping DesignOS.rb for now
+  def test_designos
+    filename = 'sample_template.xml'
+    file = File.open filename
+    xml_doc = Nokogiri::XML file
+    Editor.load xml_doc.root
+    STDERR.puts "****saving to file."
+    File.write('output_' + filename, xml_doc.to_xml)
+    reference_xml_doc = Nokogiri::XML File.open 'reference_output_template.xml'
+    assert xml_doc == reference_xml_doc, "****build failed!"
+    STDERR.puts "****build passed!"
+  end
+
+  def teardown
+  end
+end
 
 
 "#{
 def test
-  filename = 'sample_template.xml'
-  file = File.open filename
-  xml_doc = Nokogiri::XML file
-  Editor.load xml_doc.root
-  STDERR.puts "saving"
-  File.write('output_' + filename, xml_doc.to_xml)
 end}"

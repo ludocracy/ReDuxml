@@ -1,87 +1,101 @@
 require_relative 'symbolic_wrapper'
-require_relative 'Base_types'
 require 'dentaku'
 require 'dentaku/token'
 require 'dentaku/ast/identifier'
 require 'dentaku/ast/operation'
 
 module Dentaku
-  include Base_types::Operator
-  #overriding evaluate to do some rewriting (we can separate this later)
-  def self.evaluate(expression, data={})
-    #input scrubbing done here
+  # overriding evaluate to do some rewriting (we can separate this later)
+  attr_reader :logic
+  def self.evaluate(expression, logic, data={})
+    @logic = logic
+    # input scrubbing done here
     safe_expression = expression.dup
-    banned = {'==' => ' eq ', '!=' => ' ne ', '>=' => ' ge ', '<=' => ' le ', '>' => ' gt ' , '<' => ' lt ',
-              '&&' => ' and ', '||' => ' or ', /(!)(?=\w|!)/ => 'not '}
-    banned.each do |key, val| safe_expression.gsub!(key, val) end
+    @logic.names(:regexp).each_with_index do |symbol, index|
+      safe_expression.gsub!(symbol, @logic.names(:safe)[index])
+    end
+
+    # evaluating statement
     reply = calculator.evaluate(safe_expression, data).to_s
-    banned.each do |key, val|
-      if key == /(!)(?=\w|!)/
+
+    # re-substituting regular symbols for operator "safe" names
+    @logic.names(:safe).each_with_index do |name, index|
+      if name == 'not'
         replacement = "!"
-        sub_str = val
+        sub_str = "#{name} "
       else
-        replacement = key+' '
-        sub_str = val[1..-1]
+        replacement = "#{@logic.names(:symbol)[index].to_s} "
+        sub_str = " #{name} "
       end
       reply = reply.gsub!(sub_str, replacement) if reply.include?(sub_str)
     end
-    return reply.to_s if reply.respond_to?(:to_s)
+    raise Exception, "result is not convertible to a string!" unless reply.respond_to?(:to_s)
+    reply.to_s
   end
 
-  #adding boolean '!'
+  # loading operators from Logic - these will be used to produce the AST
   class Parser
     def operation(token)
-      {
-          add:      AST::Addition,
-          subtract: AST::Subtraction,
-          multiply: AST::Multiplication,
-          divide:   AST::Division,
-          pow:      AST::Exponentiation,
-          negate:   AST::Negation,
-          mod:      AST::Modulo,
+      op = logic[token.value]
+      ast_op = op.names(:name)[0]
 
-          lt:       AST::LessThan,
-          gt:       AST::GreaterThan,
-          le:       AST::LessThanOrEqual,
-          ge:       AST::GreaterThanOrEqual,
-          ne:       AST::NotEqual,
-          eq:       AST::Equal,
+      # Not has to be aliased here because of naming conflict that i can't figure out
+      ast_op = ast_op+'_' if ast_op == 'not'
 
-          not:      AST::Not_,
-          and:      AST::And,
-          or:       AST::Or,
-      }.fetch(token.value)
+      # converts operator into module name
+      ast_op = "#{ast_op.split(' ').each do |word| word.capitalize! end.join}"
+
+      # if it's a combinator, we're just going to make up the class right here
+      AST.const_get ast_op
+
     end
   end
 
+  # note! we are not dynamically replacing every scanner as they're working fine as they are.
   class TokenScanner
     class << self
-      #adding replacement symbols because the overrides are too complicated
+      # adding replacement symbols because the overrides are too complicated
       def comparator
-        new(:comparator, 'le|ge|ne|lt|gt|eq', lambda { |raw| raw.to_sym })
+        sym = __method__.to_sym
+        new(sym, get_search_str(sym), lambda { |raw| raw.to_sym })
       end
 
-      #adding new combinator '!'
+      # adding new combinator '!'
       def combinator
-        #added not
-        new(:combinator, '(and|or|not)\b', lambda { |raw| raw.strip.downcase.to_sym })
+        sym = __method__.to_sym
+        new(sym, get_search_str(sym), lambda { |raw| raw.strip.downcase.to_sym })
+      end
+
+      private
+      def get_search_str sym
+        "(#{logic[sym].names[:name][0].join('|')})\b"
       end
     end
   end
 
   module AST
     require_relative 'comparable'
-    include Symbolic_comparable
-    #redefining value to handle unknown value variables
+    include Symbolic
+
+    #passing Symbolic_comparable current logic
+    class Operation
+      Symbolic.set Dentaku.logic
+      def initialize(left, right)
+        @left  = left
+        @right = right
+      end
+    end
+
+    # redefining value to handle unknown value variables
     class Identifier < Node
-      #changing NilClass behavior
+      # changing NilClass behavior
       def value(context={})
         v = context[identifier]
         case v
           when Node
             v.value(context)
           when NilClass
-            #this is where we involve Symbolic to replace Identifier with Variable
+            # this is where we involve Symbolic to replace Identifier with Variable
             Symbolic::Variable.new(:name => identifier)
           else
             v
@@ -89,10 +103,10 @@ module Dentaku
       end
     end
 
-    #redef cast to prefer rationals
+    # redef cast to prefer rationals
     class Arithmetic < Operation
       private
-      #we prefer rationals
+      # we prefer rationals
       def cast(value, prefer_integer=true)
         return value unless value.respond_to?(:to_i)
         v = Rational(value)
@@ -101,81 +115,29 @@ module Dentaku
       end
     end
 
-    class LessThan < Comparator
-      def value(context={})
-        Symbolic_comparable.lt left.value(context), right.value(context)
-      end
-    end
+    # dynamically creating sub-subclasses of Operation using Operator names and types
+    def initialize
+      ops = logic[:comparator, :combinator, :arithmetic]
+      ops.each do |op|
+        op_str = op.names(:name)[0]
+        op_str = op_str+'_' if op_str == 'not'
+        op_str = "AST::#{op_str.split(' ').each do |word| word.capitalize! end.join}"
 
-    class LessThanOrEqual < Comparator
-      def value(context={})
-        Symbolic_comparable.le left.value(context), right.value(context)
-      end
-    end
-
-    class GreaterThan < Comparator
-      def value(context={})
-        Symbolic_comparable.gt left.value(context), right.value(context)
-      end
-    end
-
-    class GreaterThanOrEqual < Comparator
-      def value(context={})
-        Symbolic_comparable.ge left.value(context), right.value(context)
-      end
-    end
-
-    class NotEqual < Comparator
-      def value(context={})
-        Symbolic_comparable.ne left.value(context), right.value(context)
-      end
-    end
-
-    class Equal < Comparator
-      def value(context={})
-        Symbolic_comparable.eq left.value(context), right.value(context)
-      end
-    end
-
-    #adding Not Combinator; quite a few overrides because it only has one argument unlike its parent
-    class Not_ < Combinator
-      attr_reader :node
-      def initialize node
-        @node = node
-        fail "#{ self.class } requires logical operand" unless valid_node?(node)
-      end
-
-      def dependencies(context={})
-        node.dependencies(context)
-      end
-
-      def value(context={})
-        Symbolic::Combinands.not(node.value(context))
-      end
-
-      def self.arity
-        1
-      end
-
-      def self.right_associative?
-        true
-      end
-
-      def self.precedence
-        40
-      end
-    end
-
-    #overriding each Combinator so they use Symbolic's methods
-    class And < Combinator
-      def value(context={})
-        Symbolic::Combinands.and(left.value(context),right.value(context))
-      end
-    end
-
-    class Or < Combinator
-      def value(context={})
-        Symbolic::Combinands.or(left.value(context),right.value(context))
+        klass = AST.const_get(op.type.to_s.capitalize)
+        operator = Class.new klass do
+          # calls actual method using operator safe name
+          def value(context={})
+            case arity
+              when 1
+                "Symbolic_comparable.#{op.names(:safe)}".send node.value(context)
+              when 3
+                "Symbolic_comparable.#{op.names(:safe)}".send left.value(context), middle.value(context), right.value(context)
+              else
+                "Symbolic_comparable.#{op.names(:safe)}".send left.value(context), right.value(context)
+            end
+          end
+        end
+        self.const_set(op_str, operator)
       end
     end
   end
