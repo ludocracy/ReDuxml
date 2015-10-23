@@ -16,8 +16,8 @@ module Base_types
   # require 'devise'
   # XML parsing and manipulation
   require 'rubytree'
+  require 'nokogiri'
   include Tree
-
   # Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   # in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
   # each Kansei object is also a Tree::TreeNode
@@ -51,6 +51,7 @@ module Base_types
     # at its most basic it is the comment on the subclass of Component or annotation in the schema rules
     @@description
 
+    attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor, :if
     # shortcut
     def xml
       @xml_root_node
@@ -98,7 +99,6 @@ module Base_types
       @attributes = Hash.new
       @reserved_word_array ||= []
 
-      attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor, :if
 
       # must happen before traverse to have @children/@children_hash available
       super(self.object_id.to_s, @xml_root_node)
@@ -129,7 +129,7 @@ module Base_types
     def generate_new_xml args = {}
       element_name = self.class.to_s.downcase!
       element_name[/.*(?:(::))/] = ''
-      @xml_root_node = @xml_cursor = element element_name, args[:content]
+      @xml_root_node = @xml_cursor = element(element_name(args[:content]))
     end
 
     def generate_descr
@@ -242,6 +242,7 @@ module Base_types
       @children_hash[child]
     end
 
+    # a slightly safer way to get an attribute's final value (read only)
     def get_attr_val attr
       @attributes[attr].value
     end
@@ -574,11 +575,21 @@ module Base_types
   # part of the template file that actually contains the design or content
   # specifies logics allowed within itself
   class Design < Instance
-    def logics
-      get_attr_val :logics
-    end
+    @logic
+    attr_accessor :logic
+
     def initialize xml_node, args = {}
       super xml_node
+      # defining default logics here for now (make constant later? or builder template property?)
+      if get_attr_val(:logics).nil?
+        @attributes[:logics].value = %w(logic)
+      end
+
+      # also hardcoding relative path of logic template file for now
+      # will need to load from registry later
+      get_attr_val(logics).each do |logic|
+        @logic = Logic.new(logic)
+      end
     end
   end
 
@@ -638,6 +649,14 @@ module Base_types
   end
 
   class Logic < Component
+    # later this should load like a regular template (probably as part of inspector?)
+    # then it will be a run time that listens for operations and reports performance
+    def initialize logic_file_name
+      file = File.open "#{logic_file_name}.xml"
+      xml_doc = Nokogiri::XML file
+      super xml_doc.root
+    end
+
     # returns operator or operators that match arg; returns all if no arg
     def [] *args
       ops = []
@@ -652,10 +671,13 @@ module Base_types
 
     # returns array of operator names starting in priority from the given symbol and working down if none found
     # in other words, this method will always return an array with an index for each operator,
-    # even if the operator does not have a name that matches the given symbol
-    def names sym
+    # the key is the pattern that constrains which operators' names are to be returned e.g. by type, inverse, etc.
+    def names sym, key=nil
       a = []
-      children.each do |operator|
+      if key ary = self[key]
+        else ary = self[]
+      end
+      aryeach do |operator|
         case sym
           when :regexp then a << (operator.regexp ? operator.regexp : operator.symbol)
           when :symbol then a << operator.symbol

@@ -1,4 +1,6 @@
 require 'symbolic'
+
+# extending Symbolic to simplify variable expressions and adding combinators that use DesignOS::Operator
 module Symbolic
   class Variable
     # remembers primitive type of last operation; variables can take any value,
@@ -43,14 +45,14 @@ module Symbolic
     def self.def_each(*method_names, &block)
       method_names.each do |method_name|
         define_method method_name do |vars|
-          instance_exec method_name, do block.call vars end
+          instance_exec method_name do block.call vars end
         end
       end
     end
   end
 
   # this may prove redundant since :logic here already seems to point to Dentaku.logic
-  def set logic
+  def self.set logic
     @logic = logic
   end
 

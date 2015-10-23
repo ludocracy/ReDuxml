@@ -1,34 +1,15 @@
+#extending Symbolic to simplify variable expressions and adding comparators that use DesignOS::Operators
 module Symbolic_comparable
   include Symbolic
+  def set logic
+    @logic = logic
+  end
 
   class << self
-    def inverse op
-      case op
-        when 'eq' then 'ne'
-        when 'ne' then 'eq'
-        when 'gt' then 'le'
-        when 'ge' then 'lt'
-        when 'lt' then 'ge'
-        when 'le' then 'gt'
-        else raise Exception, 'not a valid operator!'
-      end
-    end
-
-    def reverse op
-      case op
-        when 'eq' then 'eq'
-        when 'ne' then 'ne'
-        when 'gt' then 'lt'
-        when 'ge' then 'le'
-        when 'lt' then 'gt'
-        when 'le' then 'ge'
-        else raise Exception, 'not a valid operator!'
-      end
-    end
-
     def compare left, right
       op = caller[0]
       op = op[/(?!`)\S*(?=')/]
+
       case
         when !left.is_a?(Symbolic) && !right.is_a?(Symbolic)
           #4 == 4
@@ -58,34 +39,11 @@ module Symbolic_comparable
       end
     end
 
-    def eq left, right
-      result = compare(left,right)
-      result.is_a?(Symbolic) ? result : result.nil? ? false : result == 0
-    end
-
-    def ne left, right
-      result = compare(left,right)
-      result.is_a?(Symbolic) ? result : result.nil? ? true : result != 0
-    end
-
-    def gt left, right
-      result = compare(left,right)
-      result.is_a?(Symbolic) ? result : result.nil? ? false : result > 0
-    end
-
-    def lt left, right
-      result = compare(left,right)
-      result.is_a?(Symbolic) ? result : result.nil? ? false : result < 0
-    end
-
-    def ge left, right
-      result = compare(left,right)
-      result.is_a?(Symbolic) ? result : result.nil? ? false : result >= 0
-    end
-
-    def le left, right
-      result = compare(left,right)
-      result.is_a?(Symbolic) ? result : result.nil? ? false : result <= 0
+    def initialize
+      def_each *logic.names[:comparators, :safe] do |op_name|
+        result = compare(left,right)
+        result.is_a?(Symbolic) ? result : result.nil? ? false : "result #{logic[op_name, :symbol]} 0".send
+      end
     end
   end
 end

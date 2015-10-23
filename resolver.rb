@@ -1,14 +1,13 @@
-require_relative 'symbolic_wrapper'
 require 'dentaku'
-require 'dentaku/token'
-require 'dentaku/ast/identifier'
-require 'dentaku/ast/operation'
+require_relative 'symbolic_wrapper'
 
 module Dentaku
+  def self.set logic
+    @logic = logic
+  end
   # overriding evaluate to do some rewriting (we can separate this later)
   attr_reader :logic
-  def self.evaluate(expression, logic, data={})
-    @logic = logic
+  def self.evaluate(expression, data={})
     # input scrubbing done here
     safe_expression = expression.dup
     @logic.names(:regexp).each_with_index do |symbol, index|
@@ -79,10 +78,16 @@ module Dentaku
 
     #passing Symbolic_comparable current logic
     class Operation
-      Symbolic.set Dentaku.logic
+      Symbolic.set @logic
       def initialize(left, right)
         @left  = left
         @right = right
+      end
+    end
+
+    class Function < Node
+      def self.register(name, type, implementation)
+
       end
     end
 

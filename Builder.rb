@@ -3,6 +3,7 @@
 module Builder
   require_relative 'Base_types'
   require_relative 'resolver'
+  require_relative '../dentaku/lib/dentaku'
   include Dentaku
   include Base_types
   # points to the component the builder is currently working on
@@ -26,8 +27,9 @@ module Builder
     end
     @current_template = @cursor
     @parameters = @current_template.design.params
-    @logics = @current_template.design.logics
-    grow @cursor
+
+    Dentaku.set @current_template.design.logics
+    build @cursor
     @builds[@current_template.object_id] = @current_template
     @cursor = @current_template.children[-1]
   end
@@ -92,5 +94,5 @@ module Builder
     raise Exception, "cannot find end of parameter expression!"
   end
 
-  private :grow, :parameterize, :find_expr
+  private :build, :parameterize!, :find_expr
 end

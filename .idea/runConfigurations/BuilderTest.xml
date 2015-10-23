@@ -1,15 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run test 'parser_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
+  <configuration default="false" name="BuilderTest" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
     <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
     <module name="DesignOS" />
     <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-    <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+    <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
     <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
     <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
     <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-    <envs>
-      <env name="JRUBY_OPTS" value="-X+O" />
-    </envs>
+    <envs />
     <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
     <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
     <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
