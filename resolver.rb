@@ -5,25 +5,29 @@ module Dentaku
   def self.set logic
     @logic = logic
   end
+
+  def self.logic
+    @logic
+  end
   # overriding evaluate to do some rewriting (we can separate this later)
-  attr_reader :logic
   def self.evaluate(expression, data={})
     # input scrubbing done here
     safe_expression = expression.dup
-    @logic.names(:regexp).each_with_index do |symbol, index|
-      safe_expression.gsub!(symbol, @logic.names(:safe)[index])
+    check = logic.aliases(:regexp)
+    logic.aliases(:regexp).each_with_index do |symbol, index|
+      safe_expression.gsub!(symbol, logic.aliases(:safe)[index])
     end
 
     # evaluating statement
     reply = calculator.evaluate(safe_expression, data).to_s
 
     # re-substituting regular symbols for operator "safe" names
-    @logic.names(:safe).each_with_index do |name, index|
+    logic.aliases(:safe).each_with_index do |name, index|
       if name == 'not'
         replacement = "!"
         sub_str = "#{name} "
       else
-        replacement = "#{@logic.names(:symbol)[index].to_s} "
+        replacement = "#{logic.aliases(:symbol)[index].to_s} "
         sub_str = " #{name} "
       end
       reply = reply.gsub!(sub_str, replacement) if reply.include?(sub_str)
@@ -35,8 +39,10 @@ module Dentaku
   # loading operators from Logic - these will be used to produce the AST
   class Parser
     def operation(token)
-      op = logic[token.value]
-      ast_op = op.names(:name)[0]
+      logic = Dentaku.logic
+      op = logic.match_ops(token.value)
+      assert op.size == 1
+      ast_op = op.aliases(:name)[0]
 
       # Not has to be aliased here because of naming conflict that i can't figure out
       ast_op = ast_op+'_' if ast_op == 'not'
@@ -46,7 +52,6 @@ module Dentaku
 
       # if it's a combinator, we're just going to make up the class right here
       AST.const_get ast_op
-
     end
   end
 
@@ -67,7 +72,11 @@ module Dentaku
 
       private
       def get_search_str sym
-        "(#{logic[sym].names[:name][0].join('|')})\b"
+        a = []
+        Dentaku.logic.match_ops(sym).each do |op|
+          a << op.aliases(:name)[0]
+        end
+        "#{a.join('|')})\b"
       end
     end
   end
@@ -78,7 +87,7 @@ module Dentaku
 
     #passing Symbolic_comparable current logic
     class Operation
-      Symbolic.set @logic
+      Symbolic.set Dentaku.logic
       def initialize(left, right)
         @left  = left
         @right = right
@@ -87,7 +96,7 @@ module Dentaku
 
     class Function < Node
       def self.register(name, type, implementation)
-
+        sleep 0
       end
     end
 
@@ -122,9 +131,9 @@ module Dentaku
 
     # dynamically creating sub-subclasses of Operation using Operator names and types
     def initialize
-      ops = logic[:comparator, :combinator, :arithmetic]
+      ops = Dentaku.logic.match_ops(:comparator, :combinator, :arithmetic)
       ops.each do |op|
-        op_str = op.names(:name)[0]
+        op_str = op.aliases(:name)[0]
         op_str = op_str+'_' if op_str == 'not'
         op_str = "AST::#{op_str.split(' ').each do |word| word.capitalize! end.join}"
 
@@ -132,13 +141,13 @@ module Dentaku
         operator = Class.new klass do
           # calls actual method using operator safe name
           def value(context={})
-            case arity
+            case op.arity
               when 1
-                "Symbolic_comparable.#{op.names(:safe)}".send node.value(context)
+                "Symbolic_comparable.#{op.aliases(:safe)}".send node.value(context)
               when 3
-                "Symbolic_comparable.#{op.names(:safe)}".send left.value(context), middle.value(context), right.value(context)
+                "Symbolic_comparable.#{op.aliases(:safe)}".send left.value(context), middle.value(context), right.value(context)
               else
-                "Symbolic_comparable.#{op.names(:safe)}".send left.value(context), right.value(context)
+                "Symbolic_comparable.#{op.aliases(:safe)}".send left.value(context), right.value(context)
             end
           end
         end

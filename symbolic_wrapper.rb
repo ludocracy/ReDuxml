@@ -56,6 +56,10 @@ module Symbolic
     @logic = logic
   end
 
+  def logic
+    @logic
+  end
+
   class Combinands < Expression
     @operator
     @identity
@@ -66,8 +70,8 @@ module Symbolic
 
     class << self
       def initialize
-        def_each *logic[:combinators, :safe] do |op_name|
-          @identity = logic[op_name].identity
+        def_each *logic.aliases(:combinators, :safe) do |op_name|
+          @identity = logic.match_op(op_name).identity
           @operator = op_name
           simplify *vars
         end

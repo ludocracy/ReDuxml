@@ -5,6 +5,14 @@ module Symbolic_comparable
     @logic = logic
   end
 
+  def logic
+    @logic
+  end
+
+  def reverse op_str
+    logic.match_ops(op_str)[0].reverse.aliases(:safe)
+  end
+
   class << self
     def compare left, right
       op = caller[0]
@@ -16,7 +24,7 @@ module Symbolic_comparable
           left.<=> right
         when left.is_a?(Symbolic) && !right.is_a?(Symbolic)
           #var == 4
-          Symbolic::Variable.new(name: "#{left.to_s} #{op} #{right.to_s}", value: :boolean)
+          Symbolic::Variable.new(name: "#{left.to_s} #{reverse(op)} #{right.to_s}", value: :boolean)
         when !left.is_a?(Symbolic) && right.is_a?(Symbolic)
           #4 == var
           Symbolic::Variable.new(name: "#{right.to_s} #{reverse(op)} #{left.to_s}", value: :boolean)
@@ -34,16 +42,21 @@ module Symbolic_comparable
               nil
             else
               #var*2 == var**-4
-              Symbolic::Variable.new(name: "#{left-right} #{reverse(op)} 0", value: boolean)
+              Symbolic::Variable.new(name: "#{left-right} #{logic(op).reverse.names(:safe)} 0", value: boolean)
           end
       end
     end
 
     def initialize
-      def_each *logic.names[:comparators, :safe] do |op_name|
+      def_each *logic.names(:comparators, :safe) do |op_name|
         result = compare(left,right)
-        result.is_a?(Symbolic) ? result : result.nil? ? false : "result #{logic[op_name, :symbol]} 0".send
+        if result.is_a?(Symbolic) then result
+        else
+          result.nil? ? false : "result #{logic.match_ops(op_name, :symbol)[0]} 0".send
+        end
       end
     end
+
   end
+
 end

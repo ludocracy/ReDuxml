@@ -40,21 +40,25 @@
                 <zeroOrMore>
                     <element name="name">
                         <a:documentation/>
+                        <a:documentation>any symbolic or natural language name or description for the operator</a:documentation>
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
                 <optional>
                     <element name="symbol">
+                        <a:documentation>preferred name when represented in mathematic shorthand</a:documentation>
                         <data type="string"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="regexp">
+                        <a:documentation>preferred name when tokenizing/searching text for operator </a:documentation>
                         <data type="string"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="ruby">
+                        <a:documentation>preferred name when invoked as ruby method/operator</a:documentation>
                         <data type="string"/>
                     </element>
                 </optional>

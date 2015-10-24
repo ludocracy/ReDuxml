@@ -11,13 +11,68 @@
 # changes made to Components are made to both the XML node and data node simultaneously
 # in order to provide real-time feedback to XML editor
 # could add switch to turn this off
+
+# XML parsing and manipulation
+require 'tree'
+require 'tree/tree_deps'
+require 'nokogiri'
+
+# need to override rubytree to make name = element name and id = name (i.e. unique identifier)
+# move this into extension file later
+module Tree
+  class TreeNode
+    attr_reader :id, :name
+    def initialize(content = nil)
+      raise ArgumentError, "XML Node HAS to be provided!" if content == nil
+      @name, @content = content.name, content
+      @id = self.object_id
+      if name.kind_of?(Integer)
+        warn StandardWarning,
+             "Using integer as node name."\
+           " Semantics of TreeNode[] may not be what you expect!"\
+           " #{name} #{content}"
+      end
+
+      self.set_as_root!
+      @children_hash = Hash.new
+      @children = []
+    end
+
+    # super is protected
+    def set_as_root!              # :nodoc:
+      self.parent = nil
+    end
+
+    # removing uniqueness test
+    def add(child, at_index = -1)
+      # Only handles the immediate child scenario
+      raise ArgumentError,
+            "Attempting to add a nil node" unless child
+      raise ArgumentError,
+            "Attempting add node to itself" if self.equal?(child)
+      raise ArgumentError,
+            "Attempting add root as a child" if child.equal?(root)
+
+      child.parent.remove! child if child.parent # Detach from the old parent
+
+      if insertion_range.include?(at_index)
+        @children.insert(at_index, child)
+      else
+        raise "Attempting to insert a child at a non-existent location"\
+              " (#{at_index}) "\
+              "when only positions from "\
+              "#{insertion_range.min} to #{insertion_range.max} exist."
+      end
+
+      @children_hash[child.name]  = child
+      child.parent = self
+      return child
+    end
+  end
+end
+
+# my own stuff
 module Base_types
-  # authentication gem
-  # require 'devise'
-  # XML parsing and manipulation
-  require 'rubytree'
-  require 'nokogiri'
-  include Tree
   # Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   # in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
   # each Kansei object is also a Tree::TreeNode
@@ -57,8 +112,8 @@ module Base_types
       @xml_root_node
     end
 
-    def root_name
-      @xml_root_node.name
+    def to_s
+      @xml_root_node.to_s
     end
 
     def collect_changes change
@@ -76,12 +131,12 @@ module Base_types
       if @children.size != 0
         content = "children: "
         @children.each do |child|
-          content << "'#{child.root_name}' "
+          content << "'#{child.name}' "
         end
       else
         content = "content: #{self.content}"
       end
-      puts "Component '#{root_name}' #{content}"
+      puts "Component '#{name}' #{content}"
     end
 
     # creating new Component from XML node (from file) or input in the form of XML string
@@ -101,7 +156,7 @@ module Base_types
 
 
       # must happen before traverse to have @children/@children_hash available
-      super(self.object_id.to_s, @xml_root_node)
+      super(@xml_root_node)
       # traverse and load Component from xml
       collect_changes traverse_xml load_methods %w(load_attributes init_reserved chase_tail init_generic)
     end
@@ -129,7 +184,7 @@ module Base_types
     def generate_new_xml args = {}
       element_name = self.class.to_s.downcase!
       element_name[/.*(?:(::))/] = ''
-      @xml_root_node = @xml_cursor = element(element_name(args[:content]))
+      @xml_root_node = @xml_cursor = element(element_name,(args[:content]))
     end
 
     def generate_descr
@@ -172,6 +227,7 @@ module Base_types
       self << Component.new(child)
     end
 
+    #takes an xml node's attributes and adds them to the Component's @attributes hash
     def load_attributes
       load_content_if_leaf
       @xml_cursor.attribute_nodes.each do |attr|
@@ -184,7 +240,7 @@ module Base_types
           when :if
             @if << attr
           else
-            @attributes[attr.name.to_sym] = attr
+            @attributes[attr.name.to_sym] = attr.value
         end
       end
       if @id.nil?
@@ -233,22 +289,23 @@ module Base_types
       false
     end
 
-    def find_child child
+    # finds first near match child
+    def find_child child_pattern
+      #attempting to match by name
       @children.each do |cur_child|
-        return cur_child if cur_child.root_name == child
+        return cur_child if cur_child.name == child_pattern
       end
-      @children[child]
+      #attempting to use pattern as index
+      @children[child_pattern]
     rescue TypeError
-      @children_hash[child]
+      #attempting to use pattern as key
+      @children_hash[child_pattern]
     end
 
     # a slightly safer way to get an attribute's final value (read only)
     def get_attr_val attr
-      @attributes[attr].value
+      @attributes[attr]
     end
-
-    # redefining TreeNode::name as Component::id
-    alias_method :id, :name
 
     def children?
       @children.size.to_s
@@ -278,6 +335,7 @@ module Base_types
       super component_child
     end
 
+    # creates new XML element
     def element name, content = nil
       doc = @xml_doc || @xml_root_node.document
       new_element = Nokogiri::XML::Element.new name, doc
@@ -486,7 +544,7 @@ module Base_types
 
     # because owner is not known until insert is registered with history, this method is kept private
     def generate_descr
-      self[:description] = "#{self[:owner].to_s} added #{@ref.root_name} (#{@ref.id}) to #{@ref.parent.root_name} (#{@ref.id})" + self[:description]
+      self[:description] = "#{self[:owner].to_s} added #{@ref.name} (#{@ref.id}) to #{@ref.parent.name} (#{@ref.id})" + self[:description]
     end
 
     private :generate_descr
@@ -576,7 +634,7 @@ module Base_types
   # specifies logics allowed within itself
   class Design < Instance
     @logic
-    attr_accessor :logic
+    attr_reader :logic
 
     def initialize xml_node, args = {}
       super xml_node
@@ -587,8 +645,8 @@ module Base_types
 
       # also hardcoding relative path of logic template file for now
       # will need to load from registry later
-      get_attr_val(logics).each do |logic|
-        @logic = Logic.new(logic)
+      get_attr_val(:logics).each do |logic|
+        @logic.load Logic.new(logic)
       end
     end
   end
@@ -652,19 +710,29 @@ module Base_types
     # later this should load like a regular template (probably as part of inspector?)
     # then it will be a run time that listens for operations and reports performance
     def initialize logic_file_name
+      #hold parent
+      old_parent = @parent
+      @reserved_word_array = %w(operator)
       file = File.open "#{logic_file_name}.xml"
       xml_doc = Nokogiri::XML file
-      super xml_doc.root
+      #skipping straight to design
+      #later we'll need to look at front matter of template to verify it; can't just load any old logic safely!
+      super xml_doc.root.element_children[-1]
+      @name = logic_file_name
+      sleep 0
+    end
+
+    def load logic
+      children << logic.children
     end
 
     # returns operator or operators that match arg; returns all if no arg
-    def [] *args
+    def match_ops *args
       ops = []
       args.each do |arg|
         children.each do |operator|
-          ops << operator.key(arg)
+          ops << operator.match(arg)
         end
-        ops.size > 1 ? ops : ops[0]
       end
       args ? ops : children
     end
@@ -672,17 +740,17 @@ module Base_types
     # returns array of operator names starting in priority from the given symbol and working down if none found
     # in other words, this method will always return an array with an index for each operator,
     # the key is the pattern that constrains which operators' names are to be returned e.g. by type, inverse, etc.
-    def names sym, key=nil
+    def aliases preferred_name, op_filter=nil
       a = []
-      if key ary = self[key]
-        else ary = self[]
+      if op_filter then ary = match_ops(op_filter)
+      else ary = match_ops
       end
-      aryeach do |operator|
-        case sym
+      ary.each do |operator|
+        case preferred_name
           when :regexp then a << (operator.regexp ? operator.regexp : operator.symbol)
           when :symbol then a << operator.symbol
-          when :name then a << operator.names[sym][0]
-          else a << operator.names[sym]
+          when :name then a << operator.aliases(preferred_name)[0]
+          else a << operator.aliases(preferred_name)
         end
       end
       a
@@ -710,26 +778,42 @@ module Base_types
 
     attr_reader :symbol, :names
 
+    #returns names that match given symbols
+    def aliases *keys
+      a = []
+      keys.each do |key|
+        a << @names[key]
+      end
+      a
+    end
+
     def initialize args={}
       super args
-
+      @names = {}
       # this name is guaranteed to be safe in any context (C-identifier string)
       @names[:safe] = id
-      find_child('names').each do |name|
-        case name.element.to_sym
-          when :symbol then @symbol = name
-          when :regexp then @regexp = name
+      s_a = get_attr_val(:names) || @xml_cursor.element_children.each do |child|
+        case child.name.to_sym
+          when :symbol then @symbol = child.content
+          when :regexp then @regexp = child.content
+          when :ruby then @ruby = child.content
           when :name
             @names[:name].is_a?(Array) ? (@names[:name] << name) : (@names[:name] = [name])
-          else @names[name.element.to_sym] = name
+          else @names[child.name.to_sym] = child.content
         end
       end
+      ObjectSpace.define_finalizer( self, self.class.finalize )
+    end
+
+    def self.finalize
+      #proc { puts "Operator destroyed!!!" }
     end
 
     # looks up arg and returns this operator if match found
-    def key arg
+    def match pattern
+      # don't be so lazy! fix this!!!
       [@symbol+@names+@proc+@attributes[:type].value].each do |obj|
-        return self if obj == arg || obj.to_s == arg
+        return self if obj == pattern || obj.to_s == pattern
       end
     end
 
