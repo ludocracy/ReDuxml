@@ -1,6 +1,6 @@
 # Editor contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
 module Editor
-  require_relative 'Base_types'
+  require_relative 'patterns'
   include Base_types
   # points to current Component
   @cursor

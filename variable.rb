@@ -1,8 +1,11 @@
 require 'symbolic'
-
+require_relative 'comparands'
 # extending Symbolic to simplify variable expressions and adding combinators that use DesignOS::Operator
 module Symbolic
+
   class Variable
+    # unlike include, puts Comparable's methods first before this class's methods in inheritance hierarchy
+    prepend Comparands
     # remembers primitive type of last operation; variables can take any value,
     # but once a value is set it cannot be overridden by a value of an incompatible type
     @type
@@ -25,6 +28,7 @@ module Symbolic
       end
     end
 
+    # need this method because we only discover variable's type when operated on
     def set_type sym
       @type = sym
     end
@@ -40,57 +44,59 @@ module Symbolic
     end
   end
 
-  # needed to automate creation of operator methods
-  class Class
-    def self.def_each(*method_names, &block)
-      method_names.each do |method_name|
-        define_method method_name do |vars|
-          instance_exec method_name do block.call vars end
-        end
+  def initialize
+    @logic.match_ops(:combinator).each do |op|
+      op.manifest(parent: self)  do |*args|
+
+      # the following is itself a dynamically created method member of Combinand - see Symbolic::Combinand below
+        Combinands.method(method_name).call(*args)
+
       end
     end
   end
 
-  # this may prove redundant since :logic here already seems to point to Dentaku.logic
-  def self.set logic
-    @logic = logic
-  end
-
-  def logic
-    @logic
-  end
-
   class Combinands < Expression
-    @operator
+    prepend Symbolic
+
+    @operator # should this be a class variable?
     @identity
     @left
     @right
 
     attr_reader :operator, :identity
 
+    def initialize *args
+      #dynamically declare each combinator method and have it call the given simplify method
+      Generate_class_methods.def_class_methods(Combinands, logic.aliases(:safe, :combinators)) do |*args|
+        @identity = logic.match_op(args[0]).identity
+        @operator = args[0]
+        simplify *vars
+      end
+
+      super *args
+    end
+
     class << self
-      def initialize
-        def_each *logic.aliases(:combinators, :safe) do |op_name|
-          @identity = logic.match_op(op_name).identity
-          @operator = op_name
-          simplify *vars
-        end
+      attr_reader :logic
+      def combinands combinands
+        combinands
       end
 
       # canceling out terms - boolean expressions should always reduce to a single variable or boolean term
       # we merged in not's simplification rule; but maybe all of these need to become separate rules in the logic template?
       def simplify *vars
-        if operator == 'not'
+        if operator.aliases(:safe).include?(:not_)
           # my admittedly hideous solution to making boolean variables negatable
           if vars[0].is_a?(FalseClass || TrueClass)
             return !vars[0]
           elsif vars[0].is_a?(Variable) then s = vars[0].name.dup
           elsif vars[0].is_a?(String) then s = vars[0].dup
-          else raise Exception, "cannot boolean negate a non-boolean expression!"
+          else raise Exception, "cannot boolean-negate a non-boolean expression!"
           end
           s[0..3].include?('not ') ? s[0..3] = '' : s = 'not '+s
           Variable.new name: s, value: :boolean
         end
+
         l,r,i,ni = vars[0].to_s, vars[1].to_s, identity.to_s, (!identity).to_s
         nl = Combinands.not(l).to_s
         case r
@@ -103,7 +109,17 @@ module Symbolic
               else "#{l} #{operator} #{r}"
             end
         end
+      end # end def simplify
+
+    end # end class << self
+
+    # needs to be rewritten but how??
+    def value
+      if variables.all?(&:value)
+        symbolic.inject(numeric) {|value, (base, coef)| value + base.value * coef.value }
       end
     end
-  end
-end
+
+  end # end Combinands
+
+end # end module Symbolic

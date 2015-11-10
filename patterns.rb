@@ -21,17 +21,17 @@ require 'nokogiri'
 # move this into extension file later
 module Tree
   class TreeNode
-    attr_reader :id, :name
+    attr_reader :id
+
+    protected :name
+    def name
+      @id
+    end
+
     def initialize(content = nil)
       raise ArgumentError, "XML Node HAS to be provided!" if content == nil
       @name, @content = content.name, content
       @id = self.object_id
-      if name.kind_of?(Integer)
-        warn StandardWarning,
-             "Using integer as node name."\
-           " Semantics of TreeNode[] may not be what you expect!"\
-           " #{name} #{content}"
-      end
 
       self.set_as_root!
       @children_hash = Hash.new
@@ -71,8 +71,23 @@ module Tree
   end
 end
 
+# modifying Hash to push duplicate values into an array matched to that key
+class Hash
+  def []=(key, value)
+    if self[key].nil?
+      self.store key, value
+    else
+      if self[key].is_a?(Array)
+        self[key].push(value)
+      else
+        self.store key, [value]
+      end
+    end
+  end
+end
+
 # my own stuff
-module Base_types
+module Patterns
   # Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   # in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
   # each Kansei object is also a Tree::TreeNode
@@ -612,7 +627,7 @@ module Base_types
     end
 
     def param_val arg
-      get_param_hash[arg].value
+      get_param_hash[arg]
     end
   end
 
@@ -640,7 +655,7 @@ module Base_types
       super xml_node
       # defining default logics here for now (make constant later? or builder template property?)
       if get_attr_val(:logics).nil?
-        @attributes[:logics].value = %w(logic)
+        @attributes[:logics] = %w(logic)
       end
 
       # also hardcoding relative path of logic template file for now
@@ -710,8 +725,6 @@ module Base_types
     # later this should load like a regular template (probably as part of inspector?)
     # then it will be a run time that listens for operations and reports performance
     def initialize logic_file_name
-      #hold parent
-      old_parent = @parent
       @reserved_word_array = %w(operator)
       file = File.open "#{logic_file_name}.xml"
       xml_doc = Nokogiri::XML file
@@ -719,7 +732,6 @@ module Base_types
       #later we'll need to look at front matter of template to verify it; can't just load any old logic safely!
       super xml_doc.root.element_children[-1]
       @name = logic_file_name
-      sleep 0
     end
 
     def load logic
@@ -731,10 +743,11 @@ module Base_types
       ops = []
       args.each do |arg|
         children.each do |operator|
-          ops << operator.match(arg)
+          a = operator.match arg
+          a ? ops << a : next
         end
       end
-      args ? ops : children
+      args.empty? ? children : ops
     end
 
     # returns array of operator names starting in priority from the given symbol and working down if none found
@@ -747,13 +760,12 @@ module Base_types
       end
       ary.each do |operator|
         case preferred_name
-          when :regexp then a << (operator.regexp ? operator.regexp : operator.symbol)
+          when :regexp then a << operator.regexp
           when :symbol then a << operator.symbol
-          when :name then a << operator.aliases(preferred_name)[0]
-          else a << operator.aliases(preferred_name)
+          else a << operator.aliases(preferred_name)[0]
         end
       end
-      a
+      a.flatten
     end
 
       private
@@ -773,84 +785,113 @@ module Base_types
     @regexp
     # alternate name hash; keys are domains in which names are used
     @names
-    # actual method to call when operator invoked
-    @proc
 
-    attr_reader :symbol, :names
+    attr_reader :symbol, :names, :regexp
 
     #returns names that match given symbols
     def aliases *keys
       a = []
       keys.each do |key|
-        a << @names[key]
+        @names[key].nil? ? next : a << @names[key]
       end
-      a
+
+      a.flatten
     end
 
-    def initialize args={}
-      super args
-      @names = {}
+    def initialize xml_node
+      super xml_node
+      #zeroing out XML-derived properties because we're making our own structure
+      remove_all!
+      @attributes = {}
+      xml_node.attributes.each do |name, attr| @attributes[name.to_sym] = (attr.value.is_a?(Array) ? attr.value[0] : attr.value) end
       # this name is guaranteed to be safe in any context (C-identifier string)
-      @names[:safe] = id
-      s_a = get_attr_val(:names) || @xml_cursor.element_children.each do |child|
-        case child.name.to_sym
-          when :symbol then @symbol = child.content
-          when :regexp then @regexp = child.content
-          when :ruby then @ruby = child.content
-          when :name
-            @names[:name].is_a?(Array) ? (@names[:name] << name) : (@names[:name] = [name])
-          else @names[child.name.to_sym] = child.content
+      @names = {safe: id}
+      @id = id
+      xml_node.element_children.each do |child|
+        if child.name == 'names'
+          child.element_children.each do |grandchild|
+            sym = grandchild.name.to_sym
+            case sym
+              when :symbol then @symbol = grandchild.content.strip.to_sym
+              when :regexp then @regexp = Regexp.new(grandchild.content.strip)
+              else
+                @names[sym] = grandchild.content
+            end
+          end
+        else
+          sym = child.name.to_sym
+          @attributes[sym] = child.content.strip
         end
       end
-      ObjectSpace.define_finalizer( self, self.class.finalize )
+      @regexp ||= @symbol.to_s
     end
 
-    def self.finalize
-      #proc { puts "Operator destroyed!!!" }
+    # allows external entities to pass in a base class and dynamically declare a subclass
+    # by exposing the given block to this operator's attributes
+    def impute klass, &block
+      op_str = klass.to_s[/(\w*)(?=$)/]
+      # getting base class
+      superklass = klass.superclass
+      # getting module
+      mod = const_get(klass.to_s[0,op_str.size-2])
+      op_class = Class.new(superklass, block)
+      mod.const_set(op_str, op_class)
+      # rescue certain kinds of errors?
     end
 
-    # looks up arg and returns this operator if match found
-    def match pattern
-      # don't be so lazy! fix this!!!
-      [@symbol+@names+@proc+@attributes[:type].value].each do |obj|
-        return self if obj == pattern || obj.to_s == pattern
+    # allows external entity to pass in a module or class :parent
+    # and dynamically declares member method by exposing the given block to this operator's attributes,
+    # assigning it a name from either type of name as indicated by sym (symbol) or sym itself
+    def manifest *args, &block
+      maudule = args[:parent] || Module
+      sym = args[:sym]
+      case sym
+        when nil          then name = @names[:safe]
+        when @names[sym]  then name = @names[sym]
+        else                   name = sym
       end
+      maudule.define_method(name, block)
+      # try to suppress any warning messages about overridden methods?
+      # rescue certain kinds of errors?
+    end
+
+    # ********** we may not need any of the code below! ***********
+
+    # returns this operator if pattern matches any of operator's names or symbols or procs
+    def match pattern
+      objs = [[symbol]+[regexp]+names.values+[@proc]+[@attributes[:type]]].flatten.compact.uniq
+      objs.each do |obj|
+        return self if obj == pattern || obj.to_s == pattern.to_s
+        return self if obj.to_s+'s' == pattern.to_s
+      end
+      false
     end
 
     # number of arguments
     def arity
-      @attributes[:arity] || 2
-    end
-
-    # logics that include this operator; default is system's logic
-    def logics
-      @attributes[:logics] || :system
-    end
-
-    # is operator bound to term on its right? e.g. -x, !x
-    def right_associative?
-      @attributes[:right_associate]
+      ar = @attributes[:arity].to_i
+      ar == 0? 2 : ar
     end
 
     # constant 'I' that for this operator 'op' meets definition: x op I == x; not all operators have identities
     def identity
-      @attributes[:identity]
+      Numeric.new @attributes[:identity]
     end
 
     # only applies to inequalities; flips direction of operator when expression is negated
     def reverse
-      @attributes[:reverse] || self
+      @parent.match_ops(@attributes[:reverse])[0] || self
     end
 
     # operation that cancels out this operation; some operations' inverses may not be members of the same logics
     # will return nil if no inverse available
     def inverse
-      @attributes[:inverse]
+      @parent.match_ops(@attributes[:inverse])[0]
     end
 
     # order of operations (higher integer is first)
     def precedence
-      @attributes[:precedence] || 0
+      @attributes[:precedence].to_i || 0
     end
   end
 end

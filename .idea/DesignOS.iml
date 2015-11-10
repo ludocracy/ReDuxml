@@ -12,7 +12,6 @@
       <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
       <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="C:/Ruby21/bin/irb" />
       <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
       <method />
@@ -29,7 +28,6 @@
       <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/parser_test.rb" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
@@ -52,7 +50,6 @@
       <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
       <IRB_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="C:/Ruby21/bin/irb" />
       <IRB_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="--prompt simple" />
       <IRB_RUN_CONFIG NAME="IS_RAILS_CONSOLE" VALUE="false" />
@@ -70,10 +67,10 @@
     <orderEntry type="library" scope="PROVIDED" name="dentaku (v2.0.5, ruby-2.1.7-p400) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v1.8.1, ruby-2.1.7-p400) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mini_portile (v0.6.2, ruby-2.1.7-p400) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="minitest (v4.7.5, ruby-2.1.7-p400) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.6.6.2, ruby-2.1.7-p400) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubytree (v0.9.6, ruby-2.1.7-p400) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="structured_warnings (v0.2.0, ruby-2.1.7-p400) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="symbolic (v0.3.8, ruby-2.1.7-p400) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="test-unit (v2.1.7.0, ruby-2.1.7-p400) [gem]" level="application" />
   </component>
 </module>

@@ -1,7 +1,7 @@
 #tester takes queries, either from the Registry or user
 #Registry queries include testing designs for changes and their validity upon commit, or generating analytics
 module Tester
-  require_relative "Base_types"
+  require_relative "patterns"
   include Base_types
   #holds template for this tester - children include rules that apply to this session
   @tester_template

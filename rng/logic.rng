@@ -37,6 +37,12 @@
                 </attribute>
             </optional>
             <element name="names">
+                <element name="default">
+                    <a:documentation/>
+                    <a:documentation>default natural language name for operator</a:documentation>
+                    <data type="string"/>
+                </element>
+                
                 <zeroOrMore>
                     <element name="name">
                         <a:documentation/>

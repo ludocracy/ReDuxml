@@ -26,20 +26,25 @@
             </names>
             <arity>2</arity>
         </operator>-->
-        <operator id="and" type="combinator" precedence="0">
+        <operator id="and_" type="combinator" precedence="0">
             <names>
+                <default>and</default>
                 <name>also</name>
                 <symbol>&amp;&amp;</symbol>
             </names>
+            <identity>true</identity>
         </operator>
-        <operator id="or" type="combinator" precedence="0">
+        <operator id="or_" type="combinator" precedence="0">
             <names>
+                <default>or</default>
                 <name>else</name>
                 <symbol>||</symbol>
             </names>
+            <identity>false</identity>
         </operator>
-        <operator id="not" type="combinator" precedence="1">
+        <operator id="not_" type="combinator" precedence="40">
             <names>
+                <default>not</default>
                 <symbol>!</symbol>
                 <regexp>(!)(?=\w|!)</regexp>
             </names>
@@ -51,6 +56,8 @@
         <!-- comparators -->
         <operator id="eq" type="comparator" precedence="30">
             <names>
+                <default>equal</default>
+                <name>equals</name>
                 <name>is</name>
                 <name>the same as</name>
                 <symbol>==</symbol>
@@ -60,7 +67,7 @@
         </operator>
         <operator id="lt" type="comparator" precedence="35">
             <names>
-                <name>less than</name>
+                <default>less than</default>
                 <name>smaller than</name>
                 <symbol>&lt;</symbol>
             </names>
@@ -69,7 +76,7 @@
         </operator>
         <operator id="gt" type="comparator" precedence="35">
             <names>
-                <name>greater than</name>
+                <default>greater than</default>
                 <name>bigger than</name>
                 <symbol>></symbol>
             </names>
@@ -78,7 +85,7 @@
         </operator>
         <operator id="le" type="comparator" precedence="35">
             <names>
-                <name>less than or equal</name>
+                <default>less than or equal</default>
                 <name>the same or smaller than</name>
                 <symbol>&lt;=</symbol>
             </names>
@@ -87,7 +94,7 @@
         </operator>
         <operator id="ge" type="comparator" precedence="35">
             <names>
-                <name>greater than or equal</name>
+                <default>greater than or equal</default>
                 <name>the same or bigger than</name>
                 <symbol>>=</symbol>
             </names>
@@ -96,11 +103,10 @@
         </operator>
         <operator id="ne" type="comparator" precedence="30">
             <names>
-                <name>not equal</name>
+                <default>not equal</default>
                 <name>=/=</name>
                 <name>not the same as</name>
                 <symbol>!=</symbol>
-                <ruby>&lt;></ruby>
             </names>
             <reverse>ne</reverse>
             <inverse>eq</inverse>
@@ -109,7 +115,7 @@
         <!-- arithmetic -->
         <operator id="add" precedence="55" type="arithmetic">
             <names>
-                <name>plus</name>
+                <default>plus</default>
                 <symbol>+</symbol>
             </names>
             <identity>0</identity>
@@ -117,16 +123,16 @@
         </operator>
         <operator id="subtract" precedence="55" type="arithmetic">
             <names>
-                <name>minus</name>
+                <default>minus</default>
                 <name>less</name>
                 <symbol>-</symbol>
             </names>
             <identity>0</identity>
-            <inverse>plus</inverse>
+            <inverse>add</inverse>
         </operator>
         <operator id="negate" precedence="65" type="arithmetic">
             <names>
-                <name>negation</name>
+                <default>negative</default>
                 <symbol>-</symbol>
                 <regexp>(!)(?=\w|!)</regexp>
             </names>
@@ -137,33 +143,35 @@
         </operator>
         <operator id="multiply" precedence="60" type="arithmetic">
             <names>
-                <name>times</name>
+                <default>times</default>
                 <name>by</name>
-                <symbol>×</symbol>
-                <ruby>*</ruby>
+                <name>×</name>
+                <symbol>*</symbol>
             </names>
             <identity>1</identity>
-            <inverse>divided_by</inverse>
+            <inverse>divide</inverse>
         </operator>
         <operator id="divide" precedence="60" type="arithmetic">
             <names>
+                <default>divide</default>
                 <name>over</name>
-                <symbol>÷</symbol>
-                <ruby>/</ruby>
+                <name>divide by</name>
+                <name>divided by</name>
+                <name>÷</name>
+                <symbol>/</symbol>
             </names>
             <identity>1</identity>
-            <inverse>times</inverse>
+            <inverse>multiply</inverse>
         </operator>
         <operator id="modulus" precedence="60" type="arithmetic">
             <names>
-                <name>mod</name>
+                <default>mod</default>
                 <symbol>%</symbol>
             </names>
         </operator>
         <operator id="exponent" precedence="70" type="arithmetic">
             <names>
-                <name>power</name>
-                <name>power</name>
+                <default>power</default>
                 <symbol>^</symbol>
                 <ruby>**</ruby>
             </names>
@@ -175,6 +183,16 @@
                 <name>logarithm</name>
             </names>
             <inverse>exponent</inverse>
+        </operator>-->
+        
+        <!-- basic -->
+        <!--<operator id="whitespace" precedence="-1" type="whitespace">
+            <names>
+                <default>whitespace</default>
+                <symbol> </symbol>
+                <regexp>\s+</regexp>
+            </names>
+            <arity>0</arity>
         </operator>-->
     </operators>
 </logic>

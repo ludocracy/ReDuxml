@@ -1,11 +1,11 @@
-require_relative "Base_types"
-include Base_types
+require_relative "patterns"
+include Patterns
 # main program - actually a template that has as subsystems
 class DesignOS < Template
   # our customization of option parser to convert program arguments into options
   require_relative 'option_parser'
   require_relative 'Editor'
-  require_relative 'Builder'
+  require_relative 'gardener'
   require_relative 'Inspector'
 
   # this is a fixed value
@@ -13,7 +13,7 @@ class DesignOS < Template
   # Editor can be an XML editor or custom DesignOS interface but can also run in basic console mode (which underlies the other interfaces)
   include Editor
   # Builder constructs design from template, populating its children and applying parameter values
-  include Builder
+  include Gardener
   # Inspector gets triggered by builder at certain points predetermined by OS and by user according to inputs
   include Inspector
 
