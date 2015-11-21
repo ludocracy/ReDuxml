@@ -3,14 +3,13 @@
 #################
 
 #IDE meta data directory
-/DesignOS/
+.idea/
 #output files
 output*
-#trashed dirs
-/extensions/
-/koi-reference-parser*
-/parser*
-/dentaku/spec*
+#java
+java/
+#backup zip
+DesignOS.zip
 
 
 #################
