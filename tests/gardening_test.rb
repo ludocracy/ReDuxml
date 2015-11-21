@@ -16,10 +16,10 @@ begin
   end
 end # includes, requires, etc
 require 'test/unit'
-require_relative 'test'
+require_relative 'console_test'
 require 'parser'
 
-class ParseTest < Test::Unit::TestCase
+class ConsoleTest < Test::Unit::TestCase
   include Dentaku
   # Called before every test method runs. Can be used
   # to set up fixture information.

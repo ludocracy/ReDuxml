@@ -1,3 +1,1 @@
-Combinand is still using the old Generate dynamics module. need to set up module initializes to do that.
-but since Combinand itself is explicitly created, it will need to have @operator set dynamically at some point during initialize.
-how? ancestor chain introspection probably needed
+okay, we need the dynamic classes to subclass, not override the AST classes!

@@ -1,11 +1,10 @@
+require 'java'
+require_relative 'patterns'
+
+
 # Gardener contains methods for converting template files into design Components
 # also has hooks for owners to create, modify, and otherwise manage templates via include File module
 module Gardener
-  require_relative 'patterns'
-  require_relative 'resolver'
-  require_relative '../dentaku/lib/dentaku'
-  include Dentaku
-  include Patterns
   # points to the component the builder is currently working on
   @cursor
   # holds parameters and their values as a smart hash
@@ -27,7 +26,7 @@ module Gardener
     end
     @current_template = @cursor
     @parameters = @current_template.design.params
-    Resolver.new @current_template.design.logics
+    Something.new @current_template.design.logic
     build @cursor
     @builds[@current_template.object_id] = @current_template
     @cursor = @current_template.children[-1]
@@ -64,7 +63,7 @@ module Gardener
     working_node.get_parameterized_xml_nodes.each do |xml_node|
       content_str = xml_node.content.to_s
       question = find_expr content_str
-      reply = Resolver.evaluate(question, @parameters)
+      reply = SymEngine.evaluate(question, @parameters)
       xml_node.content = content_str.gsub(question, reply)
     end
     current_node = working_node

@@ -1,11 +1,11 @@
 # the component is the base of every object in DesignOS and any designs produced in it.
-# components consist of components and never overlap. therefore a general tree structure is perfect
+# components consist of components and never overlap. therefore a general tree.rb structure is perfect
 # for representing component structures and also works perfectly with XML
 # however, DesignOS needs to be able to traverse concreteward and abstractward
 # and there are up to as many of each as there are views; change timestamps are a view (concrete if after a change, abstract if before);
 # for example: when a parameter is set, the resulting design is a concrete child
 # if that parameter value is overridden by a subtemplate, that produces a concrete grandchild
-# therefore, every node in this new type of tree is also a member of a hash of arrays - one hash for each query, and
+# therefore, every node in this new type of tree.rb is also a member of a hash of arrays - one hash for each query, and
 # view hashes are only constructed upon query except for those needed by DesignOS to perform
 #
 # changes made to Components are made to both the XML node and data node simultaneously
@@ -13,78 +13,10 @@
 # could add switch to turn this off
 
 # XML parsing and manipulation
-require 'tree'
+require_relative 'ext/ruby'
+require_relative 'ext/tree'
 require 'tree/tree_deps'
 require 'nokogiri'
-
-# need to override rubytree to make name = element name and id = name (i.e. unique identifier)
-# move this into extension file later
-module Tree
-  class TreeNode
-    attr_reader :id
-
-    protected :name
-    def name
-      @id
-    end
-
-    def initialize(content = nil)
-      raise ArgumentError, "XML Node HAS to be provided!" if content == nil
-      @name, @content = content.name, content
-      @id = self.object_id
-
-      self.set_as_root!
-      @children_hash = Hash.new
-      @children = []
-    end
-
-    # super is protected
-    def set_as_root!              # :nodoc:
-      self.parent = nil
-    end
-
-    # removing uniqueness test
-    def add(child, at_index = -1)
-      # Only handles the immediate child scenario
-      raise ArgumentError,
-            "Attempting to add a nil node" unless child
-      raise ArgumentError,
-            "Attempting add node to itself" if self.equal?(child)
-      raise ArgumentError,
-            "Attempting add root as a child" if child.equal?(root)
-
-      child.parent.remove! child if child.parent # Detach from the old parent
-
-      if insertion_range.include?(at_index)
-        @children.insert(at_index, child)
-      else
-        raise "Attempting to insert a child at a non-existent location"\
-              " (#{at_index}) "\
-              "when only positions from "\
-              "#{insertion_range.min} to #{insertion_range.max} exist."
-      end
-
-      @children_hash[child.name]  = child
-      child.parent = self
-      return child
-    end
-  end
-end
-
-# modifying Hash to push duplicate values into an array matched to that key
-class Hash
-  def []=(key, value)
-    if self[key].nil?
-      self.store key, value
-    else
-      if self[key].is_a?(Array)
-        self[key].push(value)
-      else
-        self.store key, [value]
-      end
-    end
-  end
-end
 
 # my own stuff
 module Patterns
@@ -94,7 +26,8 @@ module Patterns
   # disabling kansei features until we can architect it properly
 
   class Component < Tree::TreeNode
-    # pull out some of these attributes and make them subclasses - like static vs dynamic members?
+    # HEY HEY!!! pull out some of these attributes and make them structs!! some possible groupings:
+    # xml_related, conditionals, inherent properties? or perhaps by phase - when they're accessed? both?
     # id or name identify this Component uniquely among its neighbors (template for @id, immediate family for @name)
     @id
     # points to the XML element root of this Component
@@ -122,6 +55,9 @@ module Patterns
     @@description
 
     attr_reader :id, :builds, :views, :children, :children_hash, :parameterized_nodes, :xml_cursor, :if
+
+    # HEY HEY!!! need to group these into modules and pull them out!
+
     # shortcut
     def xml
       @xml_root_node
@@ -174,8 +110,9 @@ module Patterns
       super(@xml_root_node)
       # traverse and load Component from xml
       collect_changes traverse_xml load_methods %w(load_attributes init_reserved chase_tail init_generic)
-    end
+    end # end of Component::initialize(xml_node, args={})
 
+    # loads methods to run during initialize from a hash
     def load_methods method_names
       method_hash = {}
       index = 0
@@ -192,20 +129,24 @@ module Patterns
       method_hash
     end
 
+    # needed because i have to call a method and it has to have an argument
     def do_nothing arg = nil
       # this is silly
     end
 
+    # used to create new XML for a new Component
     def generate_new_xml args = {}
       element_name = self.class.to_s.downcase!
       element_name[/.*(?:(::))/] = ''
       @xml_root_node = @xml_cursor = element(element_name,(args[:content]))
     end
 
+    # should describe itself in a string
     def generate_descr
 
     end
 
+    # run by initialize
     def traverse_xml method_hash
       method_hash[:top].call
       @xml_cursor.element_children.each do |child|
@@ -233,7 +174,7 @@ module Patterns
 
     # child has a ruby class of its own
     def init_reserved child
-      child_class = Object::const_get("Base_types::#{child.name.capitalize}")
+      child_class = Object::const_get("Patterns::#{child.name.capitalize}")
       self << child_class.new(child)
     end
 
@@ -722,11 +663,13 @@ module Patterns
   end
 
   class Logic < Component
+    require 'symengine'
+    include SymEngine
     # later this should load like a regular template (probably as part of inspector?)
     # then it will be a run time that listens for operations and reports performance
     def initialize logic_file_name
       @reserved_word_array = %w(operator)
-      file = File.open "#{logic_file_name}.xml"
+      file = File.open("../xml/#{logic_file_name}.xml", 'r')
       xml_doc = Nokogiri::XML file
       #skipping straight to design
       #later we'll need to look at front matter of template to verify it; can't just load any old logic safely!
@@ -774,6 +717,7 @@ module Patterns
     def dependencies
       find_child('dependencies')
     end
+
   end
 
   # container for every possible property of an operator
@@ -796,6 +740,10 @@ module Patterns
       end
 
       a.flatten
+    end
+
+    def const_name
+      aliases(:default)[0].split(' ').each do |word| word.capitalize! end.join
     end
 
     def initialize xml_node
@@ -826,72 +774,6 @@ module Patterns
       @regexp ||= @symbol.to_s
     end
 
-    # allows external entities to pass in a base class and dynamically declare a subclass
-    # by exposing the given block to this operator's attributes
-    def impute klass, &block
-      op_str = klass.to_s[/(\w*)(?=$)/]
-      # getting base class
-      superklass = klass.superclass
-      # getting module
-      mod = const_get(klass.to_s[0,op_str.size-2])
-      op_class = Class.new(superklass, block)
-      mod.const_set(op_str, op_class)
-      # rescue certain kinds of errors?
-    end
+  end # end of class Operator
 
-    # allows external entity to pass in a module or class :parent
-    # and dynamically declares member method by exposing the given block to this operator's attributes,
-    # assigning it a name from either type of name as indicated by sym (symbol) or sym itself
-    def manifest *args, &block
-      maudule = args[:parent] || Module
-      sym = args[:sym]
-      case sym
-        when nil          then name = @names[:safe]
-        when @names[sym]  then name = @names[sym]
-        else                   name = sym
-      end
-      maudule.define_method(name, block)
-      # try to suppress any warning messages about overridden methods?
-      # rescue certain kinds of errors?
-    end
-
-    # ********** we may not need any of the code below! ***********
-
-    # returns this operator if pattern matches any of operator's names or symbols or procs
-    def match pattern
-      objs = [[symbol]+[regexp]+names.values+[@proc]+[@attributes[:type]]].flatten.compact.uniq
-      objs.each do |obj|
-        return self if obj == pattern || obj.to_s == pattern.to_s
-        return self if obj.to_s+'s' == pattern.to_s
-      end
-      false
-    end
-
-    # number of arguments
-    def arity
-      ar = @attributes[:arity].to_i
-      ar == 0? 2 : ar
-    end
-
-    # constant 'I' that for this operator 'op' meets definition: x op I == x; not all operators have identities
-    def identity
-      Numeric.new @attributes[:identity]
-    end
-
-    # only applies to inequalities; flips direction of operator when expression is negated
-    def reverse
-      @parent.match_ops(@attributes[:reverse])[0] || self
-    end
-
-    # operation that cancels out this operation; some operations' inverses may not be members of the same logics
-    # will return nil if no inverse available
-    def inverse
-      @parent.match_ops(@attributes[:inverse])[0]
-    end
-
-    # order of operations (higher integer is first)
-    def precedence
-      @attributes[:precedence].to_i || 0
-    end
-  end
-end
+end # end of module Patterns

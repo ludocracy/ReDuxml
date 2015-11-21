@@ -1,5 +1,5 @@
 
-#basic tree structure, providing attributes: @name, @children, @children_hash, @siblings, @parent, @content etc.
+#basic tree.rb structure, providing attributes: @name, @children, @children_hash, @siblings, @parent, @content etc.
 require 'rubytree'
 
 #descendant/ancestor of a design Component along the abstract/concrete dimension

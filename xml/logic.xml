@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- this file  -->
-<?xml-model href="rng/logic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="../rng/logic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <logic xmlns="" id="template_id">
     <name>logic example</name>
     <version>0.9</version>
@@ -115,7 +114,8 @@
         <!-- arithmetic -->
         <operator id="add" precedence="55" type="arithmetic">
             <names>
-                <default>plus</default>
+                <default>addition</default>
+                <name>plus</name>
                 <symbol>+</symbol>
             </names>
             <identity>0</identity>
@@ -123,8 +123,8 @@
         </operator>
         <operator id="subtract" precedence="55" type="arithmetic">
             <names>
-                <default>minus</default>
-                <name>less</name>
+                <default>subtraction</default>
+                <name>minus</name>
                 <symbol>-</symbol>
             </names>
             <identity>0</identity>
@@ -132,7 +132,8 @@
         </operator>
         <operator id="negate" precedence="65" type="arithmetic">
             <names>
-                <default>negative</default>
+                <default>negation</default>
+                <name>negative</name>
                 <symbol>-</symbol>
                 <regexp>(!)(?=\w|!)</regexp>
             </names>
@@ -143,7 +144,8 @@
         </operator>
         <operator id="multiply" precedence="60" type="arithmetic">
             <names>
-                <default>times</default>
+                <default>multiplication</default>
+                <name>times</name>
                 <name>by</name>
                 <name>×</name>
                 <symbol>*</symbol>
@@ -153,7 +155,7 @@
         </operator>
         <operator id="divide" precedence="60" type="arithmetic">
             <names>
-                <default>divide</default>
+                <default>division</default>
                 <name>over</name>
                 <name>divide by</name>
                 <name>divided by</name>
@@ -165,13 +167,15 @@
         </operator>
         <operator id="modulus" precedence="60" type="arithmetic">
             <names>
-                <default>mod</default>
+                <default>modulo</default>
+                <name>mod</name>
                 <symbol>%</symbol>
             </names>
         </operator>
         <operator id="exponent" precedence="70" type="arithmetic">
             <names>
-                <default>power</default>
+                <default>exponentiation</default>
+                <name>power</name>
                 <symbol>^</symbol>
                 <ruby>**</ruby>
             </names>

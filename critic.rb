@@ -2,7 +2,7 @@
 #Registry queries include testing designs for changes and their validity upon commit, or generating analytics
 module Tester
   require_relative "patterns"
-  include Base_types
+  include Patterns
   #holds template for this tester - children include rules that apply to this session
   @tester_template
 

@@ -1,7 +1,7 @@
-# Editor contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
-module Editor
-  require_relative 'patterns'
-  include Base_types
+require_relative 'patterns'
+# chef contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
+module Chef
+  
   # points to current Component
   @cursor
   # **************use these!!!!****************

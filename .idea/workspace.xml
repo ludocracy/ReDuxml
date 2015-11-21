@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AnalysisUIOptions">
-    <option name="ANALYZE_TEST_SOURCES" value="false" />
-    <option name="CUSTOM_SCOPE_NAME" value="Current File" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="37b866da-49b3-4128-8c5d-7e5527228571" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+    <list default="true" id="c2027ce1-e81c-49c1-9c57-656ace454ccb" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ext/tree.rb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/gardening_test.rb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/parse_test.rb" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/DesignOS.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/runConfigurations/BuilderTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/runConfigurations/irb.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/DesignOS.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Editor.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Inspector.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ext/combinands.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ext/comparands.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ext/option_parser.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ext/resolver.rb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ext/variable.rb" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/DesignOS.xpr" afterPath="$PROJECT_DIR$/xml/DesignOS.xpr" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/arithmetic_logic.xml" afterPath="$PROJECT_DIR$/xml/arithmetic_logic.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/builder.xml" afterPath="$PROJECT_DIR$/xml/builder.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/console.xml" afterPath="$PROJECT_DIR$/xml/console.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/debug.rb" afterPath="$PROJECT_DIR$/ext/ruby.rb" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/designos_template.xml" afterPath="$PROJECT_DIR$/xml/designos_template.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/inspector.xml" afterPath="$PROJECT_DIR$/xml/inspector.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/logic.xml" afterPath="$PROJECT_DIR$/xml/logic.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/registry.xml" afterPath="$PROJECT_DIR$/xml/registry.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sample_template.xml" afterPath="$PROJECT_DIR$/xml/sample_template.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/test.rb" afterPath="$PROJECT_DIR$/tests/console_test.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gardener.rb" afterPath="$PROJECT_DIR$/gardener.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kansei.rb" afterPath="$PROJECT_DIR$/kansei.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes.txt" afterPath="$PROJECT_DIR$/notes.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/patterns.rb" afterPath="$PROJECT_DIR$/patterns.rb" />
     </list>
     <ignored path="DesignOS.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/out/" />
     <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,307 +54,43 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DesignOS@IRB_console__DesignOS.coverage" NAME="IRB console: DesignOS Coverage Results" MODIFIED="1446178998140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="DesignOS" />
-    <SUITE FILE_PATH="coverage/DesignOS@DesignOS.coverage" NAME="DesignOS Coverage Results" MODIFIED="1442553404408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" MODULE_NAME="DesignOS" />
-    <SUITE FILE_PATH="coverage/DesignOS@Base_types.coverage" NAME="Base_types Coverage Results" MODIFIED="1445556212960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="DesignOS" />
-    <SUITE FILE_PATH="coverage/DesignOS@BuilderTest.coverage" NAME="BuilderTest Coverage Results" MODIFIED="1446271114310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" MODULE_NAME="DesignOS" />
-    <SUITE FILE_PATH="coverage/DesignOS@Run_test__parser_test___DesignOS.coverage" NAME="Run test 'parser_test': DesignOS Coverage Results" MODIFIED="1445563717715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="DesignOS" />
-    <SUITE FILE_PATH="coverage/DesignOS@test.coverage" NAME="test Coverage Results" MODIFIED="1444853799140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="DesignOS" />
-    <SUITE FILE_PATH="coverage/DesignOS@irb.coverage" NAME="irb Coverage Results" MODIFIED="1445829586533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" MODULE_NAME="DesignOS" />
+    <SUITE FILE_PATH="coverage/DesignOS@jirb.coverage" NAME="jirb Coverage Results" MODIFIED="1448084017004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.." />
+    <SUITE FILE_PATH="coverage/DesignOS@symja_test.coverage" NAME="symja_test Coverage Results" MODIFIED="1448084237478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DatabaseView">
-    <option name="GROUP_SCHEMA" value="true" />
-    <option name="GROUP_CONTENTS" value="false" />
-    <option name="SORT_POSITIONED" value="false" />
-    <option name="SHOW_TABLE_DETAILS" value="true" />
-    <option name="SHOW_EMPTY_GROUPS" value="false" />
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
-    <favorites_list name="DesignOS">
-      <favorite_root url="symbolic (v0.3.8, ruby-2.1.7-p400) [gem]" type="namedLibrary" klass="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode">
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/sum.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/math.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/misc.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/plugins" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/plugins/var_name.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/coerced.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions/kernel.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions/matrix.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions/module.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions/numeric.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions/rational.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/factors.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/printer.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/constant.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/function.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/summands.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/variable.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/constants.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/expression.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/statistics.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          </favorite_root>
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-      </favorite_root>
-      <favorite_root url="nokogiri (v1.6.6.2, ruby-2.1.7-p400) [gem]" type="namedLibrary" klass="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode">
-        <favorite_root url="file://$APPLICATION_CONFIG_DIR$/rubystubs/ruby18/nokogiri/1.6.6.2" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://$APPLICATION_CONFIG_DIR$/rubystubs/ruby18/nokogiri/1.6.6.2/nokogiri.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/bin" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/bin/nokogiri" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/depend" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_io.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_io.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_dtd.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_dtd.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/extconf.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/nokogiri.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/nokogiri.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_attr.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_attr.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_node.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_node.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_text.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_text.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_cdata.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_cdata.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_reader.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_reader.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_schema.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_schema.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_comment.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_comment.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_document.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_document.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_node_set.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_node_set.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_relax_ng.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_relax_ng.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_document.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_document.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_namespace.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_namespace.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_sax_parser.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_sax_parser.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_entity_decl.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_entity_decl.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xslt_stylesheet.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xslt_stylesheet.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_element_decl.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_element_decl.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_syntax_error.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_syntax_error.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_libxml2_hacks.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_libxml2_hacks.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_xpath_context.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_xpath_context.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_entity_lookup.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_entity_lookup.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_attribute_decl.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_attribute_decl.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_element_content.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_element_content.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_sax_push_parser.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_sax_push_parser.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_sax_push_parser.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_sax_push_parser.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_encoding_handler.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_encoding_handler.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_entity_reference.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_entity_reference.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_document_fragment.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_document_fragment.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_sax_parser_context.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_sax_parser_context.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_sax_parser_context.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_sax_parser_context.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_element_description.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/html_element_description.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_processing_instruction.c" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/ext/nokogiri/xml_processing_instruction.h" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          </favorite_root>
-        </favorite_root>
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/xsd" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/xsd/xmlparser" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/xsd/xmlparser/nokogiri.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-          </favorite_root>
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/1.9" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/1.9/nokogiri.so" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/2.0" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/2.0/nokogiri.so" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/2.1" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/2.1/nokogiri.so" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/node.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/parser.y" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/parser.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/tokenizer.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/tokenizer.rex" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/syntax_error.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/parser_extras.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css/xpath_visitor.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/pp" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/pp/node.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/pp/character_data.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              </favorite_root>
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/sax" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/sax/parser.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/sax/document.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/sax/push_parser.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/sax/parser_context.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              </favorite_root>
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/node" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/node/save_options.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              </favorite_root>
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/pp.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/xpath" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/xpath/syntax_error.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              </favorite_root>
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/dtd.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/sax.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/attr.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/node.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/text.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/cdata.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/xpath.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/reader.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/schema.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/builder.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/document.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/node_set.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/notation.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/relax_ng.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/namespace.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/searchable.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/entity_decl.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/element_decl.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/syntax_error.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/parse_options.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/xpath_context.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/attribute_decl.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/character_data.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/element_content.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/document_fragment.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/processing_instruction.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/sax" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/sax/parser.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/sax/push_parser.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-                <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/sax/parser_context.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              </favorite_root>
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/builder.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/document.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/entity_lookup.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/document_fragment.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/element_description.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html/element_description_defaults.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xslt" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xslt/stylesheet.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/css.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/html.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xslt.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/decorators" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/decorators/slop.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/version.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/syntax_error.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          </favorite_root>
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/tasks" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/tasks/test.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/suppressions" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/suppressions/README.txt" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/suppressions/nokogiri_ree-1.8.7.358.supp" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/suppressions/nokogiri_ruby-1.8.7.370.supp" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/suppressions/nokogiri_ruby-1.9.2.320.supp" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/suppressions/nokogiri_ruby-1.9.3.327.supp" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-      </favorite_root>
-      <favorite_root url="rubytree (v0.9.6, ruby-2.1.7-p400) [gem]" type="namedLibrary" klass="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode">
-        <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/utils.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/path_methods.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/hash_converter.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/json_converter.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/metrics_methods.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/tree_merge_handler.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-              <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/camel_case_method_handler.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            </favorite_root>
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/version.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/tree_deps.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-            <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/binarytree.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          </favorite_root>
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-          <favorite_root url="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/rubytree.rb" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
-        </favorite_root>
-      </favorite_root>
-    </favorites_list>
+    <favorites_list name="DesignOS" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="resolver.rb" pinned="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/resolver.rb">
+    <leaf>
+      <file leaf-file-name="parse_test.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/parse_test.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.3043479">
-              <caret line="70" column="14" selection-start-line="70" selection-start-column="14" selection-end-line="70" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parser_test.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/parser_test.rb">
+      <file leaf-file-name="ruby.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ext/ruby.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="74" column="13" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="13" />
+              <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="notes.txt" pinned="true" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notes.txt">
+      <file leaf-file-name="patterns.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/patterns.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="symbolic.rb" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.06521739">
+              <caret line="20" column="14" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -334,71 +98,19 @@
       </file>
     </leaf>
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Ruby Class Template" />
-        <option value="TestUnit Test Template" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/maybe/lib/maybe.rb" />
-        <option value="$PROJECT_DIR$/kansei.rb" />
-        <option value="$PROJECT_DIR$/Inspector.rb" />
-        <option value="$PROJECT_DIR$/option_parser.rb" />
-        <option value="$PROJECT_DIR$/Tester.rb" />
-        <option value="$PROJECT_DIR$/scratchpad.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/function.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/summands.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/environment.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/coerced.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/expression.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/variable.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic.rb" />
-        <option value="$PROJECT_DIR$/symbolic_modified/symbolic/boolean.rb" />
-        <option value="$PROJECT_DIR$/extensions/extensions.rb" />
-        <option value="$PROJECT_DIR$/symbolic/symbolic.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/bulk_expression_solver.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/token_matcher.rb" />
-        <option value="$PROJECT_DIR$/debug.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/logical.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/tokenizer.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/token.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/comparators.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/combinators.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/operation.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/calculator.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/token_scanner.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/literal.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/identifier.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/node.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/arithmetic.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/numeric.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/ast/formula.rb" />
-        <option value="$PROJECT_DIR$/dentaku/lib/dentaku/parser.rb" />
-        <option value="$PROJECT_DIR$/dentaku/ast/symbolic_ext.rb" />
-        <option value="$PROJECT_DIR$/dentaku/calculator.rb" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/Editor.rb" />
-        <option value="$PROJECT_DIR$/test.rb" />
-        <option value="$PROJECT_DIR$/comparable.rb" />
-        <option value="$PROJECT_DIR$/symbolic_wrapper.rb" />
-        <option value="$PROJECT_DIR$/notes.txt" />
-        <option value="$PROJECT_DIR$/Base_types.rb" />
-        <option value="$PROJECT_DIR$/parser_test.rb" />
-        <option value="$PROJECT_DIR$/Builder.rb" />
-        <option value="$PROJECT_DIR$/DesignOS.rb" />
+        <option value="$PROJECT_DIR$/ext/ruby.rb" />
         <option value="$PROJECT_DIR$/patterns.rb" />
-        <option value="$PROJECT_DIR$/comparands.rb" />
-        <option value="$PROJECT_DIR$/resolver.rb" />
       </list>
     </option>
   </component>
@@ -413,31 +125,6 @@
     <option name="width" value="1616" />
     <option name="height" value="916" />
   </component>
-  <component name="ProjectInspectionProfilesVisibleTreeState">
-    <entry key="Project Default">
-      <profile-state>
-        <expanded-state>
-          <State>
-            <id />
-          </State>
-          <State>
-            <id>Ruby</id>
-          </State>
-          <State>
-            <id>Spelling</id>
-          </State>
-          <State>
-            <id>XML</id>
-          </State>
-        </expanded-state>
-        <selected-state>
-          <State>
-            <id>RubyDefParenthesesInspection</id>
-          </State>
-        </selected-state>
-      </profile-state>
-    </entry>
-  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
@@ -445,24 +132,25 @@
     <OptionsSetting value="true" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="2" id="Add" />
+    <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
-      <showMembers ProjectPane="false" />
+      <showMembers />
       <showModules />
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
       <autoscrollToSource />
       <autoscrollFromSource />
-      <sortByType ProjectPane="true" />
+      <sortByType />
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -470,10 +158,6 @@
               <option name="myItemId" value="DesignOS" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -481,103 +165,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="symbolic (v0.3.8, ruby-2.1.7-p400) [gem]" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
               <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="symbolic (v0.3.8, ruby-2.1.7-p400) [gem]" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="symbolic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dentaku (v2.0.5, ruby-2.1.7-p400) [gem]" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dentaku (v2.0.5, ruby-2.1.7-p400) [gem]" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dentaku" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dentaku (v2.0.5, ruby-2.1.7-p400) [gem]" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dentaku" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ast" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -588,70 +176,44 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="DesignOS" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DesignOS" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DesignOS" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ext" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Problems" />
-        <subPane subId="Changed Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.ruby.settings.RubyActiveModuleSdkConfigurable" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="recentsLimit" value="5" />
-    <property name="FullScreen" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="restartRequiresConfirmation" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="find_close&#9;null&#9;null" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/tests" />
+    <property name="full.screen.before.presentation.mode" value="false" />
   </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\b33791\RubymineProjects\DesignOS\symbolic" />
-      <recent name="C:\Users\b33791\RubymineProjects\DesignOS" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\b33791\RubymineProjects\DesignOS\symbolic_modified\symbolic" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Ruby.irb">
-    <configuration default="true" type="CommandRunConfigurationType" factoryName="Gem Command">
-      <module name="" />
-      <COMMAND_RUN_CONFIGURATION NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <COMMAND_RUN_CONFIGURATION NAME="WORK DIR" VALUE="" />
-      <COMMAND_RUN_CONFIGURATION NAME="SHOULD_USE_SDK" VALUE="false" />
-      <COMMAND_RUN_CONFIGURATION NAME="ALTERN_SDK_NAME" VALUE="" />
-      <COMMAND_RUN_CONFIGURATION NAME="myPassParentEnvs" VALUE="true" />
-      <envs />
-      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <COMMAND_CONFIG_SETTINGS_ID NAME="GEM_NAME" VALUE="" />
-      <COMMAND_CONFIG_SETTINGS_ID NAME="EXECUTABLE_NAME" VALUE="" />
-      <COMMAND_CONFIG_SETTINGS_ID NAME="EXECUTABLE_ARGS" VALUE="" />
-      <COMMAND_CONFIG_SETTINGS_ID NAME="WORKING_DIR" VALUE="" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="IRB console.jirb">
     <configuration default="true" type="CucumberRunConfigurationType" factoryName="Cucumber">
       <predefined_log_file id="RUBY_CUCUMBER" enabled="true" />
       <module name="" />
@@ -685,15 +247,15 @@
     <configuration default="true" type="IrbRunConfigurationType" factoryName="IRB console">
       <module name="" />
       <IRB_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <IRB_RUN_CONFIG NAME="WORK DIR" VALUE="" />
-      <IRB_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
-      <IRB_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
+      <IRB_RUN_CONFIG NAME="WORK DIR" VALUE="$PROJECT_DIR$/.." />
+      <IRB_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="true" />
+      <IRB_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="jruby-9.0.4.0-p0" />
       <IRB_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
       <envs />
       <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <IRB_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="" />
+      <IRB_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="C:/jruby-9.0.4.0/bin/irb.bat" />
       <IRB_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
       <IRB_RUN_CONFIG NAME="IS_RAILS_CONSOLE" VALUE="false" />
       <method />
@@ -701,43 +263,8 @@
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
-    <configuration default="true" type="RSpecRunConfigurationType" factoryName="RSpec">
-      <predefined_log_file id="RUBY_RSPEC" enabled="true" />
-      <module name="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <envs />
-      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="RubyRemoteDebugConfigurationType" factoryName="Ruby remote debug">
-      <RUBY_REMOTE_DEBUG_CONFIG NAME="REMOTE_HOST" VALUE="localhost" />
-      <RUBY_REMOTE_DEBUG_CONFIG NAME="PORT" VALUE="1234" />
-      <RUBY_REMOTE_DEBUG_CONFIG NAME="DISPATCHER_PORT" VALUE="26162" />
-      <RUBY_REMOTE_DEBUG_CONFIG NAME="REMOTE_ROOT" VALUE="" />
-      <RUBY_REMOTE_DEBUG_CONFIG NAME="LOCAL_ROOT" VALUE="" />
-      <method />
-    </configuration>
     <configuration default="true" type="RubyRunConfigurationType" factoryName="Ruby">
-      <module name="DesignOS" />
+      <module name="" />
       <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
       <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="" />
       <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
@@ -747,31 +274,8 @@
       <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="C:/Ruby21/bin/irb" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="" />
       <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
-      <method />
-    </configuration>
-    <configuration default="true" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
-      <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
-      <module name="DesignOS" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <envs />
-      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="C:/Ruby21/bin/irb" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
@@ -779,7 +283,6 @@
       <gulpfile />
       <tasks />
       <arguments />
-      <pass-parent-envs>true</pass-parent-envs>
       <envs />
       <method />
     </configuration>
@@ -789,80 +292,111 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="false" name="jirb" type="IrbRunConfigurationType" factoryName="IRB console">
+      <module name="" />
+      <IRB_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+      <IRB_RUN_CONFIG NAME="WORK DIR" VALUE="$PROJECT_DIR$/.." />
+      <IRB_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="true" />
+      <IRB_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="jruby-9.0.4.0-p0" />
+      <IRB_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+      <envs />
+      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+      <IRB_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="C:/jruby-9.0.4.0/bin/irb.bat" />
+      <IRB_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
+      <IRB_RUN_CONFIG NAME="IS_RAILS_CONSOLE" VALUE="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="symja_test" type="RubyRunConfigurationType" factoryName="Ruby">
+      <module name="" />
+      <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+      <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$PROJECT_DIR$/tests" />
+      <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="true" />
+      <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="jruby-9.0.4.0-p0" />
+      <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+      <envs />
+      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$PROJECT_DIR$/tests/parse_test.rb" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
+      <method />
+    </configuration>
     <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="Ruby.irb" />
-      <item index="1" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.BuilderTest" />
+      <item index="0" class="java.lang.String" itemvalue="IRB console.jirb" />
+      <item index="1" class="java.lang.String" itemvalue="Ruby.symja_test" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
-  <component name="StructureViewFactory">
-    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
-  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="37b866da-49b3-4128-8c5d-7e5527228571" name="Default" comment="" />
-      <created>1440218010687</created>
+      <changelist id="c2027ce1-e81c-49c1-9c57-656ace454ccb" name="Default" comment="" />
+      <created>1447925175157</created>
       <option name="number" value="Default" />
-      <updated>1440218010687</updated>
+      <updated>1447925175157</updated>
     </task>
     <servers />
   </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="916" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14395887" sideWeight="0.4939551" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32830188" sideWeight="0.49725652" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32830188" sideWeight="0.5027435" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11118252" sideWeight="0.49012345" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1895887" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="149" y="227" width="284" height="600" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32582584" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22300771" sideWeight="0.5060449" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10411311" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11118252" sideWeight="0.50987655" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39950678" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34525278" sideWeight="0.49245542" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="REPL" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Leiningen" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32592592" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30086315" sideWeight="0.49725652" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3489519" sideWeight="0.5051414" order="9" side_tool="true" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39950678" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3489519" sideWeight="0.49485862" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15424165" sideWeight="0.4939551" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="REPL" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Leiningen" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1407455" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="149" y="227" width="284" height="600" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.104375" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26387176" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22300771" sideWeight="0.5060449" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.394375" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.11118252" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -876,53 +410,22 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <ignored-roots>
-      <path value="$PROJECT_DIR$/parser" />
-      <path value="$PROJECT_DIR$/koi-reference-parser" />
-      <path value="$PROJECT_DIR$/dentaku" />
-      <path value="$PROJECT_DIR$/dentaku_old" />
-    </ignored-roots>
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="ruby-line">
-          <url>file://$PROJECT_DIR$/variable.rb</url>
-          <line>51</line>
-          <option name="timeStamp" value="855" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="ruby-line">
-          <url>file://$PROJECT_DIR$/variable.rb</url>
-          <line>117</line>
-          <option name="timeStamp" value="884" />
-        </line-breakpoint>
-      </breakpoints>
-      <breakpoints-dialog>
-        <breakpoints-dialog />
-      </breakpoints-dialog>
-      <default-breakpoints>
-        <breakpoint enabled="true" type="CidrExceptionBreakpoint">
-          <properties />
-        </breakpoint>
-      </default-breakpoints>
-      <option name="time" value="907" />
+      <option name="time" value="1" />
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="RubyRunConfigurationType">
-        <watch expression="@input" />
-        <watch expression="@output" />
-        <watch expression="token" />
-        <watch expression="@operations" />
-        <watch expression="@need_formula_right" />
-      </configuration>
-      <configuration name="TestUnitRunConfigurationType">
-        <watch expression="args" />
-      </configuration>
-    </watches-manager>
+    <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resolver.rb">
+    <entry file="file://$PROJECT_DIR$/tests/parse_test.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ext/ruby.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -930,419 +433,132 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parser_test.rb">
+    <entry file="file://$PROJECT_DIR$/tests/parse_test.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="74" column="13" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="13" />
+          <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notes.txt">
+    <entry file="file://$PROJECT_DIR$/ext/ruby.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic.rb">
+    <entry file="file://$PROJECT_DIR$/tests/parse_test.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
+          <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs22/basic_object.rb">
+    <entry file="file://$PROJECT_DIR$/ext/ruby.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="251" column="8" selection-start-line="251" selection-start-column="8" selection-end-line="251" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs22/string.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="606" column="8" selection-start-line="606" selection-start-column="8" selection-end-line="606" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Editor.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="2" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34605598">
-          <caret line="30" column="19" selection-start-line="30" selection-start-column="19" selection-end-line="34" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree/utils/camel_case_method_handler.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/rubystubs/ruby18/nokogiri/1.6.6.2/nokogiri.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3320965">
-          <caret line="621" column="16" selection-start-line="621" selection-start-column="16" selection-end-line="621" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/2.1.0/rexml/attlistdecl.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6307978">
-          <caret line="20" column="4" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/rubytree.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="11" selection-start-line="40" selection-start-column="11" selection-end-line="40" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/node_set.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.296296">
-          <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/nokogiri-1.6.6.2-x86-mingw32/lib/nokogiri/xml/document.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.296296">
-          <caret line="208" column="0" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/rubytree-0.9.6/lib/tree.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3320965">
-          <caret line="543" column="8" selection-start-line="543" selection-start-column="8" selection-end-line="543" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/2.1.0/pp.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3320965">
-          <caret line="368" column="6" selection-start-line="368" selection-start-column="6" selection-end-line="368" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/hash.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="325" column="4" selection-start-line="325" selection-start-column="4" selection-end-line="327" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/ast/literal.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/printer.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/tokenizer.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="56" selection-start-line="15" selection-start-column="56" selection-end-line="15" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/token_scanner.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24304268">
-          <caret line="113" column="37" selection-start-line="113" selection-start-column="35" selection-end-line="113" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/integer.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="129" column="8" selection-start-line="129" selection-start-column="8" selection-end-line="129" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/kernel.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33204633">
-          <caret line="135" column="8" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/ast/node.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/ast/operation.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22077923">
-          <caret line="7" column="10" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/ast/identifier.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4638219">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/calculator.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
+          <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/parser.rb">
+    <entry file="file://$PROJECT_DIR$/patterns.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/function.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3320965">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/2.1.0/minitest/unit.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3320965">
-          <caret line="1272" column="0" selection-start-line="1272" selection-start-column="0" selection-end-line="1272" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/expression.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://Ruby/Symbolic::Generate_class_methods">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>Ruby</ID>
-          <OriginalElement>Symbolic::Generate_class_methods</OriginalElement>
-          <nodes>
-            <node x="" y="">Symbolic::Generate_class_methods</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="82.0" y="15.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://Ruby/Symbolic">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>Ruby</ID>
-          <OriginalElement>Symbolic</OriginalElement>
-          <nodes>
-            <node x="" y="">Symbolic</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="52.0" y="30.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://Ruby/Symbolic_comparable">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>Ruby</ID>
-          <OriginalElement>Symbolic_comparable</OriginalElement>
-          <nodes>
-            <node x="43.5" y="0.0">Symbolic</node>
-            <node x="23.333333333333343" y="90.0">Symbolic_comparable</node>
-          </nodes>
-          <notes />
-          <edges>
-            <edge source="Symbolic_comparable" target="Symbolic">
-              <point x="37.75" y="-15.0" />
-              <point x="136.58333333333334" y="70.0" />
-              <point x="112.66666666666667" y="70.0" />
-              <point x="27.66666666666667" y="15.0" />
-            </edge>
-            <edge source="Symbolic_comparable" target="Symbolic_comparable">
-              <point x="0.0" y="15.0" />
-              <point x="98.83333333333334" y="140.0" />
-              <point x="3.333333333333343" y="140.0" />
-              <point x="3.333333333333343" y="105.0" />
-              <point x="-75.5" y="-0.0" />
-            </edge>
-            <edge source="Symbolic" target="Symbolic">
-              <point x="-27.66666666666667" y="15.0" />
-              <point x="57.33333333333333" y="50.0" />
-              <point x="23.5" y="50.0" />
-              <point x="23.5" y="15.0" />
-              <point x="-41.5" y="-0.0" />
-            </edge>
-          </edges>
-          <settings layout="Hierarchic Group" zoom="1.0" x="-194.0" y="59.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/basic_object.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="24" selection-start-line="99" selection-start-column="24" selection-end-line="99" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.06521739">
+          <caret line="20" column="14" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/object.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8998145">
-          <caret line="196" column="8" selection-start-line="196" selection-start-column="8" selection-end-line="196" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://Ruby/Dentaku">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>Ruby</ID>
-          <OriginalElement>Dentaku</OriginalElement>
-          <nodes>
-            <node x="" y="">Dentaku</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="49.0" y="30.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/ast/comparators.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="7" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/dentaku-2.0.5/lib/dentaku/ast/combinators.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.031539887">
-          <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/summands.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/comparable.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.3153989">
-          <caret line="41" column="7" selection-start-line="41" selection-start-column="7" selection-end-line="41" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/array.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33200794">
-          <caret line="687" column="8" selection-start-line="687" selection-start-column="8" selection-end-line="687" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/rubystubs21/module.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="863" column="8" selection-start-line="863" selection-start-column="8" selection-end-line="863" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Ruby21/lib/ruby/gems/2.1.0/gems/symbolic-0.3.8/lib/symbolic/extensions/module.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.02173913">
-          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notes.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser_test.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="74" column="13" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignOS.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.95652175">
-          <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resolver.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3043479">
-          <caret line="70" column="14" selection-start-line="70" selection-start-column="14" selection-end-line="70" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>IntelliJ IDEA Community Edition IC-143.382.35</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>DesignOS</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

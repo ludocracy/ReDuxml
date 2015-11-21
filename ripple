@@ -3,10 +3,9 @@ include Patterns
 # main program - actually a template that has as subsystems
 class DesignOS < Template
   # our customization of option parser to convert program arguments into options
-  require_relative 'option_parser'
-  require_relative 'Editor'
+  require_relative 'chef'
   require_relative 'gardener'
-  require_relative 'Inspector'
+  require_relative 'critic'
 
   # this is a fixed value
   OS_TEMPLATE_PATH = 'designos_template.xml'
