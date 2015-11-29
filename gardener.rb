@@ -63,7 +63,7 @@ module Gardener
     working_node.get_parameterized_xml_nodes.each do |xml_node|
       content_str = xml_node.content.to_s
       question = find_expr content_str
-      reply = SymEngine.evaluate(question, @parameters)
+      reply = Symja.evaluate(question, @parameters)
       xml_node.content = content_str.gsub(question, reply)
     end
     current_node = working_node

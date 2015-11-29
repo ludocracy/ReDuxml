@@ -1,7 +1,7 @@
-require_relative '../patterns'
+require_relative '../logic'
 require 'minitest/autorun'
 
-class PatternsTest < MiniTest::Test
+class LogicTest < MiniTest::Test
   def setup
   end
 

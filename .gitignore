@@ -7,7 +7,7 @@
 #output files
 output*
 #java
-java/
+java/symja_android_library/*
 #backup zip
 DesignOS.zip
 
