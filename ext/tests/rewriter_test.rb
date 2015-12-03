@@ -23,48 +23,18 @@ class RewriterTest < MiniTest::Test
 
   # def test_logic_filter  end
 
-  def test_integer_preference
-    assert_equal "var/2", e.evaluate("var/2")
-    assert_equal "2/var", e.evaluate("2/var")
-    assert_equal "2+var", e.evaluate("var+4-2")
-    assert_equal "2*var", e.evaluate("var+var")
-    assert_equal "var^2", e.evaluate("var*var")
-    assert_equal "1", e.evaluate("var/var")
-    assert_equal "-1+2*var", e.evaluate("var*2-1")
-    assert_equal "-2+var", e.evaluate("var-2*1")
-    assert_equal "2-var", e.evaluate("2-1*var")
-    assert_equal "2-1/var", e.evaluate("2-1/var")
-    assert_equal "2*var", e.evaluate("var*2/1")
-    assert_equal "-1+var/2", e.evaluate("var/2-1")
-    assert_equal "2*var", e.evaluate("2/1*var")
-    assert_equal "2-var", e.evaluate("2/1-var")
-    assert_equal "2*var", e.evaluate("var/2*4")
-    assert_equal "2*var", e.evaluate("var*4/2")
-    assert_equal "-2+2*var", e.evaluate("var-2+var")
-    assert_equal "-var", e.evaluate("var-2*var")
-    assert_equal "var", e.evaluate("var*2-var")
-    assert_equal "3/2*var", e.evaluate("var/2+var")
-    assert_equal "2+2*var", e.evaluate("var-2+4+var")
-    assert_equal "-7*var", e.evaluate("var-2*4*var")
-    assert_equal "3*var", e.evaluate("var/2*4+var")
-    assert_equal "1+3*var", e.evaluate("1+var/2*4+var")
-    puts "test_integer_preference passed"
-  end
-
-  def test_rational_preference
-    assert_equal "1/2", e.evaluate("1/2")
-    assert_equal "var/2", e.evaluate("var/2")
-    assert_equal "1/var", e.evaluate("1/var")
-    puts "test_rational_preference passed"
-  end
-
   def test_ternary
+    assert_equal "2", e.evaluate("1==1?2:3==3?4:5")
     assert_equal "10", e.evaluate("1==2?3==4?5:6==7?8:9:10")
+    puts "test_ternary passed"
+  end
+
+  def test_var_ternary
     assert_equal "var", e.evaluate("var ? true : false")
     assert_equal "var", e.evaluate("true ? var : false")
     assert_equal "var", e.evaluate("false ? true : var")
-    assert_equal "var ? var0 : 1", e.evaluate("var ? var0 : 1")
-    puts "test_ternary passed"
+    assert_equal "If[var,var0,1]", e.evaluate("var ? var0 : 1")
+    puts "test_var_ternary passed"
   end
 
   def tear_down

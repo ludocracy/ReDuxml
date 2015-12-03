@@ -16,7 +16,10 @@ TERNARY_ARITY = 3
 
 class Symja
   def evaluate expr
-    postwrite evalengine.evaluate prewrite expr
+    puts "Evaluating '#{expr}'"
+    prepped_expr = prewrite expr
+    ans = evalengine.evaluate prepped_expr
+    postwrite(ans.toString=='Null' ? prepped_expr : ans)
   end
 
   private
@@ -40,8 +43,7 @@ class Symja
   def rewrite expr, klass
     s = expr
     rewriters = klass.methods.keep_if do |w| w.to_s.include?('rewrite_') end
-    rewriters.sort.each do |sym|
-      s = s.to_s
+    rewriters.sort do |a,b| a.to_s[-1]<=>b.to_s[-1] end.each do |sym|
       s = klass.method(sym).call(s)
     end
     s
@@ -53,8 +55,11 @@ class Rewriters
   private
 
   attr_reader :evalengine, :operators
+  attr_accessor :ternary_ast_stack
 
   def initialize evalengine
+    # holds stack of operations involving ternary operators; only final element may be for colon
+    @ternary_ast_stack = []
     @evalengine = evalengine
     @operators = Hash(ternary:  f(:Rule), colon: f(:RuleDelayed), if: f(:If))
   end
@@ -65,32 +70,31 @@ class Rewriters
 end
 
 class Pre_Rewriters < Rewriters
-include SymjaTernaryRewriter # needed because Symja already has uses for '?' and ':'
-  # using roughly equivalent precedence operators instead
-  def first_rewrite_ternary_to_placeholder expr
-    expr.gsub(/(\?|:)/,{'?' => '->', ':' => ':>'})
-  end
-
-
-  # end of rewrite_ternary_ast_to_if
-
+  # pulled out ternary rewriter because it's complicated
+  include SymjaTernaryRewriters
 end # end of class Pre_Rewriters
 
 class Post_Rewriters < Rewriters
+  def rewrite_ast_str_0 ast
+    ast.to_s
+  end
 
   # this is potentially dangerous; change to Pre_Rewriter and use pre-eval, post-parse AST manipulation
-  def first_rewrite_negate_both_sides expr
+  def rewrite_negate_both_sides_1 expr
     if expr.include?('==(!') then expr.gsub('==(!','!=!(!')
-    elsif expr.include?('!=(!') then evalengine.evaluate(expr.gsub('!=(!', '==!(!'))
+    elsif expr.include?('!=(!') then evalengine.evaluate(expr.gsub('!=(!', '==!(!')).to_s
     else expr end
   end
 
-  # this can stay in Ruby as it's cheap to do here
-  def second_rewrite_lower_case_booleans expr
-    expr.gsub(/(True|False)/,{'True' => 'true', 'False' => 'false'})
+  def rewrite_boolean_identities_2 expr
+    expr.gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b\s*(==)\s*True/) do |match| match[/\b[a-zA-Z][a-zA-Z0-9_]*\b/] end
+    .gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b\s*(==)\s*False/) do |match| "!#{match[/\b[a-zA-Z][a-zA-Z0-9_]*\b/]}" end
+    .gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b\s*(!=)\s*True/) do |match| "!#{match[/\b[a-zA-Z][a-zA-Z0-9_]*\b/]}" end
+    .gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b\s*(!=)\s*False/) do |match| match[/\b[a-zA-Z][a-zA-Z0-9_]*\b/] end
   end
 
-  def third_rewrite_to_str expr
-      expr.to_s
+  # this can stay in Ruby as it's cheap to do here
+  def rewrite_lower_case_booleans_3 expr
+    expr.gsub(/(True|False)/,{'True' => 'true', 'False' => 'false'})
   end
 end # end of class Post_Rewriters

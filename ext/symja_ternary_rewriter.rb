@@ -1,58 +1,99 @@
-module SymjaTernaryRewriter
-# rewrite this and next method later to use Symja's visitors/patterns/replacement etc
-  def second_rewrite_ternary_ast_to_if expr
-    if expr.respond_to?(:isAST) && expr.isAST || expr.include?('->')
-      ast = evalengine.parse expr
-      colon_ast_vector = get_colon_ast_vector(ast).to_a
-      # creating clones of orphans
-      left_child = get_node(ast, colon_ast_vector+[1])
-      right_child = get_node(ast, colon_ast_vector+[2])
-      orphan_array = [get_node(ast, colon_ast_vector+[1]), get_node(ast, colon_ast_vector+[2])]
-      # removing colon ast
-      ternary_ast_vector = colon_ast_vector[0..-2]
-      ast = get_node(ast, ternary_ast_vector).removeAtClone(colon_ast_vector.last)
+module SymjaTernaryRewriters
+  # needed because Symja already has uses for '?' and ':'
+  # using roughly equivalent precedence operators instead
+  def rewrite_ternary_to_placeholder_0 expr
+    expr.gsub(/(\?|:)/,{'?' => '->', ':' => ':>'})
+  end
 
-      # finding grandparent that can take an orphan
-      until ternary_ast_vector.empty? do
-        ternary_ast = get_node(ast, ternary_ast_vector)
-        ast = ternary_ast.addAtClone(TERNARY_ARITY, orphan_array.shift) if ternary_ast.size == TERNARY_ARITY
-        ast = ternary_ast.setAtClone(0, operators[:if])
-        ternary_ast_vector.pop
-        break if orphan_array.empty?
+  # symja doesn't understand solitary vars as boolean values
+  def rewrite_ternary_vars_1 expr
+    if expr.include?('->')
+      expr.gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b(?=(?:\s*->))/) do |match|
+        unless match.match(/(true|false)/)
+          "#{match}==true"
+        else
+          match
+        end
       end
-      second_rewrite_ternary_ast_to_if ast
     else
       expr
-    end # end of if/else expr has/is part of ternary expression
+    end
+  end # end of def rewrite_ternary_vars_1
+
+  def rewrite_ternary_to_ast_2 expr
+    expr.match(/(->|:>)/) ? evalengine.parse(expr) : expr
   end
 
+  # rewrite this and next method later to use Symja's visitors/patterns/replacement etc
+  def rewrite_ternary_ast_to_if_3 expr
+    if expr.respond_to?(:isAST) && expr.isAST
+      build_ternary_ast_stack expr
+      # parse expression as Rule/RuleDelayed statement then find first RuleDelayed AST i.e. ternary ':'
+
+      colon_ast = ternary_ast_stack.pop
+
+      left_child = colon_ast.getPart(1)
+      right_child = colon_ast.getPart(2)
+
+      if left_child.toString == 'True' && right_child.toString == 'False'
+        var = ternary_ast_stack.pop.getPart(1)
+        return var if ternary_ast_stack.empty?
+        ternary_ast_stack << ternary_ast_stack.pop.setAtClone(1, var)
+      end
+
+      ternary_ast_stack << ternary_ast_stack.pop.appendClone(left_child)
+
+      orphan_stack = [right_child]
+      ternary_ast_stack.reverse.each do |ternary_ast|
+        if ternary_ast.size <= TERNARY_ARITY
+          orphan_stack << ternary_ast.appendClone(orphan_stack.pop).setAtClone(0, operators[:if])
+        else
+          orphan_stack << ternary_ast
+        end
+        ternary_ast_stack.delete ternary_ast
+
+        if ternary_ast_stack.empty?
+          ternary_ast_stack << orphan_stack.pop
+          until orphan_stack.empty?
+            ternary_ast_stack << ternary_ast_stack.pop.appendClone(orphan_stack.pop)
+          end
+          break
+        end
+      end
+
+      final_ast = ternary_ast_stack.pop
+
+      # FUBAR *** can probably cut this out since the stack should only ever have one ast by now
+      if final_ast.toString.match(/(->|:>)/)
+        rewrite_ternary_ast_to_if_3 final_ast
+      else
+        final_ast.toString
+      end
+    else
+      expr
+    end # end of if expr is an AST in need of processing or not
+
+  end # def rewrite_ternary_ast_to_if_3
 
   private
-  def get_colon_ast_vector(ast, colon_ast_vector=[])
-    a=ast.to_a
-    ast.to_a.each_with_index do |node, index|
-      next if index.zero?
-      n = node.toString
-      h = node.head.toString
-      case
-        when !node.isAST
-          next
-        when node.head.toString == 'RuleDelayed'
-          return colon_ast_vector+[index]
-        when node.head.toString == 'Rule'
-          colon_ast_vector = get_colon_ast_vector(node, colon_ast_vector+[index])
-        else
+  def build_ternary_ast_stack ast
+    operation = ast.head.toString
+    if operation == 'RuleDelayed'
+      ternary_ast_stack << ast
+      true
+    elsif operation.match(/(Rule|If)/)
+      ast.to_a.each_with_index do |node, index|
+        if node.isAST && build_ternary_ast_stack(node)
+          ternary_stump = ast.copyUntil(index)
+          if ternary_ast_stack.any? do |match| match.toString!=ternary_stump.toString end
+            ternary_ast_stack.insert(0, ternary_stump)
+          end
+        end
       end
+      true
+    else
+      false
     end
-    raise Exception if colon_ast_vector.empty?
-    colon_ast_vector
-  end
+  end # def get_ternary_ast_stack
 
-  def get_node(ast, index_vector)
-    a = ast.to_a
-    return ast.getPart(index_vector.first) if index_vector.size == 1
-    sub_ast = ast.getPart(index_vector.first)
-    sub_vector = index_vector[0..-2]
-    get_node(sub_ast, sub_vector)
-  end
-end
+end # module SymjaTernaryRewriter

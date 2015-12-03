@@ -29,14 +29,22 @@ class SymjaTest < MiniTest::Test
     assert_equal "!var", evaluate("!!!var")
     assert_equal "var1", evaluate("!var0 && var0 || var1")
   end # end of test_arithmetic
-  
+
+
+  def test_rational_preference
+    assert_equal "1/2", e.evaluate("1/2")
+    assert_equal "var/2", e.evaluate("var/2")
+    assert_equal "1/var", e.evaluate("1/var")
+    puts "test_rational_preference passed"
+  end
+
   def test_arithmetic
     assert_equal "var", evaluate("var")
     assert_equal "4", evaluate("2+2")
     assert_equal "4", evaluate("2*2")
     assert_equal "2+var", evaluate("var+2")
     assert_equal "2*var", evaluate("var*2")
-    assert_equal "0.5*var", evaluate("var/2")
+    assert_equal "var/2", evaluate("var/2")
     assert_equal "2/var", evaluate("2/var")
     assert_equal "2+var", evaluate("var+4-2")
     assert_equal "2*var", evaluate("var+var")
