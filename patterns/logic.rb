@@ -18,10 +18,6 @@ module Patterns
       @name = logic_file_name
     end
 
-    def load logic
-      children << logic.children
-    end
-
     # returns operator or operators that match arg; returns all if no arg
     def match_ops *args
       ops = []

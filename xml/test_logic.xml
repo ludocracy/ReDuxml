@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../rng/logic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<logic id="template_id">
+    <name>logic example</name>
+    <version>0.9</version>
+    <owners>
+        <owner id="b33791">
+            <name>Peter Kong</name>
+        </owner>
+    </owners>
+    <description format="DITA">example of basic logic set: contains boolean, comparisons, and arithmetic.</description>
+    <history>
+        <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
+            <description>created file</description>
+            <date>2015-10-20T19:20:30+01:00</date>
+        </insert>
+    </history>
+    <operators>
+        <!-- combinators -->
+        <!--<operator id="ternary" type="combinator" precedence="10">
+            <names>
+                <name>if</name>
+                <name>then</name>
+                <symbol>?</symbol>
+            </names>
+            <arity>2</arity>
+        </operator>-->
+        <operator id="and_" type="combinator" precedence="0">
+            <names>
+                <default>and</default>
+                <name>also</name>
+                <symbol>&amp;&amp;</symbol>
+            </names>
+            <identity>true</identity>
+        </operator>
+        <operator id="or_" type="combinator" precedence="0">
+            <names>
+                <default>or</default>
+                <name>else</name>
+                <symbol>||</symbol>
+            </names>
+            <identity>false</identity>
+        </operator>
+        <operator id="not_" type="combinator" precedence="40">
+            <names>
+                <default>not</default>
+                <symbol>!</symbol>
+                <regexp>(!)(?=\w|!)</regexp>
+            </names>
+            <arity>1</arity>
+            <right_associative>true</right_associative>
+            <inverse>not</inverse>
+        </operator>
+        
+        <!-- comparators -->
+        <operator id="eq" type="comparator" precedence="30">
+            <names>
+                <default>equal</default>
+                <name>equals</name>
+                <name>is</name>
+                <name>the same as</name>
+                <symbol>==</symbol>
+            </names>
+            <reverse>eq</reverse>
+            <inverse>ne</inverse>
+        </operator>
+        <operator id="lt" type="comparator" precedence="35">
+            <names>
+                <default>less than</default>
+                <name>smaller than</name>
+                <symbol>&lt;</symbol>
+            </names>
+            <reverse>gt</reverse>
+            <inverse>ge</inverse>
+        </operator>
+        <operator id="gt" type="comparator" precedence="35">
+            <names>
+                <default>greater than</default>
+                <name>bigger than</name>
+                <symbol>></symbol>
+            </names>
+            <reverse>lt</reverse>
+            <inverse>le</inverse>
+        </operator>
+        <operator id="le" type="comparator" precedence="35">
+            <names>
+                <default>less than or equal</default>
+                <name>the same or smaller than</name>
+                <symbol>&lt;=</symbol>
+            </names>
+            <reverse>ge</reverse>
+            <inverse>gt</inverse>
+        </operator>
+        <operator id="ge" type="comparator" precedence="35">
+            <names>
+                <default>greater than or equal</default>
+                <name>the same or bigger than</name>
+                <symbol>>=</symbol>
+            </names>
+            <reverse>le</reverse>
+            <inverse>lt</inverse>
+        </operator>
+        <operator id="ne" type="comparator" precedence="30">
+            <names>
+                <default>not equal</default>
+                <name>=/=</name>
+                <name>not the same as</name>
+                <symbol>!=</symbol>
+            </names>
+            <reverse>ne</reverse>
+            <inverse>eq</inverse>
+        </operator>
+
+    </operators>
+</logic>

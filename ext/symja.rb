@@ -16,7 +16,6 @@ TERNARY_ARITY = 3
 
 class Symja
   def evaluate expr
-    puts "Evaluating '#{expr}'"
     prepped_expr = prewrite expr
     ans = evalengine.evaluate prepped_expr
     postwrite(ans.toString=='Null' ? prepped_expr : ans)
