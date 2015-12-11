@@ -1,4 +1,4 @@
-require_relative '../ext/ruby'
+require_relative '../template'
 require 'minitest/autorun'
 
 # tests term formatting - without regard to validity of evaluation
@@ -6,36 +6,20 @@ class TemplateTest < MiniTest::Test
   def setup
   end
 
-  def test_logic_filter
-    it "must raise" do
-      assert_raises LogicException do
-        ""
-      end
-      ->     { bar.do_it }.must_raise RuntimeError
-      lambda { bar.do_it }.must_raise RuntimeError
-      proc   { bar.do_it }.must_raise RuntimeError
-    end
+  def test_load_logic_template
+    # load logic file
   end
 
-  def test_boolean_lower_case
-    assert_equal "true", "true".evaluate
-    assert_equal "false", "false".evaluate
+  def test_add_child
+
   end
 
-  def test_var_negate_bug
-    assert_equal "true", "!var == !var".evaluate
-    assert_equal "true", "var != !var".evaluate
-    assert_equal "!var", "!var".evaluate
-    assert_equal "var", "!!var".evaluate
-    assert_equal "!var", "!!!var".evaluate
-    assert_equal "var1", "!var0 && var0 || var1".evaluate
+  def test_remove_child
+
   end
 
-  def test_ternary
-    assert_equal "var", "var ? true : false".evaluate
-    assert_equal "var", "true ? var : false".evaluate
-    assert_equal "var", "false ? true : var".evaluate
-    assert_equal "var ? var0 : 1", "var ? var0 : 1".evaluate
+  def test_write_to_file
+
   end
 
   def tear_down

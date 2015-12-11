@@ -1,4 +1,4 @@
-require_relative 'component'
+require_relative '../patterns/component/component'
 require 'nokogiri'
 
 # my own stuff

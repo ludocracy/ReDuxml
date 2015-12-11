@@ -2,20 +2,18 @@ require_relative '../ext/symja'
 require 'nokogiri'
 
 module Patterns
-
   class Logic < Component
-    include Symja
-
     # later this should load like a regular template (probably as part of inspector?)
     # then it will be a run time that listens for operations and reports performance
     def initialize logic_file_name
       @reserved_word_array = %w(operator)
-      file = File.open("../xml/#{logic_file_name}.xml", 'r')
+      file = File.open("../../../DesignOS/xml/#{logic_file_name}.xml", 'r')
       xml_doc = Nokogiri::XML file
       #skipping straight to design
       #later we'll need to look at front matter of template to verify it; can't just load any old logic safely!
       super xml_doc.root.element_children[-1]
       @name = logic_file_name
+      @resolver = Symja.new
     end
 
     # returns operator or operators that match arg; returns all if no arg

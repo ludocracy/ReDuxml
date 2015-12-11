@@ -5,9 +5,9 @@ class DesignTest < MiniTest::Test
   def setup
   end
 
-  def test_regression
-    assert_equal "true", "!var == !var".evaluate
-    assert_equal "true", "var != !var".evaluate
+  def test_init_nil
+    @d = Patterns::Design.new
+    assert d.respond_to?(:logic)
   end
 
   def tear_down

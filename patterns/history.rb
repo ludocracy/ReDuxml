@@ -1,5 +1,5 @@
 module Patterns
-  require_relative 'component'
+  require_relative 'component/component'
 
   class History < Component
     def initialize xml_node
@@ -52,13 +52,14 @@ module Patterns
       super
       @previous = args[:previous]
       @next = nil
-      @xml_cursor['previous'] = @previous.id
+      @xml_cursor['previous'] = @previous.id unless @previous.nil?
       @ref = args[:ref]
-      @xml_cursor['ref'] = @ref.id
+      @xml_cursor['ref'] = @ref.id unless @ref.nil?
       @timestamp = Time.now
-      @xml_cursor.element 'date', @timestamp.to_s
+      @xml_cursor << Nokogiri::XML::Node.new('date', @xml_doc)
+      @xml_cursor << @timestamp.to_s
       # description will be generated or input later and only when triggered
-      @xml_cursor.element 'description'
+      @xml_cursor << Nokogiri::XML::Node.new('description', @xml_doc)
     end
 
     def generate_descr

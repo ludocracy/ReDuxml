@@ -1,4 +1,6 @@
 require 'tree'
+require_relative 'regexp'
+
 # override rubytree to make name = element name and id = name (i.e. unique identifier)
 module Tree
   class TreeNode
@@ -9,9 +11,8 @@ module Tree
       @id
     end
 
-    def initialize(content = nil)
-      raise ArgumentError, "XML Node HAS to be provided!" if content == nil
-      @name, @content = content.name, content
+    def initialize content
+      @name, @content = content.respond_to?(:name) ? content.name : content.match(Regexp.identifier), content
       @id = self.object_id
 
       self.set_as_root!

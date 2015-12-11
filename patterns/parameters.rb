@@ -1,5 +1,5 @@
 module Patterns
-  require_relative 'component'
+  require_relative 'component/component'
 
   class Parameters < Component
     @reserved_word_array = 'parameter'
@@ -16,9 +16,9 @@ module Patterns
         last_change = nil
         @children_hash.merge params.parameter_hash do |key, old_val, new_val|
           @children_hash[key] = new_val
-          last_change.push (catch :edit)
+          # last_change.push (catch :edit)
         end
-        collect_changes last_change
+        # collect_changes last_change
       end
     end
   end
@@ -26,8 +26,8 @@ module Patterns
   # specialization of Component holds parameter name, value and description
   # also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
-    def initialize xml_node, args = {}
-      super xml_node
+    def initialize xml_node, *args
+      super xml_node, *args
     end
 
     def value
@@ -43,4 +43,21 @@ module Patterns
     end
   end
 
+  class Iterator < Parameter
+    include Enumerable
+    @offset
+    @increment
+    @symbol
+
+    def array
+
+    end
+
+    def initialize node
+      super node
+      @offset = attributes[:offset]
+      @increment = attributes[:increment]
+      @symbol = attributes[:symbol]
+    end
+  end
 end
