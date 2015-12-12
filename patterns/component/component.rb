@@ -18,7 +18,7 @@ require_relative 'interface'
 require_relative 'double_stack_hash'
 require_relative 'guts'
 
-module Patterns
+module Components
   # Components are equivalent to objects in OOP; they are implemented as XML structures that have no branching except for the Component's children.
   # in addition they are Kansei objects existing along two concrete/abstract dimensions, one for views, the other for builds
   # each Kansei object is also a Tree::TreeNode
@@ -36,9 +36,10 @@ module Patterns
     @id
     # points to the XML element root of this Component
     @reserved_word_array = []
-    # hash of attribute name keys and attribute node values derived from XML attributes and leaf singletons
-    # hash values are of type Nokogiri::XML:Attr
+    # root of xml stub that makes up this node
     @xml_root_node
+    # root of design xml containing this component
+    @doc
 
     # tracks all content nodes that contain parameterized expressions for quick retrieval and resolution
     # keys are the nodes themselves, values are the strings that contain the parameter expressions
@@ -49,7 +50,8 @@ module Patterns
     # array of words that indicate reserved classes
     @attributes = {}
 
-    attr_reader :id, :children, :children_hash, :if
+    attr_reader :id, :children, :children_hash, :if, :doc, :xml_root_node
+    alias_method :xml, :xml_root_node
 
     class << self
       def rename maudule, name
@@ -68,17 +70,18 @@ module Patterns
     end
 
     # creating new Component from XML node (from file) or input in the form of XML string
-    def initialize xml_node, args = {}
+    def initialize xml_node, args={}
       raise ArgumentError if xml_node.nil?
-      @xml_root_node = xml_node.respond_to?(:gsub) ? Nokogiri::XML(xml_node) : xml_node
+      @attributes = args
+      @xml_root_node = xml_node.respond_to?(:element_children) ? xml_node : Nokogiri::XML(xml_node)
+      @xml_root_node = xml_root_node.root if xml_root_node.respond_to?(:root)
+      @doc = xml_root_node.document
       @kanseis = DoubleStackHash.new
       @kanseis.push self
       @if = []
       @visible = ['admin']
       @parameterized_nodes = Hash.new
-      @attributes = Hash.new
       @reserved_word_array ||= []
-      generate_new_xml args if xml_node.respond_to?(:gsub)
 
       @xml_cursor ||= xml_root_node
 
@@ -91,7 +94,7 @@ module Patterns
     private
     include Components::Guts
 
-    attr_reader :parameterized_nodes, :xml_cursor, :kanseis, :xml_root_node, :xml_cursor
+    attr_reader :parameterized_nodes, :xml_cursor, :kanseis
   end # end of class Component
 
 end # end of module Patterns

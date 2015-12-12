@@ -1,7 +1,10 @@
 require_relative '../ext/symja'
 require 'nokogiri'
 
-module Patterns
+module Logics
+  require_relative 'component/component'
+  include Components
+
   class Logic < Component
     # later this should load like a regular template (probably as part of inspector?)
     # then it will be a run time that listens for operations and reports performance

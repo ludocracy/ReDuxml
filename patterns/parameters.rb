@@ -1,5 +1,6 @@
-module Patterns
+module Parameters
   require_relative 'component/component'
+  include Components
 
   class Parameters < Component
     @reserved_word_array = 'parameter'

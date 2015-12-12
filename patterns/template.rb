@@ -1,8 +1,6 @@
-require_relative '../patterns/component/component'
-require 'nokogiri'
-
-# my own stuff
-module Patterns
+module Templates
+  require_relative 'component/component'
+  include Components
   # Templates are components that constitute a distinct technology
   # They must have owners and always record sub-component changes
   # Element names reserved by the template's schema rules become constructors for sub-components

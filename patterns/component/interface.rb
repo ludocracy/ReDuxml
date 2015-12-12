@@ -1,5 +1,12 @@
 module Components
   module Interface
+    # returns just copy of top xml element minus children
+    def stub
+      x = xml.clone
+      x.element_children.remove
+      x
+    end
+
     # creates new XML element
     def element name, content=nil
       new_element = Nokogiri::XML::Element.new(name.to_s, document)
@@ -15,11 +22,6 @@ module Components
       new_element
     end
 
-    # shortcut
-    def xml
-      @xml_root_node
-    end
-
     def promote attr_key, args={}
       new_name = args[:element] || attr_key.to_s
       if !args[:attr].nil?
@@ -30,7 +32,8 @@ module Components
         new_content = args[:content] || @attributes[attr_key]
         s_string = "<#{new_name}>#{new_content}</#{new_name}>"
       end
-      new_comp = Patterns::Component.new(s_string)
+      new_comp = Component.new(s_string)
+      @xml_cursor = xml_cursor.parent
       self << new_comp
       @attributes.delete self[attr_key]
       @xml_root_node.remove_attribute attr_key.to_s
@@ -59,39 +62,22 @@ module Components
       puts "Component '#{name}' #{content}"
     end
 
-    def view view_hash
-      if reconcile view_hash, @visible
-        # @views[view_hash] = @cursor.dup
-      end
-    end
-
-    def reconcile view_hash, visible
-      visible.split(' ').each do |view|
-        true if view_hash.include? view
-      end
-      false
-    end
-
     # finds first near match child
     def find_child child_pattern
       #attempting to match by name
       @children.each do |cur_child|
-        return cur_child if cur_child.name == child_pattern
+        return cur_child if cur_child.name == child_pattern.to_s
       end
       #attempting to use pattern as index
       @children[child_pattern]
     rescue TypeError
       #attempting to use pattern as key
-      @children_hash[child_pattern]
+      @children_hash[child_pattern] || self
     end
 
     # a slightly safer way to get an attribute's final value (read only)
     def get_attr_val attr
       @attributes[attr]
-    end
-
-    def children?
-      @children.size.to_s
     end
 
     # overriding TreeNode::content to point to XML head's content
@@ -101,21 +87,18 @@ module Components
 
     # initializes component attributes if empty
     def []= attr, *vals
-      @attributes[attr] ||= vals.join ' '
-      @xml_cursor[attr] ||= vals.join ' '
+      @attributes[attr] ||= vals.join(' ')
+      @xml_cursor[attr] ||= vals.join(' ')
     end
 
     def [] attr
       get_attr_val attr
     end
 
-    # extending TreeNode's add child to link up XML if for new node
-    def << component_child
-      x = component_child.xml
-      unless x.respond_to?(:add_child)
-        @xml_cursor.add_child component_child.xml unless @xml_cursor.element_children.any? do |match| match==x end
-      end
-      super component_child
+    def << obj
+      c = coerce(obj)
+      add c
+      @xml_cursor.add_child c.xml
     end
   end
 end

@@ -1,9 +1,7 @@
+require 'nokogiri'
 module Components
   module Guts
     private
-    def document
-      xml_cursor.nil? ? Nokogiri::XML::Document.new : xml_cursor.document
-    end
 
     def collect_changes change
       cur = self.parent
@@ -37,12 +35,6 @@ module Components
       # this is silly
     end
 
-    # used to create new XML for a new Component
-    def generate_new_xml args = {}
-      x = xml.root.name || args[:element]
-      @xml_root_node = element(x, args)
-    end
-
     # should describe itself in a string
     def generate_descr
 
@@ -71,18 +63,20 @@ module Components
 
     # adds leaf content as attribute; element name as key
     def load_content_if_leaf
-      @attributes[@xml_cursor.name] = @xml_cursor.content if @xml_cursor.element_children.size == 0
+      if @xml_cursor.element_children.size == 1
+        @attributes[@xml_cursor.name] = @xml_cursor.content
+      end
     end
 
     # child has a ruby class of its own
     def init_reserved child
-      child_class = Object::const_get("Patterns::#{child.name.capitalize}")
+      child_class = Object::const_get("#{self.class.to_s.split('::')[-2]+'::'}#{child.name.capitalize}")
       self << child_class.new(child)
     end
 
     # child is just XML - wrap it
     def init_generic child
-      self << Patterns::Component.new(child, {})
+      self << Component.new(child, {})
     end
 
     #takes an xml node's attributes and adds them to the Component's @attributes hash
@@ -131,6 +125,19 @@ module Components
         value = attr[1]
       end
       @parameterized_nodes[attr] = value if value.include? '@('
+    end
+
+    def xml=arg
+      @xml_cursor=arg
+    end
+
+    def coerce obj
+      case obj.class
+        when String                                       then Components::Component.new(Nokogiri::XML(obj).root)
+        when Nokogiri::XML::Element                       then Components::Component.new(obj)
+        when obj.respond_to?(:document?) && obj.document? then Components::Component.new(obj.root)
+        else obj
+      end
     end
   end
 end

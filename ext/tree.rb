@@ -4,12 +4,13 @@ require_relative 'regexp'
 # override rubytree to make name = element name and id = name (i.e. unique identifier)
 module Tree
   class TreeNode
-    attr_reader :id
+    attr_reader :name
 
-    protected :name
-    def name
+    def id
       @id
     end
+
+    protected :id
 
     def initialize content
       @name, @content = content.respond_to?(:name) ? content.name : content.match(Regexp.identifier), content
@@ -29,7 +30,7 @@ module Tree
     def add(child, at_index = -1)
       # Only handles the immediate child scenario
       raise ArgumentError,
-            "Attempting to add a nil node" unless child
+            "Attempting to add a nil node" if child.nil?
       raise ArgumentError,
             "Attempting add node to itself" if self.equal?(child)
       raise ArgumentError,

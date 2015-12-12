@@ -1,5 +1,6 @@
-module Patterns
+module Histories
   require_relative 'component/component'
+  include Components
 
   class History < Component
     def initialize xml_node

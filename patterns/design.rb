@@ -1,6 +1,9 @@
-module Patterns
+module Designs
   require_relative 'component/component'
-  require_relative '../ext/object'
+  require_relative 'logic'
+
+  include Components
+  include Logics
 
   # instances are copies (dclones) or aliases (clones) of a given Component; if copies, they get Instances of the children also
   # when used to wrap a Component or set of Components, allows use of locally-namespaced parameters
@@ -29,10 +32,14 @@ module Patterns
   # specifies logics allowed within itself
   class Design < Instance
     @logic
-    attr_reader :logic
+    @doc
+
+    attr_reader :logic, :doc
 
     def initialize xml_node=nil, args = {}
-      generate_new_xml args if xml_node.nil?
+      @xml_root_node = if xml_node.nil? || !xml_node.respond_to?(:element_children)
+               generate_new_xml(xml_node, args) else xml_node
+             end
       super xml
       # defining default logics here for now (make constant later? or builder template property?)
       if get_attr_val(:logics).nil?
@@ -40,15 +47,18 @@ module Patterns
       end
 
       get_attr_val(:logics).each do |logic|
-        @logic = Logic.new(logic)
+        @logic = Logics::Logic.new(logic)
       end
     end
 
-    def generate_new_xml args = {}
-      doc = Nokogiri::XML::Document.new
-      new_element = self.class.to_method_name
-      @xml_root_node = Nokogiri::XML::Element.new(new_element, doc)
-      @xml_cursor = @xml_root_node
+    private
+    def generate_new_xml xml_node, args = {}
+      return xml_node if xml_node.respond_to?(:element_children)
+      new_doc = Nokogiri::XML(xml_node)
+      new_doc << "<#{self.class.to_s.split('::').last.downcase}/>" if new_doc.element_children.empty?
+      args.each do |key, val| new_doc.root[key]=val end
+      @doc = new_doc
+      new_doc.root
     end
   end
 
