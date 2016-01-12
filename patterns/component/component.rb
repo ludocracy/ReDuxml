@@ -12,7 +12,7 @@
 # could add switch to turn this off
 
 require 'tree/tree_deps'
-require 'nokogiri'
+require_relative '../../ext/object'
 require_relative '../../ext/tree'
 require_relative 'interface'
 require_relative 'double_stack_hash'
@@ -71,17 +71,15 @@ module Components
 
     # creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args={}
-      raise ArgumentError if xml_node.nil?
+      raise ArgumentError unless @xml_root_node = xml_node.xml
       @attributes = args
-      @xml_root_node = xml_node.respond_to?(:element_children) ? xml_node : Nokogiri::XML(xml_node)
-      @xml_root_node = xml_root_node.root if xml_root_node.respond_to?(:root)
       @doc = xml_root_node.document
       @kanseis = DoubleStackHash.new
       @kanseis.push self
       @if = []
       @visible = ['admin']
       @parameterized_nodes = Hash.new
-      @reserved_word_array ||= []
+      @reserved_word_array = args[:reserved] || []
 
       @xml_cursor ||= xml_root_node
 

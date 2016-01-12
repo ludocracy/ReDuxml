@@ -9,10 +9,10 @@ module SymjaTernaryRewriters
   def rewrite_ternary_vars_1 expr
     if expr.include?('->')
       expr.gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b(?=(?:\s*->))/) do |match|
-        unless match.match(/(true|false)/)
-          "#{match}==true"
-        else
+        if match.match(/(true|false)/)
           match
+        else
+          "#{match}==true"
         end
       end
     else

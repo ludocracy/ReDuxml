@@ -47,9 +47,10 @@ module Tree
               "#{insertion_range.min} to #{insertion_range.max} exist."
       end
 
-      @children_hash[child.name]  = child
+      @children_hash[child.name] ||= Array.new
+      @children_hash[child.name] << child
       child.parent = self
-      return child
+      child
     end
   end
 end

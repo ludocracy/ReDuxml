@@ -1,25 +1,31 @@
+require_relative '../ext/object'
+
 module Parameters
   require_relative 'component/component'
   include Components
 
   class Parameters < Component
-    @reserved_word_array = 'parameter'
     def initialize xml_node, args = {}
-      super xml_node
+      super xml_node, {reserved: ['parameter']}
+      @parameter_hash = Hash.new
+      children_hash['parameter'].each do |param| @parameter_hash[param[:name]] = param end
+      update args unless args.nil? || args.empty?
     end
 
-    def parameter_hash
-      @children_hash
+    def [] key
+      @parameter_hash[key]
     end
 
     def update params
-      if params
-        last_change = nil
-        @children_hash.merge params.parameter_hash do |key, old_val, new_val|
-          @children_hash[key] = new_val
-          # last_change.push (catch :edit)
-        end
+      h = Hash.new
+      params.each do |key, val|
+        h[key] = Parameter.new(
+%(<parameter name="#{key}" value="#{val}"/>)
+        )
+      end
+      @parameter_hash.merge!(h) do |key, old, new|
         # collect_changes last_change
+        new
       end
     end
   end
@@ -27,12 +33,12 @@ module Parameters
   # specialization of Component holds parameter name, value and description
   # also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
-    def initialize xml_node, *args
-      super xml_node, *args
+    def initialize xml_node, args={}
+      super xml_node, args
     end
 
     def value
-      self['value']
+      self[:value]
     end
 
     # parameter value assignments must be recorded
@@ -41,6 +47,10 @@ module Parameters
         value = val
         throw :edit, Edit.new(nil, self)
       end
+    end
+
+    def describe
+      self[:description]
     end
   end
 

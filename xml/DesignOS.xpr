@@ -204,7 +204,7 @@
         </options>
     </meta>
     <projectTree name="DesignOS.xpr">
-        <folder path="rng/"/>
+        <folder path="../rng/"/>
         <file name="builder.xml"/>
         <file name="console.xml"/>
         <file name="designos_template.xml"/>
