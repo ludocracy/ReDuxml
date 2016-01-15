@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" >
+    <include href="template.rng"/>
+    <!-- name of template root -->
+    <start>
+        <ref name="outline"/>
+    </start>
+    <define name="outline" combine="choice">
+        <element name="outline">
+            <ref name="systemComAttr"/>
+            <ref name="instanceComType"/>
+            <ref name="chapter"></ref>
+        </element>
+    </define>
+    <define name="chapter">
+        <element name="chapter">
+            <zeroOrMore>
+                <ref name="split"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="merge"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="chapter"></ref>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="ref"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="split">
+        <element name="split">
+            <ref name="criteriaAttr"/>
+            <choice>
+                <ref name="link"/>
+            </choice>
+        </element>
+    </define>
+    <define name="merge">
+        <element name="merge">
+            <ref name="criteriaAttr"/>
+            <oneOrMore>
+                <ref name="link"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="criteriaAttr">
+        <attribute name="criteria"/>
+    </define>
+</grammar>

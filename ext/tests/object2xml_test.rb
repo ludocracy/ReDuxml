@@ -15,13 +15,13 @@ class Object2XMLTest < MiniTest::Test
 
   # Fake test
   def test_fail
-    assert !"".xml?
-    assert !" ".xml?
-    assert !nil.xml?
+    assert "".xml.nil?
+    assert " ".xml.nil?
+    assert nil.xml.nil?
   end
 
   def test_true
-    assert "<poop/>".xml?
+    assert "<poop/>".xml
     assert "<poop></poop>"
     assert "<pooper>poop</pooper>"
   end

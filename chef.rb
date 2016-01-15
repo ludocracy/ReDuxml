@@ -1,52 +1,44 @@
-require_relative 'patterns'
-# chef contains methods for user to interact with design - is a console in its unextended state; can be extended with graphical overlay or enterprise editing tool
+require_relative 'patterns/template'
+require_relative 'gardener'
+
 module Chef
-  
-  # points to current Component
+  include Templates
+
+  def open filename
+    @current_template = Template.new(File.open(filename))
+  end
+
+  def grow target
+    Gardener.grow target
+  end
+
+  def wrap target, container
+
+  end
+
+  def goto direction
+    # xpath
+    # relative
+  end
+
+  def read filename
+    @current_template = Template.new(File.read(filename))
+  end
+
+  def save target, filename=nil
+    File.write(filename || @current_template.name, @current_template)
+  end
+
+  def template
+    @current_template
+  end
+
+  def component
+    @cursor
+  end
+
+  @current_template
   @cursor
-  # **************use these!!!!****************
-  # ENV['USER']  on Unix
-  # ENV['USERNAME'] on Windows
 
-
-  def respond input
-    case input[0]
-      when 'help'
-        puts "help check root child parent load quit"
-      when 'quit'
-        STDERR.puts "quitting"
-        @cursor =
-        quit
-      when 'check'
-        puts @cursor.summarize
-      when 'root'
-        @cursor = @root_template
-      when 'child'
-        maybe = @cursor.find_child input[1]
-        @cursor = maybe || @cursor
-      when 'parent'
-        @cursor = @cursor.parent
-      when 'build'
-        @cursor.build
-      else
-        d "unknown command '# {input[0]}'"
-    end
-  end
-
-  def listen
-    until @cursor.nil? do
-      puts "Command?"
-      respond gets.chomp!.split' '
-    end
-  end
-
-  def load root_xml_node, *args
-    @cursor = @root_template = Template.new(root_xml_node)
-    # temporarily bypassing Editor template
-    listen
-  end
-
-  def root_name
-    self.to_s
-  end
+  extend self
 end

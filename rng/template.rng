@@ -252,7 +252,14 @@
             </rng:attribute>
         </rng:define>
 
-
+        <rng:define name="link">
+            <a:documentation> creates a link to a referenced object or template applying given
+                parameter values to the original object.</a:documentation>
+            <rng:element name="link">
+                <rng:ref name="instanceComType"/>
+            </rng:element>
+        </rng:define>
+        
         <rng:define name="array">
             <a:documentation> creates patterned instances of referenced objects </a:documentation>
             <rng:element name="array">
@@ -278,7 +285,7 @@
 
         <rng:define name="instance">
             <a:documentation> creates instance of referenced object or template applying given
-                parameter values </a:documentation>
+                parameter values to the instance.</a:documentation>
             <rng:element name="instance">
                 <rng:ref name="instanceComType"/>
             </rng:element>
