@@ -50,24 +50,7 @@ module Components
     # array of words that indicate reserved classes
     @attributes = {}
 
-    attr_reader :id, :children, :children_hash, :if, :doc, :xml_root_node
-    alias_method :xml, :xml_root_node
-
-    class << self
-      def rename maudule, name
-        renamed_component_class = maudule.const_set(name, self)
-        renamed_component_class.add_alias(maudule.to_sym, self.to_sym)
-      end
-
-      def add_alias key, value
-        @@aliases.nil? ? @@aliases = Hash.new :
-            @@aliases[key] = value
-      end
-
-      def aliases
-        @@aliases
-      end
-    end
+    attr_reader :id, :children, :children_hash, :if, :doc, :xml_root_node, :attributes
 
     # creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args={}
@@ -95,4 +78,4 @@ module Components
     attr_reader :parameterized_nodes, :xml_cursor, :kanseis
   end # end of class Component
 
-end # end of module Patterns
+end # end of module Components

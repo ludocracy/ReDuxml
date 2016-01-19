@@ -1,27 +1,5 @@
 module Components
   module Interface
-    # returns just copy of top xml element minus children
-    def stub
-      x = xml.clone
-      x.element_children.remove
-      x
-    end
-
-    # creates new XML element
-    def element name, content=nil
-      new_element = Nokogiri::XML::Element.new(name.to_s, document)
-      new_element = new_element.root unless new_element.is_a?(Nokogiri::XML::Element)
-      if content.is_a?(Hash)
-        content.each do |key, value|
-          new_element[key.to_s.strip]=value.to_s.strip
-          @attributes[key]=value
-        end
-      elsif !content.nil?
-        new_element.content = content
-      end
-      new_element
-    end
-
     def promote attr_key, args={}
       new_name = args[:element] || attr_key.to_s
       if !args[:attr].nil?
@@ -33,16 +11,10 @@ module Components
         s_string = "<#{new_name}>#{new_content}</#{new_name}>"
       end
       new_comp = Component.new(s_string)
-      @xml_cursor = xml_cursor.parent
       self << new_comp
       @attributes.delete self[attr_key]
       @xml_root_node.remove_attribute attr_key.to_s
       new_comp
-    end
-
-    def give_attribute! attr_key, target
-      target[attr_key] = self[attr_key]
-      self[attr_key] = nil
     end
 
     def to_s
@@ -75,11 +47,6 @@ module Components
       @children_hash[child_pattern] || self
     end
 
-    # a slightly safer way to get an attribute's final value (read only)
-    def get_attr_val attr
-      @attributes[attr]
-    end
-
     # overriding TreeNode::content to point to XML head's content
     def content
       xml.content
@@ -92,13 +59,13 @@ module Components
     end
 
     def [] attr
-      get_attr_val attr
+      attributes[attr]
     end
 
     def << obj
       c = coerce(obj)
       add c
-      @xml_cursor.add_child c.xml
+      @xml_cursor.add_child c.xml_root_node
     end
   end
 end

@@ -2,7 +2,8 @@ require_relative '../parameters'
 require 'minitest/autorun'
 
 class ParametersTest < MiniTest::Test
-  include Parameters
+  include Patterns
+
   def setup
 
   end

@@ -1,6 +1,10 @@
-module Templates
-  require_relative 'component/component'
+require_relative 'component/component'
+require_relative 'history'
+require_relative 'design'
+
+module Patterns
   include Components
+
   # Templates are components that constitute a distinct technology
   # They must have owners and always record sub-component changes
   # Element names reserved by the template's schema rules become constructors for sub-components
@@ -11,9 +15,8 @@ module Templates
     @owners
 
     def initialize template_root_node, args = {}
-      @reserved_word_array = %w(owners history design)
-      # creating new template
-      super template_root_node, args
+      # check for format - if non-compliant, wrap in boilerplate with DesignOS as owner
+      super template_root_node, reserved: %w(owners history)
     end
 
     def history
@@ -21,11 +24,11 @@ module Templates
     end
 
     def design
-      find_child 'design'
+      find_child -1
     end
 
     def owners
-      find_child 'owners'
+      find_child('owners').children
     end
 
     def generate_new_xml args = {}
@@ -38,14 +41,13 @@ module Templates
 
   class Owners < Component
     def initialize xml_node
-      @reserved_word_array = 'owner'
-      super xml_node
+      super xml_node, reserved: ['owner']
     end
   end
 
   class Owner < Component
     def initialize xml_node, args ={}
-      super xml_node
+      super xml_node, args
     end
 
     def generate_new_xml args

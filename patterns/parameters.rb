@@ -1,12 +1,12 @@
 require_relative '../ext/object'
+require_relative 'component/component'
 
-module Parameters
-  require_relative 'component/component'
+module Patterns
   include Components
 
   class Parameters < Component
     def initialize xml_node, args = {}
-      super xml_node, {reserved: ['parameter']}
+      super xml_node, reserved: %w(parameter)
       @parameter_hash = Hash.new
       children_hash['parameter'].each do |param| @parameter_hash[param[:name]] = param end
       update args unless args.nil? || args.empty?

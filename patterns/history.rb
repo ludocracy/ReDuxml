@@ -1,11 +1,10 @@
-module Histories
-  require_relative 'component/component'
+require_relative 'component/component'
+module Patterns
   include Components
 
   class History < Component
     def initialize xml_node
-      @reserved_word_array = %w(insert remove edit error correction instantiate move undo)
-      super xml_node
+      super xml_node, reserved: %w(insert remove edit error correction instantiate move undo)
     end
 
     # a special register function is used by the History, instead of the usual add child to avoid adding a history of the history to the history
@@ -47,6 +46,14 @@ module Histories
   class Change < Component
     def initialize xml_node, args = {}
       super xml_node
+    end
+
+    def description
+      find_child :description
+    end
+
+    def date
+      find_child :date
     end
 
     def generate_new_xml args

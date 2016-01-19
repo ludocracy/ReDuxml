@@ -1,4 +1,5 @@
 require 'nokogiri'
+
 module Components
   module Guts
     private
@@ -70,7 +71,7 @@ module Components
 
     # child has a ruby class of its own
     def init_reserved child
-      child_class = Object::const_get("#{self.class.to_s.split('::')[-2]+'::'}#{child.name.capitalize}")
+      child_class = Patterns::const_get("#{self.class.to_s.split('::')[-2]+'::'}#{child.name.capitalize}")
       self << child_class.new(child)
     end
 

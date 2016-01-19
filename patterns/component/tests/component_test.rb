@@ -40,15 +40,6 @@ class ComponentTest < MiniTest::Test
     assert_equal "<chunks>chunky</chunks>", child1.xml.to_s
   end
 
-  def test_add_child
-    @e = Component.new("<poop><danglers/></poop>")
-    test_xml = Nokogiri::XML("<jangles/>").root
-    j = Component.new(test_xml.to_s)
-    @e.find_child(:danglers) << j
-    child0 = e.find_child(:jangles)
-    assert_equal test_xml.to_s, child0.xml.to_s
-  end
-
   def tear_down
 
   end
