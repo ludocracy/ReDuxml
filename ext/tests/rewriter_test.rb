@@ -37,6 +37,11 @@ class RewriterTest < MiniTest::Test
     puts "test_var_ternary passed"
   end
 
+  def test_substitution
+    result = e.evaluate("param", {param: {string: 'should not'}})
+    assert_equal "should not", result
+  end
+
   def tear_down
 
   end

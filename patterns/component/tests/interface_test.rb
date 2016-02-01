@@ -3,6 +3,7 @@ require 'minitest/autorun'
 require 'nokogiri'
 # tests term formatting - without regard to validity of evaluation
 class InterfaceTest < MiniTest::Test
+  SAMPLE_TEMPLATE_FILE = 'xml/sample_template.xml'
   include Components
   @e
   attr_reader :e
@@ -29,5 +30,24 @@ class InterfaceTest < MiniTest::Test
 
   def test_get_attr
     assert_equal 'large', e[:size]
+  end
+
+  def test_find_child
+    t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
+    assert_equal 'pine', t.find_child(%w(material wood)).content
+  end
+
+  def test_stub
+    t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
+    stub = t.stub
+    x = stub.xml.to_s
+    assert_equal %(<birdhouse/>), x
+  end
+
+  def test_remove
+    t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
+    c = t.find_child('material')
+    t.remove c
+    assert_equal %(<birdhouse><color/></birdhouse>), t.xml.to_s
   end
 end

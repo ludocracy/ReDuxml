@@ -9,12 +9,6 @@ class TemplateTest < MiniTest::Test
     @template = Template.new(File.read('xml/sample_template.xml'))
   end
 
-  def test_load_non_compliant_design
-    x = '<horse/>'
-    t = Template.new(x)
-    assert_equal 'horse', t.design.name
-  end
-
   def test_sample_template_owner
     assert_equal 'b33791', template.owners[0].id
   end

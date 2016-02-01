@@ -59,7 +59,7 @@ module Components
 
     # called by method hash when traversing down a Component's trailing XML descendants; its 'tail'
     def chase_tail child
-      @xml_cursor = child
+      init_generic child
     end
 
     # adds leaf content as attribute; element name as key
@@ -101,20 +101,14 @@ module Components
       end
     end
 
-    # traverses this Component's xml (and not children's) for parameterized content nodes
-    def get_parameterized_xml_nodes
-      @parameterized_nodes = {}
-      traverse_xml load_methods ['find_parameterized_nodes', nil, 'chase_tail', nil]
-      @parameterized_nodes
-    end
-
     # looks through all attributes for parameter expressions
     def find_parameterized_nodes
+      return nil if self.parent.name == 'template'
       @if.each do |condition_node|
         add_if_parameterized condition_node
       end
       @attributes.each do |attr|
-        add_if_parameterized attr
+        add_if_parameterized attr unless attr.first == :reserved
       end
     end
 

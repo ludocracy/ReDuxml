@@ -17,8 +17,18 @@ module Components
       new_comp
     end
 
+    def graft cutting
+      @kanseis.push cutting
+    end
+
     def to_s
       @xml_root_node.to_s
+    end
+
+    def stub
+      x = xml.clone
+      x.element_children.remove
+      Component.new(x)
     end
 
     def summarize
@@ -34,17 +44,33 @@ module Components
       puts "Component '#{name}' #{content}"
     end
 
+    # traverses this Component's xml (and not children's) for parameterized content nodes
+    def get_parameterized_xml_nodes
+      @parameterized_nodes = {}
+      traverse_xml load_methods ['find_parameterized_nodes', nil, 'chase_tail', nil]
+      @parameterized_nodes
+    end
+
     # finds first near match child
-    def find_child child_pattern
+    def find_child child_pattern, cur_comp = nil
+      return nil unless child_pattern
+      pattern = child_pattern.is_a?(Array) ? child_pattern.first : child_pattern
       #attempting to match by name
-      @children.each do |cur_child|
-        return cur_child if cur_child.name == child_pattern.to_s
+      cur_comp ||= self
+      cur_comp.children.each do |cur_child|
+        if cur_child.name == pattern.to_s
+          if child_pattern == pattern || child_pattern.size == 1
+            return cur_child
+          else
+            return find_child(child_pattern[1..-1], cur_child)
+          end
+        end
       end
       #attempting to use pattern as index
-      @children[child_pattern]
+      cur_comp.children[pattern]
     rescue TypeError
       #attempting to use pattern as key
-      @children_hash[child_pattern] || self
+      cur_comp.children_hash[pattern] || find_child(child_pattern[1..-1])
     end
 
     # overriding TreeNode::content to point to XML head's content
@@ -66,6 +92,11 @@ module Components
       c = coerce(obj)
       add c
       @xml_cursor.add_child c.xml_root_node
+    end
+
+    def remove child
+      child.xml_root_node.remove
+      remove! child
     end
   end
 end

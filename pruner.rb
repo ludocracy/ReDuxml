@@ -1,10 +1,10 @@
 
-module Critic
-  def rubrik filename
+module Pruner
+  def prune filename
 
   end
 
-  def review target
+  def check target
     # check against rules
   end
 

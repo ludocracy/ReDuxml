@@ -8,12 +8,12 @@ module Patterns
     def initialize xml_node, args = {}
       super xml_node, reserved: %w(parameter)
       @parameter_hash = Hash.new
-      children_hash['parameter'].each do |param| @parameter_hash[param[:name]] = param end
+      children_hash['parameter'].each do |param| @parameter_hash[param[:name].to_sym] = param end
       update args unless args.nil? || args.empty?
     end
 
     def [] key
-      @parameter_hash[key]
+      @parameter_hash[key].value
     end
 
     def update params
@@ -38,14 +38,14 @@ module Patterns
     end
 
     def value
-      self[:value]
+      self[:value] || find_child(:string).content
     end
 
     # parameter value assignments must be recorded
     def value= val
       if val != self[:value]
-        value = val
-        throw :edit, Edit.new(nil, self)
+        self[:value] = val
+        #throw :edit, Edit.new(nil, self)
       end
     end
 

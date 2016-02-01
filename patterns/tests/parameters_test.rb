@@ -16,7 +16,7 @@ class ParametersTest < MiniTest::Test
                 </parameter>
             </parameters>
                    ))
-    assert_equal 'fff', p['instance_param_0'].value
+    assert_equal 'fff', p[:instance_param_0]
   end
 
   def test_parameter_values_init
@@ -28,8 +28,8 @@ class ParametersTest < MiniTest::Test
                 </parameter>
             </parameters>
                    ), h)
-    assert_equal 'A', p[:a].value
-    assert_equal 'B', p[:b].value
+    assert_equal 'A', p[:a]
+    assert_equal 'B', p[:b]
   end
 
   def test_parameter_values_post_init
@@ -42,8 +42,22 @@ class ParametersTest < MiniTest::Test
             </parameters>
                    ))
     p.update(h)
-    assert_equal 'A', p[:a].value
-    assert_equal 'B', p[:b].value
+    assert_equal 'A', p[:a]
+    assert_equal 'B', p[:b]
+  end
+
+  def test_parameter_string_value
+    ans = 'string value'
+    p = Parameters.new(%(
+            <parameters>
+                <parameter name="instance_param_0">
+                    <description>what this param is about</description>
+                    <string>#{ans}</string>
+                </parameter>
+            </parameters>
+                   ))
+    result = p[:instance_param_0]
+    assert_equal ans, result
   end
 
   def tear_down

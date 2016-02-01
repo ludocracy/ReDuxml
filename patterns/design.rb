@@ -27,6 +27,12 @@ module Patterns
     end
   end
 
+  class Design < Instance
+    def initialize xml_node, args = {}
+      super xml_node, args
+    end
+  end
+
   # links function as aliases of a given Component; essentially they are the same object but in target location and location of Link object
   # actually implemented by redirecting pointers to target; Link Components must never have children!! any children added will be added to target!!
   class Link < Component

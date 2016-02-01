@@ -27,7 +27,7 @@
             </rng:attribute>
         </rng:define>
 
-        <rng:define name="ref">
+        <rng:define name="refAttr">
             <rng:attribute name="ref">
                 <a:documentation> holds id of referenced component </a:documentation>
             </rng:attribute>
@@ -259,7 +259,7 @@
                 <rng:ref name="instanceComType"/>
             </rng:element>
         </rng:define>
-        
+
         <rng:define name="array">
             <a:documentation> creates patterned instances of referenced objects </a:documentation>
             <rng:element name="array">
@@ -299,7 +299,7 @@
             </rng:optional>
             <rng:choice>
                 <rng:zeroOrMore>
-                    <rng:ref name="ref"/>
+                    <rng:ref name="refAttr"/>
                 </rng:zeroOrMore>
             </rng:choice>
             <rng:ref name="conditional"/>
@@ -320,14 +320,23 @@
         <rng:define name="parameter">
             <a:documentation> how parameters are assigned values </a:documentation>
             <rng:element name="parameter">
+                <rng:choice>
+                    <rng:ref name="string"/>
+                    <rng:attribute name="value"/>
+                </rng:choice>
                 <rng:optional>
                     <rng:ref name="description"/>
                 </rng:optional>
-                <rng:attribute name="value"/>
                 <rng:ref name="objectAttributes"/>
             </rng:element>
         </rng:define>
     </rng:div>
+    
+    <rng:define name="string">
+        <rng:element name="string">
+            <rng:data type="string"/>
+        </rng:element>
+    </rng:define>
 
 
     <rng:define name="description">
@@ -335,7 +344,9 @@
             documentation content </a:documentation>
         <rng:element name="description">
             <rng:zeroOrMore>
-                <rng:attribute><rng:anyName></rng:anyName></rng:attribute>
+                <rng:attribute>
+                    <rng:anyName/>
+                </rng:attribute>
             </rng:zeroOrMore>
             <rng:zeroOrMore>
                 <rng:choice>
@@ -354,15 +365,20 @@
     <rng:define name="objectAttributes">
         <a:documentation> attributes common to any object </a:documentation>
         <rng:choice>
-            <a:documentation>can only have id or name and both must be unique within the family (parent, siblings, children)</a:documentation>
+            <a:documentation>can only have id or name and both must be unique within the family
+                (parent, siblings, children)</a:documentation>
             <rng:attribute name="id">
-                <a:documentation>id must be unique throughout entire template. should not be outward facing</a:documentation>
+                <a:documentation>id must be unique throughout entire template. should not be outward
+                    facing</a:documentation>
                 <rng:data type="string"/>
             </rng:attribute>
-            <rng:attribute name="name">
-                <a:documentation>name must only be unique among immediate family. can be outward facing</a:documentation>
-                <rng:data type="string"/>
-            </rng:attribute>
+            <rng:optional>
+                <rng:attribute name="name">
+                    <a:documentation>name must only be unique among immediate family. can be outward
+                        facing</a:documentation>
+                    <rng:data type="string"/>
+                </rng:attribute>
+            </rng:optional>
         </rng:choice>
         <rng:optional>
             <rng:attribute name="visible">

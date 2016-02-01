@@ -1,4 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/symja_ternary_rewriter.rb')
+require_relative 'regexp'
 begin # don't touch this load order!!!
   require 'java'
   require 'C:\Users\b33791\RubymineProjects\DesignOS\java\symja_android_library\bin\symja_android_library.jar'
@@ -15,10 +16,15 @@ end # loading java libraries - do not change order!!!
 TERNARY_ARITY = 3
 
 class Symja
-  def evaluate expr
-    prepped_expr = prewrite expr
-    ans = evalengine.evaluate prepped_expr
-    postwrite(ans.toString=='Null' ? prepped_expr : ans)
+  def evaluate expr, parameter_hash = {}
+    result_expr = expr.clone
+    string_expr_or_false = substitute! result_expr, parameter_hash
+    unless string_expr_or_false
+      prepped_expr = prewrite result_expr
+      ans = evalengine.evaluate prepped_expr
+      result_expr = postwrite(ans.toString=='Null' ? prepped_expr : ans)
+    end
+    result_expr
   end
 
   private
@@ -27,8 +33,24 @@ class Symja
 
   def initialize
     @evalengine = EvalEngine.new
-    @prewriter = Pre_Rewriters.new(evalengine)
-    @postwriter = Post_Rewriters.new(evalengine)
+    @prewriter = Pre_Rewriters.new evalengine
+    @postwriter = Post_Rewriters.new evalengine
+  end
+
+  def substitute! expr, parameter_hash
+    result = nil
+    string_expr_or_false = false
+    expr.gsub!(Regexp.identifier) do |identifier|
+      if parameter_hash[identifier.to_sym]
+        result = parameter_hash[identifier.to_sym]
+        if result.is_a?(Hash) && result[:string]
+          string_expr_or_false = true
+          result = result[:string]
+        end
+      end
+      result || identifier
+    end
+    string_expr_or_false
   end
 
   def prewrite expr
