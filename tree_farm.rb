@@ -1,6 +1,7 @@
-require 'java'
 require 'singleton'
 require_relative 'patterns/template'
+require_relative 'ext/symja'
+require_relative 'ext/macro'
 
 module Patterns
   TEMPLATE_RELAXNG = 'C:\Users\b33791\RubymineProjects\DesignOS\rng\design.rng'
@@ -23,30 +24,36 @@ module Patterns
 
     # recursive method that traverses down system design, pruning and instantiating
     def grow current_node
-      @parameters.update cursor.params if cursor.respond_to?(:params)
       if current_node.respond_to?(:design)
-        @cursor = current_node.design
-        @current_template.graft Template.new(wrap cursor)
-        @current_template = current_template.kanseis.first
+        build = Template.new(wrap current_node.design.xml)
+        @current_template.concrete build
+        @current_template = build
+        grow current_template.design
       else
-        kansei_node = resolve(current_node)
-        current_node.children.each do |child|
-          if peek(child)
-            kansei_node << grow(child)
-          else
-            current_node.remove child
-          end
+        if current_node.respond_to?(:params) && current_node.params
+          @parameters.update current_node.params
+
         end
+        resolve! current_node
+        #current_node.instantiate! if current_node.respond_to?(:params)
+        dead_nodes = []
+        current_node.children.each do |child|
+          peek(child) ? grow(child) : dead_nodes << child
+        end
+        dead_nodes.each do |node| current_node.remove(node) end
       end
+      current_template
     end
 
     private
 
     def peek current_node
-      if current_node[:if]
-        return resolve current_node[:if]
+      if current_node[:if].nil?
+        true
+      else
+        r = resolve!(current_node, :if)
+        r.if?
       end
-      true
     end
 
     def validate xml
@@ -64,44 +71,46 @@ module Patterns
           </owner>
         </owners>
         <description>created by Chef module to wrap around non-DesignOS XML design</description>
+      </template>
                               ))
-      xml_doc.root << xml_node.root
+      xml_doc.root << xml_node
       xml_doc
     end
 
-    def resolve current_node
-      working_node = current_node.clone
-      working_node.get_parameterized_xml_nodes.each do |xml_node|
-        # check for if statement first!!!
+    def resolve! current_node, attr=nil
+      parameterized_xml_nodes = attr.nil? ? current_node.parameterized_nodes : [current_node.xml_root_node.attribute(attr.to_s)]
+      parameterized_xml_nodes.each do |xml_node|
         content_str = xml_node.content.to_s
         question = find_expr content_str
-        reply = Symja.evaluate(question, parameters)
-        xml_node.content = content_str.gsub(question, reply)
+        reply = Macro.new Symja.instance.evaluate(question, parameters)
+        replacement_str = reply.parameterized? ? reply : reply.demacro
+        xml_node.content = content_str.gsub(Macro.new(question), replacement_str)
       end
-      working_node
+      #parameterized_xml_nodes.empty? ? current_node : current_node.concrete!
+      current_node
     end
 
     def find_expr str
-      expr_start_index = str.index'@('
-      expr_end_index = find_close_parens_index str[expr_start_index,-1]
-      str[expr_start_index, expr_end_index]
+      expr_start_index = str.index('@(')
+      return str if expr_start_index.nil?
+      expr_end_index = find_close_parens_index str[expr_start_index+1..-1]
+      str[expr_start_index+2, expr_end_index-1]
     end
 
     def find_close_parens_index str
       levels = 0
-      str.to_ary.each_with_index do |char|
-        if index == 0
-          levels += 1
-          next
-        end
+      index = 0
+      str.each_char do |char|
         case char
           when '(' then levels += 1
           when ')' then levels -= 1
-          else next
+          else
         end
         return index if levels == 0
+        index += 1
       end
       raise Exception, "cannot find end of parameter expression!"
     end
+
   end
 end

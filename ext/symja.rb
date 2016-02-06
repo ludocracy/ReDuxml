@@ -1,5 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/symja_ternary_rewriter.rb')
 require_relative 'regexp'
+require 'singleton'
 begin # don't touch this load order!!!
   require 'java'
   require 'C:\Users\b33791\RubymineProjects\DesignOS\java\symja_android_library\bin\symja_android_library.jar'
@@ -16,6 +17,8 @@ end # loading java libraries - do not change order!!!
 TERNARY_ARITY = 3
 
 class Symja
+  include Singleton
+
   def evaluate expr, parameter_hash = {}
     result_expr = expr.clone
     string_expr_or_false = substitute! result_expr, parameter_hash

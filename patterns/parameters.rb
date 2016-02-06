@@ -1,3 +1,4 @@
+require 'observer'
 require_relative '../ext/object'
 require_relative 'component/component'
 
@@ -5,26 +6,46 @@ module Patterns
   include Components
 
   class Parameters < Component
+    include Observable
+
     def initialize xml_node, args = {}
+      if xml_node.nil?
+        params = ''
+        args.each do |key, val|
+          params += %(<parameter name="#{key}" value="#{val}"/>)
+        end
+        xml_node = %(<parameters>#{params}</parameters>)
+      end
       super xml_node, reserved: %w(parameter)
       @parameter_hash = Hash.new
       children_hash['parameter'].each do |param| @parameter_hash[param[:name].to_sym] = param end
       update args unless args.nil? || args.empty?
     end
 
+    def to_hash
+      hash = {}
+      @parameter_hash.each do |key, val|
+        hash[key] = val.value
+      end
+      hash
+    end
+
     def [] key
-      @parameter_hash[key].value
+      begin
+        @parameter_hash[key].value
+      rescue Exception
+        nil
+      end
     end
 
     def update params
       h = Hash.new
-      params.each do |key, val|
+      params.to_hash.each do |key, val|
         h[key] = Parameter.new(
 %(<parameter name="#{key}" value="#{val}"/>)
         )
       end
       @parameter_hash.merge!(h) do |key, old, new|
-        # collect_changes last_change
         new
       end
     end
@@ -33,6 +54,8 @@ module Patterns
   # specialization of Component holds parameter name, value and description
   # also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
+    include Observable
+
     def initialize xml_node, args={}
       super xml_node, args
     end

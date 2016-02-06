@@ -8,7 +8,7 @@ class RegexpIdentifierTest < MiniTest::Test
   end
 
   def test_regexp_identifier
-    assert_equal "var", ("var ? true : false").match(Regexp.identifier)
+    assert_equal "var", ("var ? true : false").match(Regexp.identifier).to_s
   end
 
   def tear_down

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../rng/outline.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<outline name="module_instande">
+    <doc_object name="instance_descr"/>
+    <doc_object name="memory_map"/>
+    <instance ref="reg_descr_directives"/>
+</outline>
+
+

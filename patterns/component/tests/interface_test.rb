@@ -40,7 +40,7 @@ class InterfaceTest < MiniTest::Test
   def test_stub
     t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
     stub = t.stub
-    x = stub.xml.to_s
+    x = stub.to_s
     assert_equal %(<birdhouse/>), x
   end
 
@@ -49,5 +49,29 @@ class InterfaceTest < MiniTest::Test
     c = t.find_child('material')
     t.remove c
     assert_equal %(<birdhouse><color/></birdhouse>), t.xml.to_s
+  end
+
+  def test_get_parameterized_nodes
+    t = Component.new(%(<design><birdhouse attr="@(param)">@(pine)<color/><material><wood>pine</wood></material></birdhouse></design>))
+    s = []
+    t.find_child(:birdhouse).parameterized_nodes.each do |node| s << node.to_s end
+    assert_equal %w(@(param) @(pine)), s
+  end
+
+  def test_if
+    t = Component.new(%(<birdhouse if="false">@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
+    assert_equal false, t.if?
+  end
+
+  def test_no_if
+    t = Component.new(%(<birdhouse>@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
+    assert_equal true, t.if?
+  end
+
+  def test_descended_from
+    t = Component.new(%(<birdhouse>@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
+    r = t.find_child(%w(material wood))
+    assert_equal true, r.descended_from?(:birdhouse)
+    assert_equal false, r.descended_from?(:color)
   end
 end

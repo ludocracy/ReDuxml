@@ -10,7 +10,9 @@ module Patterns
   # Element names reserved by the template's schema rules become constructors for sub-components
   class Template < Component
     def initialize xml_node, args = {}
+      xml_node = xml_node.root if xml_node.respond_to?(:root)
       super xml_node, reserved: %w(owners history design)
+      # raise Exception if anything other than design has parameterization!!!
     end
 
     def history
@@ -23,6 +25,16 @@ module Patterns
 
     def owners
       find_child('owners').children
+    end
+
+    def concrete cutting
+      raise ArgumentError unless cutting.respond_to?(:design)
+      @kanseis[cutting.design.params.to_hash] = cutting
+      cutting.abstract self
+    end
+
+    def abstract trunk
+      @abstraction = trunk
     end
   end # end of Template class
 

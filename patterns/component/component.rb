@@ -15,7 +15,6 @@ require 'tree/tree_deps'
 require_relative '../../ext/object'
 require_relative '../../ext/tree'
 require_relative 'interface'
-require_relative 'double_stack_hash'
 require_relative 'guts'
 
 module Components
@@ -26,42 +25,28 @@ module Components
     include Components::Interface
     # hash of builds where keys are parameter settings and values are kansei siblings of this component
     @kanseis
-
-    # array of Nokogiri::XML::Attr whose values must all be true for this Component to build
-    @if = []
-    # lists all views that can see this Component
-    @visible = []
-
-    # unique for any given template
-    @id
-    # points to the XML element root of this Component
-    @reserved_word_array = []
-    # root of xml stub that makes up this node
+    @visible
     @xml_root_node
-    # root of design xml containing this component
-    @doc
 
     # tracks all content nodes that contain parameterized expressions for quick retrieval and resolution
     # keys are the nodes themselves, values are the strings that contain the parameter expressions
-    @parameterized_nodes = {}
+    @parameterized_nodes
     # tracks where to add children; on initializing traverse, leave it at the last singleton child
     @xml_cursor
 
     # array of words that indicate reserved classes
-    @attributes = {}
+    @attributes
 
-    attr_reader :id, :children, :children_hash, :if, :doc, :xml_root_node, :attributes
+    attr_reader :children, :children_hash, :xml_root_node, :kanseis, :abstraction
+
+    attr_accessor :parameterized_nodes
 
     # creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args={}
       raise ArgumentError unless @xml_root_node = xml_node.xml
-      @attributes = args
-      @doc = xml_root_node.document
-      @kanseis = DoubleStackHash.new
-      @kanseis.push self
-      @if = []
-      @visible = ['admin']
-      @parameterized_nodes = Hash.new
+      @abstraction = nil
+      @kanseis = Hash.new
+      @parameterized_nodes = []
       @reserved_word_array = args[:reserved] || []
 
       @xml_cursor ||= xml_root_node
@@ -69,13 +54,13 @@ module Components
       # must happen before traverse to have @children/@children_hash available
       super @xml_root_node
       # traverse and load Component from xml
-      collect_changes traverse_xml load_methods %w(load_attributes init_reserved chase_tail init_generic)
+      traverse_xml load_methods %w(load_parameterized_nodes init_reserved init_generic)
     end # end of Component::initialize(xml_node, args={})
 
     private
     include Components::Guts
 
-    attr_reader :parameterized_nodes, :xml_cursor, :kanseis
+    attr_reader :xml_cursor
   end # end of class Component
 
 end # end of module Components

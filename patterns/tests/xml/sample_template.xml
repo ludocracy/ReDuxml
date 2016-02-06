@@ -31,6 +31,7 @@
                 </parameter>
             </parameters>
         </instance>
+        <thing id="targetiddxcz">something something</thing>
         <array size="4" id="array_id">
             <!-- example of where you could add design data -->
             <instance id="thisid" ref="targetid"/>

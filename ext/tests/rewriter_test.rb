@@ -6,7 +6,7 @@ class RewriterTest < MiniTest::Test
   @e
   attr_reader :e
   def setup
-    @e = Symja.new
+    @e = Symja.instance
   end
 
   def test_rh_negated_boolean

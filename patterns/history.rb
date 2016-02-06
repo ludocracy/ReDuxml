@@ -27,6 +27,10 @@ module Patterns
       register change, @parent.owners
     end
 
+    def last_change
+      @children.last
+    end
+
     def size
       @children.size
     end

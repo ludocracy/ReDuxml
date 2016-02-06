@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <include href="outline.rng"/>
+    <!-- name of template root -->
+    <start combine="choice">
+        <ref name="doc_directives"/>
+    </start>
+
+    <define name="doc_directives">
+        <element name="doc_directives">
+            <ref name="default_binding"/>
+            <zeroOrMore>
+                <ref name="doc_binding"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="default_binding">
+        <element name="default_binding">
+            <ref name="bindingType"/>
+        </element>
+    </define>
+
+    <define name="doc_binding">
+        <element name="doc_binding">
+            <ref name="bindingType"/>
+        </element>
+    </define>
+    
+    <define name="bindingType">
+        <attribute name="source"/>      
+        <choice><ref name="outline"/>
+            <ref name="instance"></ref></choice>
+    </define>
+</grammar>
