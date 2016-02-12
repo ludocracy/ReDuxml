@@ -21,10 +21,6 @@ module Components
       new_comp
     end
 
-    def graft cutting
-      @kanseis[] = cutting
-    end
-
     def to_s
       @xml_root_node.to_s
     end
@@ -62,7 +58,7 @@ module Components
       #attempting to match by name
       cur_comp ||= self
       cur_comp.children.each do |cur_child|
-        if cur_child.name == pattern.to_s
+        if cur_child.name == pattern.to_s || cur_child.type == pattern.to_s
           if child_pattern == pattern || child_pattern.size == 1
             return cur_child
           else
@@ -74,7 +70,11 @@ module Components
       cur_comp.children[pattern]
     rescue TypeError
       #attempting to use pattern as key
-      cur_comp.children_hash[pattern] || find_child(child_pattern[1..-1])
+      if cur_comp.children_hash[pattern]
+        cur_comp.children_hash[pattern].first
+      else
+        find_child(child_pattern[1..-1])
+      end
     end
 
     # overriding TreeNode::content to point to XML head's content

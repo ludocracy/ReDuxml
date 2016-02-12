@@ -5,14 +5,10 @@ require_relative 'design'
 module Patterns
   include Components
 
-  # Templates are components that constitute a distinct technology
-  # They must have owners and always record sub-component changes
-  # Element names reserved by the template's schema rules become constructors for sub-components
   class Template < Component
     def initialize xml_node, args = {}
       xml_node = xml_node.root if xml_node.respond_to?(:root)
       super xml_node, reserved: %w(owners history design)
-      # raise Exception if anything other than design has parameterization!!!
     end
 
     def history
@@ -27,14 +23,8 @@ module Patterns
       find_child('owners').children
     end
 
-    def concrete cutting
-      raise ArgumentError unless cutting.respond_to?(:design)
-      @kanseis[cutting.design.params.to_hash] = cutting
-      cutting.abstract self
-    end
-
-    def abstract trunk
-      @abstraction = trunk
+    def get_cutting
+      cutting = Template.new(wrap current_node.design.xml)
     end
   end # end of Template class
 

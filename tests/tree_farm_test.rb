@@ -8,31 +8,92 @@ class TreeFarmTest < MiniTest::Test
   # Called before every test method runs. Can be used
   # to set up fixture information.
 
-  attr_reader :t, :r
+  attr_reader :b, :g
   def setup
-    g = TreeFarm.instance
-    @t = g.load SAMPLE_TEMPLATE
-    @r = g.grow t
   end
 
   def test_load_template
-    assert t.is_a?(Template)
+    g = TreeFarm.new
+    b = g.plant SAMPLE_TEMPLATE
+    assert b.is_a?(Template)
   end
 
   def test_if_resolution
-    assert_equal nil, r.design.find_child(:instance)
+    g = TreeFarm.new
+    g.plant 'xml/conditionals.xml'
+    t = g.grow.design
+    assert_equal nil, t.find_child(:should_be_false)
+    assert_equal 'should_be_true', t.find_child(:should_be_true).id
+    assert_equal 'unconditional_comp', t.find_child(:unconditional_comp).id
   end
 
   def test_inline_resolution
-    p_test = r.design.find_child(%w(array p_test))
+    g = TreeFarm.new
+    g.plant 'xml/inline_param.xml'
+    d = g.grow.design
+    p_test = d.find_child(%w(blah p_test))
+    assert_equal '0 is a design param expression', p_test.content
+  end
+
+  def test_save_kansei
+    g = TreeFarm.new
+    g.plant 'xml/inline_param.xml'
+    g.grow
+    g.save RESULT_TEMPLATE
+    x = File.read(RESULT_TEMPLATE)
+    d = Template.new(x).design
+    p_test = d.find_child(%w(blah p_test))
     assert_equal '0 is a design param expression', p_test.content
   end
 
   def test_kansei_traverse
-    assert_equal t.find_child(%w(design array p_test)).content, r.abstraction.find_child(%w(design array p_test)).content
-    #assert_equal r.find_child(%w(design array p_test)).content, t.kansei_to(t.design.params.to_hash).find_child(%w(design array p_test)).content
+    skip
+    g = TreeFarm.new
+    b = g.plant SAMPLE_TEMPLATE
+    t = g.grow
+    assert t === g.current_template
+    assert b === g.base_template
+  end
+
+  def test_instantiate_ref
+    skip
+    g = TreeFarm.new
+    g.plant 'xml/simple_inst.xml'
+    t = g.grow
+    assert_equal 'this is a design component', t.design.find_child(%w(blah some_component)).content
+  end
+
+  def test_instantiate_array
+    skip
+    g = TreeFarm.new
+    g.plant 'xml/array_inst.xml'
+    c = g.grow.design
+    assert_equal '4 is an iterator expression', c.find_child(:iterator_test3).content
+  end
+
+  def test_param_overrides
+    skip
+    g = TreeFarm.new
+    g.plant 'xml/param_override.xml'
+    c = g.grow.design
+    assert_equal 'this component thinks param0 = 0', c.find_child(:some_component).content
+    assert_equal 'this component should also say param0 = 0', c.find_child(:param_overrides_inst)
+  end
+
+  def test_derived_params
+    skip
+    g = TreeFarm.new
+    g.plant 'xml/derived_params.xml'
+    c = g.grow.design
+    assert_equal '30 is a derived resolved value', c.find_child(%w(blah resolvable)).content
+    assert_equal '@(monkey) is a derived unresolved value', c.find_child(%w(blah unresolvable)).content
+  end
+
+  def test_link_design
+    # INCOMPLETE REQUIREMENTS!!!
   end
 
   def teardown
+    #File.delete RESULT_TEMPLATE if File.exists?(RESULT_TEMPLATE)
   end
 end

@@ -5,9 +5,19 @@ class HistoryTest < MiniTest::Test
   def setup
   end
 
-  def test_regression
-    assert_equal "true", "!var == !var".evaluate
-    assert_equal "true", "var != !var".evaluate
+  def test_add_child
+  end
+
+  def test_remove_child
+
+  end
+
+  def test_change_child
+
+  end
+
+  def test_change_param
+
   end
 
   def tear_down

@@ -5,11 +5,9 @@ require_relative 'logic'
 module Patterns
   include Components
 
-  # wrapper is removed after build; aliases
   class Instance < Component
-    # instances can expect reserved component element names AND parameter assignment hash
-    def initialize xml_node, args = {}
-      xml_node = %(<instance/>) if xml_node.nil?
+    def initialize xml_node=nil, args = {}
+      xml_node = class_to_xml if xml_node.nil?
       super xml_node, reserved: %w(parameters array instance)
     end
 
@@ -17,67 +15,51 @@ module Patterns
       find_child 'parameters'
     end
 
-    def instantiate!
-      if ref
-        #target = id_or_uri?(ref) ? ObjectSpace._id2ref(ref) : Template.new(File.open(ref)).design
-        #self << target.clone
-      end
-    end
-
-    def ref
-      self[:ref]
+    def instantiate target
+      target.nil? ? self : target.clone
     end
   end
 
   class Design < Instance
-    include Observable
-
-    def initialize xml_node, args = {}
-      #add_observer template.history
-      super xml_node, args
-    end
-
     def logics
-      nil
+      true
     end
   end
 
-  class Link < Component
-    def initialize xml_node, args = {}
-      super xml_node, args
-    end
+  # links allow parameters to be bound to attribute values or element content in the design components wrapped by the link object
+  class Link < Instance
+    attr_reader :ref
 
-
-    def instantiate!
-      ref = get_attr_val :ref
-      target = id_or_uri?(ref) ? ObjectSpace._id2ref(ref) : Template.new(File.open(ref)).design
-      self << target
-    end
-
-    # is link live? links can be broken if the target object is removed after the link is created
-    def link?
-      true
+    def instantiate target
+      raise Exception if target.nil?
+      @ref = target
     end
   end
 
   # name collision? doesn't seem like it...
   class Array < Instance
     include Enumerable
-    def initialize xml_node, args = {}
-      super xml_node, args
-    end
 
-    def instantiate!
+    def instantiate target
+      return [] if target.nil?
       size_expr = size.respond_to?(:to_i) ? size.to_i : size.to_s
       if size_expr.is_a? Fixnum
-        iterator = 0
+        iterator_index = 0
+        new_children = []
         size_expr.times do
-          i = Instance.new(nil)
-          i << Parameters.new(nil, {iterator: iterator})
-          children.each do |child| i << child.clone end
-          self << i
-          iterator += 1
+          i = Instance.new
+          i << Parameters.new(nil, iterator: iterator_index)
+          if children.any?
+            children.each do |child| i << child.clone end
+          else
+            i << target.clone
+          end
+          new_children << i
+          iterator_index += 1
         end
+        new_children
+      else
+        children
       end
     end
 

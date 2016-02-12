@@ -68,6 +68,12 @@ class InterfaceTest < MiniTest::Test
     assert_equal true, t.if?
   end
 
+  def test_type_and_id
+    t = Component.new(%(<birdhouse id="jerrys">@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
+    assert_equal 'birdhouse', t.type
+    assert_equal 'jerrys', t.id
+  end
+
   def test_descended_from
     t = Component.new(%(<birdhouse>@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
     r = t.find_child(%w(material wood))

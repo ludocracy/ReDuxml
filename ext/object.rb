@@ -8,4 +8,8 @@ class Object
       nil
     end
   end
+
+  def simple_class
+    self.class.to_s.split('::').last.downcase
+  end
 end

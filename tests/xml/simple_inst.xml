@@ -12,7 +12,7 @@
             <name>asdf fdsd</name>
         </owner>
     </owners>
-    <description>This should be allowed.</description>
+    <description>tests simple instantiation</description>
     <history>
         <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
             <description>created file</description>
@@ -27,25 +27,8 @@
         </parameters>
         <!-- example of where you could add design data -->
         <some_component id="reftarget">this is a design component</some_component>
-        <instance visible="debug !customer" id="param_overrides_inst">
-            <parameters>
-                <parameter name="instance_param_0" value="fff">
-                    <description>what this param is about</description>
-                </parameter>
-                <parameter name="param0" value="10"/>
-                <parameter name="derived_param" value="@(monkey)"/>
-                <parameter name="derived_resolvable" value="@(param0+20)"/>
-            </parameters>
-            <blah id="blah">
+            <blah>
                 <instance id="simpleinst" ref="reftarget"/>
-                <p_test>@(param0) is a design param expression</p_test>
-                <conditional_comp id="cond_comp" if="@(param0 &gt; 0)">This component SHOULD appear in the output!</conditional_comp>
             </blah>
-        </instance>
-        <conditional_comp id="cond_comp" if="@(param0 &gt; 0)">This component should NOT appear in the output!</conditional_comp>
-        <array size="4" id="array_id">
-            <!-- example of where you could add design data -->
-            <iterator_test>@(iterator+1) is an iterator expression</iterator_test>
-        </array>
     </design>
 </template>

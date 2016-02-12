@@ -1,59 +1,101 @@
-require 'singleton'
+require File.expand_path(File.dirname(__FILE__) + '/tree_farmer.rb')
+require_relative 'ext/nokogiri'
 require_relative 'patterns/template'
 require_relative 'ext/symja'
 require_relative 'ext/macro'
 
 module Patterns
-  TEMPLATE_RELAXNG = 'C:\Users\b33791\RubymineProjects\DesignOS\rng\design.rng'
+  #TEMPLATE_RELAXNG = 'C:\Users\b33791\RubymineProjects\DesignOS\rng\design.rng'
   class TreeFarm
-    include Singleton
+    include TreeFarmer
+    @parameters_stack
+    @kansei_array
+    @ref_component_hash
 
-    @parameters
-    @current_template
-    @cursor
-
-    attr_reader :current_template, :parameters, :cursor
-
-    def load file
-      xml = Nokogiri::XML File.read file
-      xml = validate(xml) ? xml : wrap(xml)
-      @current_template = Template.new(xml.root)
-      @parameters = current_template.design.params
-      current_template
+    attr_reader :kansei_array, :parameters_stack, :ref_component_hash
+  private
+    def initialize file=""
+      @parameters_stack = []
+      @kansei_array = []
+      @ref_component_hash = {}
+      plant file if File.exists? file
     end
 
-    # recursive method that traverses down system design, pruning and instantiating
-    def grow current_node
-      if current_node.respond_to?(:design)
-        build = Template.new(wrap current_node.design.xml)
-        @current_template.concrete build
-        @current_template = build
-        grow current_template.design
+    def update_params! current_node
+      if current_node.respond_to?(:params) && current_node.params
+        current_node.params.each do |param|
+          resolve_parameterized!(param, :value) if param.value.parameterized?
+          param.xml_root_node[:if] = 'false' unless param.value.parameterized?
+          overriding_param = parameter_hash[param[:name]]
+          update param, overriding_param if overriding_param
+        end
+        if current_node.params.any?
+          @parameters_stack << current_node.params
+          true
+        else
+          false
+        end
       else
-        if current_node.respond_to?(:params) && current_node.params
-          @parameters.update current_node.params
-
-        end
-        resolve! current_node
-        #current_node.instantiate! if current_node.respond_to?(:params)
-        dead_nodes = []
-        current_node.children.each do |child|
-          peek(child) ? grow(child) : dead_nodes << child
-        end
-        dead_nodes.each do |node| current_node.remove(node) end
+        false
       end
-      current_template
     end
 
-    private
+    def instantiate! current_node
+      if current_node.respond_to?(:params)
+        if current_node.params && !current_node.params.children.any? do |child| child.if? end
+          current_node.remove current_node.params
+        end
+        return current_node.children if current_node.respond_to?(:logics)
+        parent_node = current_node.parent
+        ref_target = resolve_ref current_node
+        current_node.instantiate(ref_target).each do |new_node|
+          parent_node << new_node
+        end
+        parent_node.remove current_node
+        parent_node.children
+      else
+        current_node.children
+      end
+    end
+
+    def resolve_parameterized! current_node, attr=nil
+      parameterized_xml_nodes = attr.nil? ? current_node.parameterized_nodes : [current_node.xml_root_node.attribute(attr.to_s)]
+      parameterized_xml_nodes.each do |xml_node|
+        content_str = xml_node.content.to_s
+        question = find_expr content_str
+        h = parameter_hash
+        reply = Macro.new Symja.instance.evaluate(question, parameter_hash)
+        replacement_str = reply.parameterized? ? reply : reply.demacro
+        xml_node.content = content_str.gsub(Macro.new(question), replacement_str)
+      end
+      #parameterized_xml_nodes.empty? ? current_node : current_node.concrete!
+      current_node
+    end
+
+    def parameter_hash
+      h = {}
+      parameters_stack.reverse.each do |params|
+        params.each do |param| h[param[:name].to_sym] = param[:value] end
+      end
+      h
+    end
+
+    def resolve_ref instance_node
+      return nil unless ref = instance_node[:ref]
+      ref.match(Regexp.identifier) ? ref_component_hash[ref] : Template.new(File.open(ref)).design
+    end
 
     def peek current_node
-      if current_node[:if].nil?
+      if current_node[:if].nil? || current_node.simple_class.include?('parameter')
         true
       else
-        r = resolve!(current_node, :if)
+        r = resolve_parameterized!(current_node, :if)
         r.if?
       end
+    end
+
+    def update before, after
+      # record in history
     end
 
     def validate xml
@@ -61,8 +103,9 @@ module Patterns
     end
 
     def wrap xml_node
+      raise ArgumentError unless instance_id = xml_node[:id]
       xml_doc = Nokogiri::XML(%(
-      <template id="temp_id">
+      <template id="#{instance_id}">
         <name>temp_name</name>
         <version>1.0</version>
         <owners>
@@ -75,19 +118,6 @@ module Patterns
                               ))
       xml_doc.root << xml_node
       xml_doc
-    end
-
-    def resolve! current_node, attr=nil
-      parameterized_xml_nodes = attr.nil? ? current_node.parameterized_nodes : [current_node.xml_root_node.attribute(attr.to_s)]
-      parameterized_xml_nodes.each do |xml_node|
-        content_str = xml_node.content.to_s
-        question = find_expr content_str
-        reply = Macro.new Symja.instance.evaluate(question, parameters)
-        replacement_str = reply.parameterized? ? reply : reply.demacro
-        xml_node.content = content_str.gsub(Macro.new(question), replacement_str)
-      end
-      #parameterized_xml_nodes.empty? ? current_node : current_node.concrete!
-      current_node
     end
 
     def find_expr str

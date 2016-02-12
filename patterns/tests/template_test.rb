@@ -14,7 +14,7 @@ class TemplateTest < MiniTest::Test
   end
 
   def test_sample_template_history
-    a = template.history.children.first.name
+    a = template.history.children.first.type
     assert_equal 'insert', a
   end
 

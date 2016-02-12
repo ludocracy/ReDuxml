@@ -1,5 +1,5 @@
 require 'nokogiri'
-require_relative '../../ext/string'
+require_relative '../../ext/xml'
 
 module Components
   module Guts
@@ -77,6 +77,10 @@ module Components
         when obj.respond_to?(:document?) && obj.document? then Components::Component.new(obj.root)
         else obj
       end
+    end
+
+    def class_to_xml
+      element self.simple_class
     end
   end
 end

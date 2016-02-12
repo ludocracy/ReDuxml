@@ -11,9 +11,8 @@
 # in order to provide real-time feedback to XML editor
 # could add switch to turn this off
 
-require 'tree/tree_deps'
+require 'tree'
 require_relative '../../ext/object'
-require_relative '../../ext/tree'
 require_relative 'interface'
 require_relative 'guts'
 
@@ -24,7 +23,6 @@ module Components
   class Component < Tree::TreeNode
     include Components::Interface
     # hash of builds where keys are parameter settings and values are kansei siblings of this component
-    @kanseis
     @visible
     @xml_root_node
 
@@ -37,24 +35,25 @@ module Components
     # array of words that indicate reserved classes
     @attributes
 
-    attr_reader :children, :children_hash, :xml_root_node, :kanseis, :abstraction
+    attr_reader :children, :children_hash, :xml_root_node, :type
 
     attr_accessor :parameterized_nodes
+
+    alias_method :id, :name
 
     # creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args={}
       raise ArgumentError unless @xml_root_node = xml_node.xml
-      @abstraction = nil
-      @kanseis = Hash.new
       @parameterized_nodes = []
       @reserved_word_array = args[:reserved] || []
 
       @xml_cursor ||= xml_root_node
-
+      id = xml_root_node[:id] || xml_root_node[:name] || xml_root_node.name
       # must happen before traverse to have @children/@children_hash available
-      super @xml_root_node
+      super id, xml_root_node
       # traverse and load Component from xml
       traverse_xml load_methods %w(load_parameterized_nodes init_reserved init_generic)
+      @type = xml_root_node.name
     end # end of Component::initialize(xml_node, args={})
 
     private

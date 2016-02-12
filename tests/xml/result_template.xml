@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<template id="design_id">
+        
+        
+        
+        
+      <name>temp_name</name>
+<version>1.0</version>
+<owners>
+          
+        <owner id="chef_id">
+            
+          <name>module: Chef</name>
+</owner>
+</owners>
+<description>created by Chef module to wrap around non-DesignOS XML design</description>
+<design id="design_id" logics="logic">
+    <blah id="blah">
+            <p_test>0 is a design param expression</p_test>
+</blah>
+</design>
+</template>

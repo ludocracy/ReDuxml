@@ -6,48 +6,22 @@ module Patterns
   include Components
 
   class Parameters < Component
-    include Observable
+    include Enumerable
 
-    def initialize xml_node, args = {}
+    def each &block
+      children.each &block
+    end
+
+    def initialize xml_node=nil, args = {}
       if xml_node.nil?
-        params = ''
-        args.each do |key, val|
-          params += %(<parameter name="#{key}" value="#{val}"/>)
-        end
-        xml_node = %(<parameters>#{params}</parameters>)
+        xml_node = class_to_xml
       end
       super xml_node, reserved: %w(parameter)
-      @parameter_hash = Hash.new
-      children_hash['parameter'].each do |param| @parameter_hash[param[:name].to_sym] = param end
-      update args unless args.nil? || args.empty?
+      args.each do |key, val| self << Parameter.new(nil, {name: key, value: val}) end if children.empty?
     end
 
-    def to_hash
-      hash = {}
-      @parameter_hash.each do |key, val|
-        hash[key] = val.value
-      end
-      hash
-    end
-
-    def [] key
-      begin
-        @parameter_hash[key].value
-      rescue Exception
-        nil
-      end
-    end
-
-    def update params
-      h = Hash.new
-      params.to_hash.each do |key, val|
-        h[key] = Parameter.new(
-%(<parameter name="#{key}" value="#{val}"/>)
-        )
-      end
-      @parameter_hash.merge!(h) do |key, old, new|
-        new
-      end
+    def [] target_key
+      children.each do |param_node| return param_node[:value] if param_node[:name] == target_key.to_s  end
     end
   end
 
@@ -57,6 +31,11 @@ module Patterns
     include Observable
 
     def initialize xml_node, args={}
+      if xml_node.nil?
+        xml_node = class_to_xml
+        xml_node[:name] = args[:name]
+        xml_node[:value] = args[:value] if args[:value]
+      end
       super xml_node, args
     end
 
@@ -68,30 +47,7 @@ module Patterns
     def value= val
       if val != self[:value]
         self[:value] = val
-        #throw :edit, Edit.new(nil, self)
       end
-    end
-
-    def describe
-      self[:description]
-    end
-  end
-
-  class Iterator < Parameter
-    include Enumerable
-    @offset
-    @increment
-    @symbol
-
-    def array
-
-    end
-
-    def initialize node
-      super node
-      @offset = attributes[:offset]
-      @increment = attributes[:increment]
-      @symbol = attributes[:symbol]
     end
   end
 end

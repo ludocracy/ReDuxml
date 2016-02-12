@@ -1,9 +1,10 @@
-require_relative '../string'
+require_relative '../macro'
 require 'minitest/autorun'
 
-class StringIdentifierTest < MiniTest::Test
+class MacroTest < MiniTest::Test
   def setup
-    # Do nothing
+    @m = Macro.new "2 + asdf"
+    @n = Macro.new "2 + 4"
   end
 
   # Called after every test method runs. Can be used to tear
@@ -14,12 +15,13 @@ class StringIdentifierTest < MiniTest::Test
   end
 
   # Fake test
-  def test_whitespaces
-    assert !"asdf asd".identifier?
+  def test_demacro
+    assert_equal "2 + asdf", @m.demacro
   end
 
-  def test_starting_numeral
-    assert !"4asdfasd".identifier?
+  def test_parameterized
+    assert @m.parameterized?
+    assert !@n.parameterized?
   end
 
   def test_illegal_char
