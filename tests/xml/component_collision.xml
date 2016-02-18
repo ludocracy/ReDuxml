@@ -12,7 +12,7 @@
             <name>asdf fdsd</name>
         </owner>
     </owners>
-    <description>tests simple instantiation</description>
+    <description>tests what happens when an instantiation has the same type as a sibling</description>
     <history>
         <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
             <description>created file</description>
@@ -22,14 +22,12 @@
     <design id="design_id" logics="logic">
         <parameters>
             <parameter name="param0" value="0">
-                <description>param0 is an integer and will be tested against the instance
-                    below</description>
+                <description>param0 is an integer and will be tested against the instance below</description>
             </parameter>
         </parameters>
-        <!-- example of where you could add design data -->
-        <some_component id="reftarget">this is a design component</some_component>
-        <blah>
-            <instance id="simpleinst" ref="reftarget"/>
-        </blah>
+        <some_component>this design component should collide</some_component>
+        <instance id="blah">
+            <some_component>with this component!</some_component>
+        </instance>        
     </design>
 </template>

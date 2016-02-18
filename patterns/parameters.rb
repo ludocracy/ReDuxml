@@ -23,6 +23,11 @@ module Patterns
     def [] target_key
       children.each do |param_node| return param_node[:value] if param_node[:name] == target_key.to_s  end
     end
+
+    def << param
+      raise Exception unless param.is_a?(Parameter)
+      super param
+    end
   end
 
   # specialization of Component holds parameter name, value and description

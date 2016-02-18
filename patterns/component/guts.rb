@@ -5,7 +5,7 @@ module Components
   module Guts
     private
     # loads methods to run during initialize from a hash
-    def load_methods method_names
+    def exec_methods method_names
       method_hash = {}
       index = 0
       %w(top reserved traverse).each do |key|
@@ -24,11 +24,6 @@ module Components
     # needed because i have to call a method and it has to have an argument
     def do_nothing arg = nil
       # this is silly
-    end
-
-    # should describe itself in a string
-    def generate_descr
-
     end
 
     # run by initialize
@@ -57,13 +52,13 @@ module Components
 
     # child has a ruby class of its own
     def init_reserved child
-      child_class = Patterns::const_get("#{self.class.to_s.split('::')[-2]+'::'}#{child.name.capitalize}")
-      self << child_class.new(child)
+      child_class = Patterns::const_get(child.name.capitalize)
+      self << child_class.new(child, reserved: reserved_word_array)
     end
 
     # child is just XML - wrap it
     def init_generic child
-      self << Component.new(child, {})
+      self << Component.new(child, reserved: reserved_word_array)
     end
 
     def xml=arg

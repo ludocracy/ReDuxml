@@ -26,12 +26,12 @@
             </parameter>
         </parameters>
         <!-- example of where you could add design data -->
-        <some_component>this component thinks param0 = @(param0)</some_component>
+        <some_component id="overriding">this component thinks param0 = @(param0)</some_component>
         <instance id="param_overrides_inst">
             <parameters>
                 <parameter name="param0" value="10"/>
             </parameters>
-            <some_component>this component should also say param0 = @(param0)</some_component>
+            <some_component id="overridden">this component should also say param0 = @(param0)</some_component>
         </instance>
     </design>
 </template>

@@ -21,7 +21,7 @@ class TreeFarmTest < MiniTest::Test
   def test_if_resolution
     g = TreeFarm.new
     g.plant 'xml/conditionals.xml'
-    t = g.grow.design
+    t = g.resolve.design
     assert_equal nil, t.find_child(:should_be_false)
     assert_equal 'should_be_true', t.find_child(:should_be_true).id
     assert_equal 'unconditional_comp', t.find_child(:unconditional_comp).id
@@ -30,7 +30,7 @@ class TreeFarmTest < MiniTest::Test
   def test_inline_resolution
     g = TreeFarm.new
     g.plant 'xml/inline_param.xml'
-    d = g.grow.design
+    d = g.resolve.design
     p_test = d.find_child(%w(blah p_test))
     assert_equal '0 is a design param expression', p_test.content
   end
@@ -38,7 +38,7 @@ class TreeFarmTest < MiniTest::Test
   def test_save_kansei
     g = TreeFarm.new
     g.plant 'xml/inline_param.xml'
-    g.grow
+    g.resolve
     g.save RESULT_TEMPLATE
     x = File.read(RESULT_TEMPLATE)
     d = Template.new(x).design
@@ -50,41 +50,55 @@ class TreeFarmTest < MiniTest::Test
     skip
     g = TreeFarm.new
     b = g.plant SAMPLE_TEMPLATE
-    t = g.grow
+    t = g.resolve
+    g.save RESULT_TEMPLATE
     assert t === g.current_template
     assert b === g.base_template
   end
 
+  def test_instance_name_collision
+    g = TreeFarm.new
+    g.plant 'xml/component_collision.xml'
+    t = g.resolve
+    assert_equal 'this design component should collide', t.design.children[0].content
+    assert_equal 'with this component!', t.design.children[1].content
+  end
+
   def test_instantiate_ref
-    skip
     g = TreeFarm.new
     g.plant 'xml/simple_inst.xml'
-    t = g.grow
+    t = g.resolve
     assert_equal 'this is a design component', t.design.find_child(%w(blah some_component)).content
   end
 
   def test_instantiate_array
-    skip
     g = TreeFarm.new
     g.plant 'xml/array_inst.xml'
-    c = g.grow.design
-    assert_equal '4 is an iterator expression', c.find_child(:iterator_test3).content
+    c = g.resolve.design
+    g.save RESULT_TEMPLATE
+    assert_equal '4 is an iterator expression', c.find_child(:iterator_test03).content
   end
 
   def test_param_overrides
-    skip
     g = TreeFarm.new
     g.plant 'xml/param_override.xml'
-    c = g.grow.design
-    assert_equal 'this component thinks param0 = 0', c.find_child(:some_component).content
-    assert_equal 'this component should also say param0 = 0', c.find_child(:param_overrides_inst)
+    c = g.resolve.design
+    assert_equal 'this component thinks param0 = 0', c.find_child(:overriding).content
+    assert_equal 'this component should also say param0 = 0', c.find_child(:overridden).content
+  end
+
+  def test_nonidentical_insts
+    g = TreeFarm.new
+    g.plant 'xml/fraternal_twins.xml'
+    c = g.resolve.design
+    assert_equal 'for this instance, param0 == 0', c.find_child(:description).content
+    assert_equal 'but for this instance, param0 == 10', c.find_child(:description.instance_1).content
   end
 
   def test_derived_params
-    skip
     g = TreeFarm.new
     g.plant 'xml/derived_params.xml'
-    c = g.grow.design
+    c = g.resolve.design
     assert_equal '30 is a derived resolved value', c.find_child(%w(blah resolvable)).content
     assert_equal '@(monkey) is a derived unresolved value', c.find_child(%w(blah unresolvable)).content
   end
@@ -94,6 +108,5 @@ class TreeFarmTest < MiniTest::Test
   end
 
   def teardown
-    #File.delete RESULT_TEMPLATE if File.exists?(RESULT_TEMPLATE)
   end
 end

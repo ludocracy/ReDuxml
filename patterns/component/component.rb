@@ -11,7 +11,7 @@
 # in order to provide real-time feedback to XML editor
 # could add switch to turn this off
 
-require 'tree'
+require_relative '../../ext/tree'
 require_relative '../../ext/object'
 require_relative 'interface'
 require_relative 'guts'
@@ -22,44 +22,34 @@ module Components
   # each Kansei object is also a Tree::TreeNode
   class Component < Tree::TreeNode
     include Components::Interface
-    # hash of builds where keys are parameter settings and values are kansei siblings of this component
-    @visible
+
     @xml_root_node
-
-    # tracks all content nodes that contain parameterized expressions for quick retrieval and resolution
-    # keys are the nodes themselves, values are the strings that contain the parameter expressions
     @parameterized_nodes
-    # tracks where to add children; on initializing traverse, leave it at the last singleton child
     @xml_cursor
-
-    # array of words that indicate reserved classes
     @attributes
 
     attr_reader :children, :children_hash, :xml_root_node, :type
-
     attr_accessor :parameterized_nodes
 
     alias_method :id, :name
 
-    # creating new Component from XML node (from file) or input in the form of XML string
     def initialize xml_node, args={}
       raise ArgumentError unless @xml_root_node = xml_node.xml
       @parameterized_nodes = []
       @reserved_word_array = args[:reserved] || []
-
       @xml_cursor ||= xml_root_node
       id = xml_root_node[:id] || xml_root_node[:name] || xml_root_node.name
       # must happen before traverse to have @children/@children_hash available
-      super id, xml_root_node
+      super id, xml_root_node.content
       # traverse and load Component from xml
-      traverse_xml load_methods %w(load_parameterized_nodes init_reserved init_generic)
+      traverse_xml exec_methods %w(load_parameterized_nodes init_reserved init_generic)
       @type = xml_root_node.name
     end # end of Component::initialize(xml_node, args={})
 
     private
     include Components::Guts
 
-    attr_reader :xml_cursor
+    attr_reader :xml_cursor, :reserved_word_array
   end # end of class Component
 
 end # end of module Components

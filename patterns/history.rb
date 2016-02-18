@@ -3,7 +3,7 @@ module Patterns
   include Components
 
   class History < Component
-    def initialize xml_node
+    def initialize xml_node, args={}
       super xml_node, reserved: %w(insert remove edit error correction instantiate move undo)
     end
 

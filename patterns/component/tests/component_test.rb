@@ -32,6 +32,12 @@ class ComponentTest < MiniTest::Test
     assert_equal "green", e[:color].to_s
   end
 
+  def test_init_content
+    test_xml = Nokogiri::XML("<poop>pooper</poop>").root
+    @e = Component.new(test_xml)
+    assert_equal 'pooper', e.content
+  end
+
   def test_init_hierarchy
     @e = Component.new("<poop><danglers>dangling</danglers><chunks>chunky</chunks></poop>")
     child0 = e.find_child(:danglers)

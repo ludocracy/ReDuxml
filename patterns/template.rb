@@ -29,7 +29,7 @@ module Patterns
   end # end of Template class
 
   class Owners < Component
-    def initialize xml_node
+    def initialize xml_node, args={}
       super xml_node, reserved: %w(owner)
     end
   end
@@ -37,10 +37,6 @@ module Patterns
   class Owner < Component
     def initialize xml_node, args ={}
       super xml_node, args
-    end
-
-    def generate_new_xml args
-      @xml_cursor
     end
   end
 

@@ -46,10 +46,7 @@ class Symja
     expr.gsub!(Regexp.identifier) do |identifier|
       if parameter_hash[identifier.to_sym]
         result = parameter_hash[identifier.to_sym]
-        if result.is_a?(Hash) && result[:string]
-          string_expr_or_false = true
-          result = result[:string]
-        end
+        string_expr_or_false = true if result.parameterized?
       end
       result || identifier
     end

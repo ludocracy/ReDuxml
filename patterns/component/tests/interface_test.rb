@@ -39,9 +39,9 @@ class InterfaceTest < MiniTest::Test
 
   def test_stub
     t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
-    stub = t.stub
-    x = stub.to_s
-    assert_equal %(<birdhouse/>), x
+    s = t.stub
+    assert_equal %(<birdhouse/>), s.xml.to_s
+    assert_equal 0, s.children.size
   end
 
   def test_remove
@@ -59,8 +59,10 @@ class InterfaceTest < MiniTest::Test
   end
 
   def test_if
-    t = Component.new(%(<birdhouse if="false">@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
-    assert_equal false, t.if?
+    f = Component.new(%(<birdhouse if="false">@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
+    t = Component.new(%(<birdhouse if="true">@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
+    assert_equal false, f.if?
+    assert_equal true, t.if?
   end
 
   def test_no_if

@@ -12,7 +12,8 @@
             <name>asdf fdsd</name>
         </owner>
     </owners>
-    <description>tests simple instantiation</description>
+    <description>tests that parameter expressions vary between instances end up making them
+        non-identical</description>
     <history>
         <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
             <description>created file</description>
@@ -20,16 +21,17 @@
         </insert>
     </history>
     <design id="design_id" logics="logic">
-        <parameters>
-            <parameter name="param0" value="0">
-                <description>param0 is an integer and will be tested against the instance
-                    below</description>
-            </parameter>
-        </parameters>
-        <!-- example of where you could add design data -->
-        <some_component id="reftarget">this is a design component</some_component>
-        <blah>
-            <instance id="simpleinst" ref="reftarget"/>
-        </blah>
+        <instance id="instance_0">
+            <parameters>
+                <parameter name="param0" value="0"/>
+            </parameters>
+            <description>for this instance, param0 == @(param0)</description>
+        </instance>
+        <instance id="instance_1">
+            <parameters>
+                <parameter name="param0" value="10"/>
+            </parameters>
+            <description>but for this instance, param0 == @(param0)</description>
+        </instance>
     </design>
 </template>

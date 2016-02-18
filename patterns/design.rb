@@ -8,21 +8,41 @@ module Patterns
   class Instance < Component
     def initialize xml_node=nil, args = {}
       xml_node = class_to_xml if xml_node.nil?
-      super xml_node, reserved: %w(parameters array instance)
+      super xml_node, reserved: %w(parameters array instance link)
     end
 
     def params
-      find_child 'parameters'
+      p = find_child 'parameters'
+      p.simple_class == 'parameters' ? p : []
     end
 
-    def instantiate target
-      target.nil? ? self : target.clone
+    def instantiate target=nil
+      new_kids = []
+      if target.nil?
+        children.each do |child|
+          new_kids << child if child.simple_class != 'parameters'
+        end
+      else
+        new_kids << target.clone
+      end
+      new_kids
     end
   end
 
   class Design < Instance
     def logics
       true
+    end
+
+    def instantiate
+      super
+    end
+
+    def find_kansei target
+      n = target.respond_to?(:name) ? target.name : target.to_s
+      each do |node|
+        return node if node.name == n
+      end
     end
   end
 
@@ -33,6 +53,7 @@ module Patterns
     def instantiate target
       raise Exception if target.nil?
       @ref = target
+      self
     end
   end
 
@@ -40,26 +61,28 @@ module Patterns
   class Array < Instance
     include Enumerable
 
-    def instantiate target
-      return [] if target.nil?
+    def instantiate target=nil
       size_expr = size.respond_to?(:to_i) ? size.to_i : size.to_s
       if size_expr.is_a? Fixnum
         iterator_index = 0
         new_children = []
+        kids = children.clone
         size_expr.times do
           i = Instance.new
           i << Parameters.new(nil, iterator: iterator_index)
-          if children.any?
-            children.each do |child| i << child.clone end
-          else
-            i << target.clone
+          kids.each do |child|
+            new_kid = child.clone
+            new_kid.rename new_kid.name+iterator_index.to_s
+            remove child
+            i << new_kid
           end
+          i.rename name+iterator_index.to_s
           new_children << i
           iterator_index += 1
         end
         new_children
       else
-        children
+        []
       end
     end
 
