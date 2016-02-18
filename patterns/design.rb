@@ -66,16 +66,13 @@ module Patterns
       if size_expr.is_a? Fixnum
         iterator_index = 0
         new_children = []
-        kids = children.clone
+        kids = []
+        children.each do |kid| kids << kid.detached_subtree_copy end
+        remove_all!
         size_expr.times do
           i = Instance.new
           i << Parameters.new(nil, iterator: iterator_index)
-          kids.each do |child|
-            new_kid = child.clone
-            new_kid.rename new_kid.name+iterator_index.to_s
-            remove child
-            i << new_kid
-          end
+          kids.each do |kid| i << kid.detached_subtree_copy end
           i.rename name+iterator_index.to_s
           new_children << i
           iterator_index += 1

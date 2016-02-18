@@ -34,7 +34,10 @@ class DesignTest < MiniTest::Test
   end
 
   def test_array_instantiate
-    #a = Patterns::Array.new.instantiate
+    a = Patterns::Array.new(%(<array size="10"><car/></array>))
+    c = a.instantiate
+    assert_equal 10, c.size
+    assert_equal '9', c.last.params[:iterator]
   end
 
   def tear_down

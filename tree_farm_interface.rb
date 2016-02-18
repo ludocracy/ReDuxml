@@ -1,7 +1,13 @@
 require_relative 'patterns/template'
+require_relative 'ext/nokogiri'
 
 module TreeFarmInterface
   include Patterns
+
+  def initialize file=""
+    @kansei_array = []
+    plant file if File.exists? file
+  end
 
   def resolve
     grow!

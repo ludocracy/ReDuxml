@@ -24,12 +24,9 @@ module Components
     include Components::Interface
 
     @xml_root_node
-    @parameterized_nodes
     @xml_cursor
-    @attributes
 
-    attr_reader :children, :children_hash, :xml_root_node, :type
-    attr_accessor :parameterized_nodes
+    attr_reader :children, :children_hash, :xml_root_node
 
     alias_method :id, :name
 
@@ -42,8 +39,7 @@ module Components
       # must happen before traverse to have @children/@children_hash available
       super id, xml_root_node.content
       # traverse and load Component from xml
-      traverse_xml exec_methods %w(load_parameterized_nodes init_reserved init_generic)
-      @type = xml_root_node.name
+      traverse_xml exec_methods %w(do_nothing init_reserved init_generic)
     end # end of Component::initialize(xml_node, args={})
 
     private

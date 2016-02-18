@@ -38,18 +38,6 @@ module Components
       end
     end
 
-    def load_parameterized_nodes
-      return unless name=='design' || descended_from?(:design)
-      xml_nodes = xml_root_node.attribute_nodes
-      xml_root_node.children.each do |child|
-        if child.is_a?(Nokogiri::XML::Node) && child.text?
-          xml_nodes << child
-          break
-        end
-      end
-      xml_nodes.each do |xml_node| parameterized_nodes << xml_node if xml_node.content.parameterized? end
-    end
-
     # child has a ruby class of its own
     def init_reserved child
       child_class = Patterns::const_get(child.name.capitalize)

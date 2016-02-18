@@ -15,9 +15,16 @@
 </owners>
 <description>created by Chef module to wrap around non-DesignOS XML design</description>
 <design id="design_id" logics="logic">
-    <iterator_test id="iterator_test03">1 is an iterator expression</iterator_test>
-<iterator_test id="iterator_test03.array_id1">1 is an iterator expression</iterator_test>
-<iterator_test id="iterator_test03.array_id2">1 is an iterator expression</iterator_test>
-<iterator_test id="iterator_test03.array_id3">1 is an iterator expression</iterator_test>
+        <!--
+  -->
+    <some_component id="reftarget">this is a design component</some_component>
+<blah id="blah">
+            <p_test>0 is a design param expression</p_test>
+<some_component id="reftarget">this is a design component</some_component>
+</blah>
+<iterator_test>1 is an iterator expression</iterator_test>
+<iterator_test id="iterator_test.array_id1">2 is an iterator expression</iterator_test>
+<iterator_test id="iterator_test.array_id2">3 is an iterator expression</iterator_test>
+<iterator_test id="iterator_test.array_id3">4 is an iterator expression</iterator_test>
 </design>
 </template>

@@ -36,6 +36,7 @@ class TreeFarmTest < MiniTest::Test
   end
 
   def test_save_kansei
+    skip
     g = TreeFarm.new
     g.plant 'xml/inline_param.xml'
     g.resolve
@@ -47,7 +48,6 @@ class TreeFarmTest < MiniTest::Test
   end
 
   def test_kansei_traverse
-    skip
     g = TreeFarm.new
     b = g.plant SAMPLE_TEMPLATE
     t = g.resolve
@@ -75,8 +75,7 @@ class TreeFarmTest < MiniTest::Test
     g = TreeFarm.new
     g.plant 'xml/array_inst.xml'
     c = g.resolve.design
-    g.save RESULT_TEMPLATE
-    assert_equal '4 is an iterator expression', c.find_child(:iterator_test03).content
+    assert_equal '4 is an iterator expression', c.find_child('iterator_test.array_id3').content
   end
 
   def test_param_overrides
@@ -92,7 +91,7 @@ class TreeFarmTest < MiniTest::Test
     g.plant 'xml/fraternal_twins.xml'
     c = g.resolve.design
     assert_equal 'for this instance, param0 == 0', c.find_child(:description).content
-    assert_equal 'but for this instance, param0 == 10', c.find_child(:description.instance_1).content
+    assert_equal 'but for this instance, param0 == 10', c.find_child('description.instance_1').content
   end
 
   def test_derived_params

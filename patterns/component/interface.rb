@@ -25,11 +25,38 @@ module Components
       @xml_root_node.to_s
     end
 
+    def detached_subtree_copy
+      new_node = detached_copy
+      children.each do |child|
+        new_node << child.detached_subtree_copy
+      end
+      new_node
+    end
+
+    def parameterized_xml_nodes
+      return unless type=='design' || descended_from?(:design)
+      a = []
+      xml_nodes = xml_root_node.attribute_nodes
+      xml_root_node.children.each do |child|
+        if child.is_a?(Nokogiri::XML::Node) && child.text?
+          xml_nodes << child
+          break
+        end
+      end
+      xml_nodes.each do |xml_node| a << xml_node if xml_node.content.parameterized? end
+      a
+    end
+
+    def type
+      xml_root_node.name
+    end
+
     def stub
       x = xml.dup
       x.element_children.remove
       self.class.new x
     end
+    alias_method :detached_copy, :stub
 
     def summarize
       content = ""
@@ -103,9 +130,12 @@ module Components
 
     # need to have observer monitor this method!!!
     def << obj
-      c = coerce obj
-      add c
-      @xml_cursor.add_child c.xml_root_node
+      objs = obj.is_a?(Array) ? obj : [obj]
+      objs.each do |node|
+        new_kid = coerce node
+        add new_kid
+        @xml_cursor.add_child new_kid.xml_root_node
+      end
       #update history
     end
 

@@ -22,10 +22,23 @@ class InterfaceTest < MiniTest::Test
     assert_equal answer, e.to_s
   end
 
+  def test_type
+    a = Component.new(%(<birdhouse id="poop" color="red" size="large"/>))
+    assert_equal 'birdhouse', a.type
+  end
+
   def test_add_child
     answer = %(<birdhouse color="red" size="large"><material>pine</material></birdhouse>)
     e << Component.new(%(<material>pine</material>))
     assert_equal answer, e.to_s
+  end
+
+  def test_add_children
+    a = [Component.new(%(<sub0/>)), Component.new(%(<sub1/>)), Component.new(%(<sub2/>))]
+    e << a
+    assert_equal 'sub0', e.children[0].type
+    assert_equal 'sub1', e.children[1].type
+    assert_equal 'sub2', e.children[2].type
   end
 
   def test_get_attr
@@ -52,9 +65,10 @@ class InterfaceTest < MiniTest::Test
   end
 
   def test_get_parameterized_nodes
-    t = Component.new(%(<design><birdhouse attr="@(param)">@(pine)<color/><material><wood>pine</wood></material></birdhouse></design>))
+    a = Component.new(%(<design><birdhouse attr="@(param)">@(pine)<color/><material><wood>pine</wood></material></birdhouse></design>))
+    t = a.detached_subtree_copy
     s = []
-    t.find_child(:birdhouse).parameterized_nodes.each do |node| s << node.to_s end
+    t.find_child(:birdhouse).parameterized_xml_nodes.each do |node| s << node.to_s end
     assert_equal %w(@(param) @(pine)), s
   end
 
