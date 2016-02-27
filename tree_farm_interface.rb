@@ -9,10 +9,18 @@ module TreeFarmInterface
     plant file if File.exists? file
   end
 
+  def generate type
+    current_template.directives(type).each do |directive| harvest! directive end
+  end
+
   def resolve
     grow!
     prune!
     current_template
+  end
+
+  def document
+    execute!
   end
 
   def save file_name

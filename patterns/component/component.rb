@@ -11,6 +11,7 @@
 # in order to provide real-time feedback to XML editor
 # could add switch to turn this off
 
+require_relative '../../ext/xml'
 require_relative '../../ext/tree'
 require_relative '../../ext/object'
 require_relative 'interface'
@@ -32,7 +33,6 @@ module Components
 
     def initialize xml_node, args={}
       raise ArgumentError unless @xml_root_node = xml_node.xml
-      @parameterized_nodes = []
       @reserved_word_array = args[:reserved] || []
       @xml_cursor ||= xml_root_node
       id = xml_root_node[:id] || xml_root_node[:name] || xml_root_node.name

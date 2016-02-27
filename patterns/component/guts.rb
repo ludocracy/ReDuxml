@@ -41,7 +41,7 @@ module Components
     # child has a ruby class of its own
     def init_reserved child
       child_class = Patterns::const_get(child.name.capitalize)
-      self << child_class.new(child, reserved: reserved_word_array)
+      add child_class.new(child, reserved: reserved_word_array)
     end
 
     # child is just XML - wrap it
@@ -61,6 +61,15 @@ module Components
         else obj
       end
     end
+
+    def design_comp?
+      type == 'design' || descended_from?(:design)
+    end
+
+    def post_init?
+      !caller.any? do |call| call.match(/(?:`)(.)+(?:')/).to_s[1..-2] == 'initialize' end
+    end
+
 
     def class_to_xml
       element self.simple_class

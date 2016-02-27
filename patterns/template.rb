@@ -16,15 +16,22 @@ module Patterns
     end
 
     def design
-      find_child -1
+      find_child 'design'
+    end
+
+    def directives type=nil
+      directive_array = find_child('directives').children
+      return directive_array if type.nil?
+      matching_directives = []
+      directive_array.each do |child|
+        generation_types = type.is_a?(Array) ? type : [type]
+        matching_directives << child[:type] if generation_types.include?(child[:type])
+      end
+      matching_directives
     end
 
     def owners
       find_child('owners').children
-    end
-
-    def get_cutting
-      cutting = Template.new(wrap current_node.design.xml)
     end
   end # end of Template class
 

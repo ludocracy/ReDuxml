@@ -12,9 +12,8 @@
     </owners>
     <description>This should be allowed.</description>
     <history>
-        <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
+        <insert id="change_0_id" date="2015-08-20T19:20:30+01:00" change_ids="template_id" previous="" owner="b33791">
             <description>created file</description>
-            <date>2015-08-20T19:20:30+01:00</date>
         </insert>
     </history>
     <design id="design_id" logics="logic">
@@ -32,6 +31,7 @@
             </parameters>
         </instance>
         <thing id="targetiddxcz">something something</thing>
+        <thing id="thing1"/>
         <array size="4" id="array_id">
             <!-- example of where you could add design data -->
             <instance id="thisid" ref="targetid"/>

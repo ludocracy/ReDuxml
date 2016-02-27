@@ -19,6 +19,7 @@ module Components
       self << new_comp
       @xml_root_node.remove_attribute attr_key.to_s
       new_comp
+      report edit: {'' => attr_key}
     end
 
     def to_s
@@ -35,7 +36,6 @@ module Components
 
     def parameterized_xml_nodes
       return unless type=='design' || descended_from?(:design)
-      a = []
       xml_nodes = xml_root_node.attribute_nodes
       xml_root_node.children.each do |child|
         if child.is_a?(Nokogiri::XML::Node) && child.text?
@@ -43,8 +43,8 @@ module Components
           break
         end
       end
+      a = []
       xml_nodes.each do |xml_node| a << xml_node if xml_node.content.parameterized? end
-      a
     end
 
     def type
@@ -111,11 +111,6 @@ module Components
       xml_root_node.content
     end
 
-    def content= arg
-      @content = arg
-      @xml_root_node.content = arg
-    end
-
     def id
       self[:id]
     end
@@ -126,9 +121,17 @@ module Components
 
     def each &block
       super &block
+  end
+
+    def report type, obj
+      if design_comp? && post_init?
+        add_observer template.history if template && count_observers == 0
+        changed
+        h = {parent: id, target: obj}
+        notify_observers type, h
+      end
     end
 
-    # need to have observer monitor this method!!!
     def << obj
       objs = obj.is_a?(Array) ? obj : [obj]
       objs.each do |node|
@@ -136,20 +139,44 @@ module Components
         add new_kid
         @xml_cursor.add_child new_kid.xml_root_node
       end
-      #update history
+      report :insert, obj.id
     end
 
-    # need to have observer monitor this method!!!
-    def remove child
-      return if child.nil? || !child.any?
+    # should we add a remove array function?
+    def remove child_or_id
+      return if child_or_id.nil?
+      child = child_or_id.respond_to?(:id) ? child_or_id : find_child(child_or_id)
       child.xml_root_node.remove
       remove! child
-      #update history
+      report :remove, child
+    end
+
+    def []= key, val
+      case key
+        when :id, :if then return
+        else
+          old_val = self[key] || :nil
+          @xml_root_node[key] = val
+          report :edit, {old_val => key}
+      end
+    end
+
+    def if= condition
+      # check for valid conditional
+      @xml_root_node['if'] = condition
     end
 
     def rename new_id
+      old_id = id
       super new_id
       @xml_root_node[:id] = new_id
+      report :edit, {id: old_id}
+    end
+
+    def content= new_content
+      old_content = content
+      @xml_root_node.content = new_content
+      report :edit, {content: old_content}
     end
 
     def descended_from? target
@@ -157,6 +184,16 @@ module Components
         return true if ancestor.name == target.to_s
       end
       false
+    end
+
+    def instance
+      parentage.each do |ancestor| return ancestor if ancestor.respond_to?(:params) end
+      nil
+    end
+
+    def template
+      return root if root.type == 'template'
+      nil
     end
   end
 end

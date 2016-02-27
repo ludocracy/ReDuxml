@@ -1,8 +1,9 @@
 require_relative 'ext/nokogiri'
 require_relative 'patterns/template'
+require_relative 'ext/symja'
+require_relative 'ext/macro'
 
 module TreeFarmHand
-  include Patterns
   private
   def find_close_parens_index str
     levels = 0
@@ -19,6 +20,15 @@ module TreeFarmHand
       index += 1
     end
     raise Exception, "cannot find end of parameter expression!"
+  end
+
+  def resolve_str content_str, param_hash
+    question = find_expr content_str
+    return if question.nil?
+    reply = Macro.new Symja.instance.evaluate(question, param_hash)
+    replacement_str = reply.parameterized? ? reply : reply.demacro
+    macro_string = Macro.new(question)
+    content_str.gsub(macro_string, replacement_str)
   end
 
   def find_expr str
@@ -39,6 +49,11 @@ module TreeFarmHand
           </owner>
         </owners>
         <description>created by Chef module to wrap around non-DesignOS XML design</description>
+        <history>
+          <insert id="change_0_id" owner="tree_farm">
+              <description>created file</description>
+              <date>#{Time.now.to_s}</date>
+          </insert>
       </template>
                               ))
     xml_doc.root << xml_node if xml_node = xml_node.xml
@@ -62,9 +77,10 @@ module TreeFarmHand
     end
   end
 
-  def resolve_ref instance_node
-    return nil unless ref = instance_node[:ref]
-    ref.match(Regexp.identifier) ? base_template.design.find_kansei(ref) : Template.new(File.open(ref)).design
+  def resolve_ref ref
+    ref = ref.respond_to?(:id) ? ref[:ref] : ref
+    return nil if ref.nil?
+    ref.match(Regexp.identifier) ? base_template.design.find_kansei(ref) : Patterns::Template.new(File.open(ref)).design
   end
 
   def get_inst_hierarchy node

@@ -1,205 +1,139 @@
 require_relative 'component/component'
+require_relative '../tree_farm_hand'
+
 module Patterns
   include Components
 
   class History < Component
-    def initialize xml_node, args={}
+    include Enumerable
+
+    def initialize xml_node=nil, args={}
+      xml_node = %(<history><insert id="change_0" owner="system"><description>file created</description><date>#{Time.now.to_s}</date></insert></history>) if xml_node.nil?
       super xml_node, reserved: %w(insert remove edit error correction instantiate move undo)
     end
 
-    # a special register function is used by the History, instead of the usual add child to avoid adding a history of the history to the history
-    def register change, owner
-      current_change = change
-      while current_change do
-        current_change[:owner] = owner
-        # adding to head so latest changes are on top
-        @xml_cursor.children.first.add_previous_sibling
-        @children.add_child current_change
-        current_change.next!
-      end
+    def update type, change
+      change_class = Patterns::const_get type.to_s.capitalize
+      change_comp = change_class.new(nil, change)
+      add change_comp, 0
+      @xml_root_node.prepend_child change_comp.xml
     end
 
-    def generate_descr
-
+    def each &block
+      children.each &block
     end
 
-    def register_with_owner change
-      register change, @parent.owners
+    def last
+      last_child
     end
 
-    def last_change
-      @children.last
+    def [] key
+      find_child key
     end
-
-    def size
-      @children.size
-    end
-
-    def change_hash
-      @children_hash
-    end
-
-    def get_changes
-      # handle cases for searches by: date, date range, owner, type, target,
-    end
-
-    private :register
   end
 
   # individual change; not to be used, only for subclassing
   class Change < Component
+    include TreeFarmHand
+
     def initialize xml_node, args = {}
+      if xml_node.nil?
+        xml_node = class_to_xml
+        args.each do |key, val|
+          case
+            when val.respond_to?(:id) then xml_node << val.xml
+            when val.is_a?(Hash)
+              old_content_str = val.first.last.empty? ? nil : val.first.last
+              old_content_type = val.first.first.to_s
+              xml_node << element(old_content_type, nil, old_content_str)
+            when key == :description then xml_node << element(key.to_s, nil, val)
+            else xml_node[key] = val
+          end
+        end
+        xml_node[:date] = Time.now.to_s
+      end
       super xml_node
     end
 
     def description
-      find_child :description
+      descr = find_child(:description)
+      descr.nil? ? nil : descr.content
     end
 
     def date
-      find_child :date
+      self[:date]
     end
 
-    def generate_new_xml args
-      super
-      @previous = args[:previous]
-      @next = nil
-      @xml_cursor['previous'] = @previous.id unless @previous.nil?
-      @ref = args[:ref]
-      @xml_cursor['ref'] = @ref.id unless @ref.nil?
-      @timestamp = Time.now
-      @xml_cursor << Nokogiri::XML::Node.new('date', @xml_doc)
-      @xml_cursor << @timestamp.to_s
-      # description will be generated or input later and only when triggered
-      @xml_cursor << Nokogiri::XML::Node.new('description', @xml_doc)
+    def affected_parent
+      resolve_ref self[:parent]
     end
 
-    def generate_descr
-      @description = " at #{@timestamp}."
+    def base_template
+      root
     end
 
-    def push component
-      if component.is_a? Change
-        @next = component
-        component.previous = self
-        component
-      else
-        super component
-      end
-    end
-
-    def previous= ref
-      @previous ||= ref
-    end
-
-    private :generate_descr
-
-    attr_reader :next, :ref, :timestamp, :description
-  end
-
-  # Component instantiated; holds pointers to Edits to parameter values if redefined for this instance
-  # holds pointer to antecedent; generates fresh ID for instance; adds as new child to template
-  class Instantiate < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
-    end
-
-    def generate_new_xml
+    def target
+      children.each do |child| return child unless child.type == :description end
     end
   end
 
-  # error found during build inspection process (syntax errors) or during general inspection - saved to file if uncorrected on commit
-  # points to rule violated and/or syntax marker and previous error in exception stack
-  class Error < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
-    end
-
-    def generate_new_xml
-    end
-  end
-
-  # build-time, inspection or committed error correction - points to error object
-  # also points to change object that precipitated this one
-  # (could be another correction or other change-type other than Error or Instantiate)
-  class Correction < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
-    end
-
-    def generate_new_xml
-    end
-  end
-
-  # removal of node can occur when building design from de-instantiation (@if == false)
-  # when inspecting from a given perspective, or from user input when editing
   class Remove < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
+    def description
+      super || %(Component '#{removed.id}' of type '#{removed.type}' was removed from component '#{affected_parent.id}' of type '#{affected_parent.type}'.)
     end
 
-    def generate_new_xml
-    end
+    alias_method :removed, :target
   end
 
-  # insertion of node can occur when building design from instantiation
-  # after inspector reports changes (when historian inserts changes into history)
-  # and from user input when editing
-  # the initialization strings really should be loaded from the RelaxNG. LATER!!!
   class Insert < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
+    def description
+      super || %(Component '#{inserted.id}' of type '#{inserted.type}' was added to component '#{affected_parent.id}' of type '#{affected_parent.type}'.)
     end
 
-    # because owner is not known until insert is registered with history, this method is kept private
-    def generate_descr
-      self[:description] = "#{self[:owner].to_s} added #{@ref.name} (#{@ref.id}) to #{@ref.parent.name} (#{@ref.id})" + self[:description]
-    end
-
-    private :generate_descr
-  end
-
-  class Move < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
-    end
-
-    def generate_new_xml
+    def inserted
+      resolve_ref self[:target]
     end
   end
 
-  # change to element content or attribute value, essentially the actual content of the Component has changed
-  # this can occur from owner input when editing
-  # or initiated by Builder when dealing with parameters (and nothing else)
   class Edit < Change
-    # string containing new content
-    @new_content
-    # string containing old content (if content is XML, string can be converted to XML)
-    @old_content
-    # xpath to changed element
-    @xpath
-    # string if empty content change was to element; if non-empty is name of attribute value changed
-    @attributeOrNo
-    @previous
-    @next
-
-
-    def initialize xml_node, args = {}
-      super xml_node, args
+    def description
+      return super if super
+      descr = %(Component '#{affected_parent.id}' of type '#{affected_parent.type}' )
+      is_attribute = target.type != 'content'
+      oc = old_content
+      is_new = old_content.empty?
+      descr << case
+        when is_new && is_attribute then "given new attribute '#{target.type}' with value '#{new_content}'."
+        when is_new && !is_attribute then "given new #{target.type} '#{new_content}'."
+        when !is_new && is_attribute then "changed attribute '#{target.type}' value from '#{old_content}' to '#{new_content}'."
+        when !is_new && !is_attribute then "changed #{target.type} from '#{old_content}' to '#{new_content}'."
+        else 'edited.'
+      end
+      descr
     end
 
-    def generate_new_xml
+    def old_content
+      target.type == 'nil' ? '' : target.content
+    end
 
+    def new_content
+      affected_parent.content
     end
   end
 
   class Undo < Change
-    def initialize xml_node, args = {}
-      super xml_node, args
+    def description
+      super || "#{target_full_name} removed from #{parent_full_name}."
     end
 
-    def generate_new_xml
+    def undone_change
+      self[:change]
     end
   end
 
+  class Error < Change
+    def description
+      super || "#{target_full_name} removed from #{parent_full_name}."
+    end
+  end
 end # end of module Patterns

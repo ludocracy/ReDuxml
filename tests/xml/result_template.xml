@@ -2,29 +2,46 @@
 <template id="pruned">
         
         
-        
-        
-      <name>temp_name</name>
-<version>1.0</version>
-<owners>
-          
-        <owner id="chef_id">
+        <owners>
+          <owner id="chef_id">
             
           <name>module: Chef</name>
 </owner>
-</owners>
-<description>created by Chef module to wrap around non-DesignOS XML design</description>
+        </owners>
+        
+        <history>
+          <insert id="change_0_id" owner="tree_farm">
+              
+              
+          <description>created file</description>
+<date>2016-02-22 09:47:31 -0600</date>
+</insert>
+      </history>
 <design id="design_id" logics="logic">
         <!--
   -->
     <some_component id="reftarget">this is a design component</some_component>
+<graphics_card id="ATI" if="@(param0&lt;0)">Expensive component</graphics_card>
+<something attr="@(derived_param)" xyz="@(derived_resolvable)"/>
 <blah id="blah">
-            <p_test>0 is a design param expression</p_test>
+                
+                
+                
+            <p_test>1200 is a design param expression</p_test>
 <some_component id="reftarget">this is a design component</some_component>
 </blah>
-<iterator_test>1 is an iterator expression</iterator_test>
-<iterator_test id="iterator_test.array_id1">2 is an iterator expression</iterator_test>
-<iterator_test id="iterator_test.array_id2">3 is an iterator expression</iterator_test>
-<iterator_test id="iterator_test.array_id3">4 is an iterator expression</iterator_test>
+<usb_port>usb port 1</usb_port>
+<usb_port id="usb_port.usb1">usb port 2</usb_port>
+<usb_port id="usb_port.usb2">usb port 3</usb_port>
+<usb_port id="usb_port.usb3">usb port 4</usb_port>
+<usb_port id="usb_port.usb4">usb port 5</usb_port>
+<usb_port id="usb_port.usb5">usb port 6</usb_port>
+<usb_port id="usb_port.usb6">usb port 7</usb_port>
+<usb_port id="usb_port.usb7">usb port 8</usb_port>
+<usb_port id="usb_port.usb8">usb port 9</usb_port>
+<usb_port id="usb_port.usb9">usb port 10</usb_port>
 </design>
+<name>temp_name</name>
+<version>1.0</version>
+<description>created by Chef module to wrap around non-DesignOS XML design</description>
 </template>
