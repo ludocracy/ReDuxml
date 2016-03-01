@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/symja_ternary_rewriter.rb')
-require_relative 'regexp'
+require_relative 'string'
 require 'singleton'
 begin # don't touch this load order!!!
   require 'java'
@@ -46,7 +46,12 @@ class Symja
     expr.gsub!(Regexp.identifier) do |identifier|
       if parameter_hash[identifier.to_sym]
         result = parameter_hash[identifier.to_sym]
-        string_expr_or_false = true if result.parameterized?
+        if result.is_a?(Hash)
+          result = result[:string]
+          string_expr_or_false = true
+        else
+          string_expr_or_false = true if val.parameterized?
+        end
       end
       result || identifier
     end

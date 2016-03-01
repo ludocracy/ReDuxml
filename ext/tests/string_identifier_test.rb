@@ -32,4 +32,8 @@ class StringIdentifierTest < MiniTest::Test
   def test_valid_identifier
     assert "aDD323_sdf".identifier?
   end
+
+  def test_classify
+    assert_equal 'MailMan', 'mail_man'.classify
+  end
 end

@@ -28,28 +28,28 @@ class HistoryTest < MiniTest::Test
   def test_new_attr
     t.design.find_child('targetiddxcz')[:new_attribute] = 'new value'
     c = t.history.first
-    assert_equal 'edit', c.type
+    assert_equal 'new_attribute', c.type
     assert_equal %(Component 'targetiddxcz' of type 'thing' given new attribute 'new_attribute' with value 'new value'.), c.description
   end
 
   def test_new_content
     t.design.find_child('thing1').content = 'new content'
     c = t.history.first
-    assert_equal 'edit', c.type
+    assert_equal 'new_content', c.type
     assert_equal %(Component 'thing1' of type 'thing' given new content 'new content'.), c.description
   end
 
   def test_change_attr
     t.design.find_child('test_instance_0_id')[:visible] = 'new value'
     c = t.history.first
-    assert_equal 'edit', c.type
-    assert_equal %(Component 'test_instance_0_id' of type 'instance' changed attribute 'visible' value from 'debug !customer' to 'debug'.), c.description
+    assert_equal 'change_attribute', c.type
+    assert_equal %(Component 'test_instance_0_id' of type 'instance' changed attribute 'visible' value from 'debug !customer' to 'new value'.), c.description
   end
 
   def test_change_content
     t.design.find_child('targetiddxcz').content = 'new content'
     c = t.history.first
-    assert_equal 'edit', c.type
+    assert_equal 'change_content', c.type
     assert_equal %(Component 'targetiddxcz' of type 'thing' changed content from 'something something' to 'new content'.), c.description
   end
 

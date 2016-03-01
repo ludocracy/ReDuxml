@@ -10,6 +10,9 @@ class Object
   end
 
   def simple_class
-    self.class.to_s.split('::').last.downcase
+    str = self.class.to_s.split('::').last
+    str.split(//).collect do |char|
+      char == char.upcase ? "_#{char.downcase!}" : char.downcase
+    end.join[1..-1]
   end
 end

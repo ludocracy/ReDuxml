@@ -9,11 +9,11 @@ module Patterns
 
     def initialize xml_node=nil, args={}
       xml_node = %(<history><insert id="change_0" owner="system"><description>file created</description><date>#{Time.now.to_s}</date></insert></history>) if xml_node.nil?
-      super xml_node, reserved: %w(insert remove edit error correction instantiate move undo)
+      super xml_node, reserved: %w(insert remove change_content change_attribute new_content new_attribute error correction instantiate move undo)
     end
 
     def update type, change
-      change_class = Patterns::const_get type.to_s.capitalize
+      change_class = Patterns::const_get type.to_s.classify
       change_comp = change_class.new(nil, change)
       add change_comp, 0
       @xml_root_node.prepend_child change_comp.xml
@@ -39,20 +39,16 @@ module Patterns
     def initialize xml_node, args = {}
       if xml_node.nil?
         xml_node = class_to_xml
+        xml_node[:date] = Time.now.to_s
         args.each do |key, val|
-          case
-            when val.respond_to?(:id) then xml_node << val.xml
-            when val.is_a?(Hash)
-              old_content_str = val.first.last.empty? ? nil : val.first.last
-              old_content_type = val.first.first.to_s
-              xml_node << element(old_content_type, nil, old_content_str)
-            when key == :description then xml_node << element(key.to_s, nil, val)
-            else xml_node[key] = val
+          if val.is_a?(Hash)
+            val.each do |k, v| xml_node << element(k.to_s, nil, v) end
+          else
+            xml_node << element(key.to_s, nil, val)
           end
         end
-        xml_node[:date] = Time.now.to_s
       end
-      super xml_node
+      super xml_node, args
     end
 
     def description
@@ -65,7 +61,7 @@ module Patterns
     end
 
     def affected_parent
-      resolve_ref self[:parent]
+      resolve_ref find_child(:parent).content
     end
 
     def base_template
@@ -73,7 +69,9 @@ module Patterns
     end
 
     def target
-      children.each do |child| return child unless child.type == :description end
+      targe = find_child(:target)
+      targe = targe.children.first if targe.has_children?
+      targe
     end
   end
 
@@ -82,7 +80,9 @@ module Patterns
       super || %(Component '#{removed.id}' of type '#{removed.type}' was removed from component '#{affected_parent.id}' of type '#{affected_parent.type}'.)
     end
 
-    alias_method :removed, :target
+    def removed
+      find_child(:target).children.first
+    end
   end
 
   class Insert < Change
@@ -91,33 +91,74 @@ module Patterns
     end
 
     def inserted
-      resolve_ref self[:target]
+      resolve_ref find_child(:target).content
     end
   end
 
   class Edit < Change
     def description
-      return super if super
-      descr = %(Component '#{affected_parent.id}' of type '#{affected_parent.type}' )
-      is_attribute = target.type != 'content'
-      oc = old_content
-      is_new = old_content.empty?
-      descr << case
-        when is_new && is_attribute then "given new attribute '#{target.type}' with value '#{new_content}'."
-        when is_new && !is_attribute then "given new #{target.type} '#{new_content}'."
-        when !is_new && is_attribute then "changed attribute '#{target.type}' value from '#{old_content}' to '#{new_content}'."
-        when !is_new && !is_attribute then "changed #{target.type} from '#{old_content}' to '#{new_content}'."
-        else 'edited.'
-      end
-      descr
+      super if super
+    end
+  end
+
+  class ChangeContent < Edit
+    def description
+      super
+      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' changed content from '#{old_content}' to '#{new_content}'."
     end
 
     def old_content
-      target.type == 'nil' ? '' : target.content
+      target.content
     end
 
     def new_content
       affected_parent.content
+    end
+  end
+
+  class ChangeAttribute < Edit
+    def description
+      super
+      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' changed attribute '#{attr_name}' value from '#{old_value}' to '#{new_value}'."
+    end
+
+    def old_value
+      find_child(:old_value).content
+    end
+
+    def new_value
+      affected_parent[attr_name.to_sym]
+    end
+
+    def attr_name
+      find_child(:attr_name).content
+    end
+  end
+
+  class NewContent < Edit
+
+    def description
+      super
+      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' given new content '#{new_content}'."
+    end
+
+    def new_content
+      affected_parent.content
+    end
+  end
+
+  class NewAttribute < Edit
+    def description
+      super
+      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' given new attribute '#{new_attr_name}' with value '#{new_attr_value}'."
+    end
+
+    def new_attr_name
+      find_child(:attr_name).content
+    end
+
+    def new_attr_value
+      find_child(:new_value).content
     end
   end
 

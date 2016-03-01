@@ -74,5 +74,22 @@ module Components
     def class_to_xml
       element self.simple_class
     end
+
+    def change_attr_value key, val
+      case key
+        when :id, :if then return
+        else
+          old_val = if self[key]
+                      change_type = :change_attribute
+                      self[key]
+                    else
+                      change_type = :new_attribute
+                      :nil
+                    end
+
+          @xml_root_node[key] = val
+          report change_type, {old_value: old_val, new_value: val, attr_name: key.to_s}
+      end
+    end
   end
 end

@@ -19,7 +19,7 @@ module Components
       self << new_comp
       @xml_root_node.remove_attribute attr_key.to_s
       new_comp
-      report edit: {'' => attr_key}
+      report :edit, attr_key.to_sym => ''
     end
 
     def to_s
@@ -138,8 +138,8 @@ module Components
         new_kid = coerce node
         add new_kid
         @xml_cursor.add_child new_kid.xml_root_node
+        report :insert, node.id
       end
-      report :insert, obj.id
     end
 
     # should we add a remove array function?
@@ -152,18 +152,12 @@ module Components
     end
 
     def []= key, val
-      case key
-        when :id, :if then return
-        else
-          old_val = self[key] || :nil
-          @xml_root_node[key] = val
-          report :edit, {old_val => key}
-      end
+      change_attr_value key, val
     end
 
     def if= condition
       # check for valid conditional
-      @xml_root_node['if'] = condition
+      change_attr_value :if, condition
     end
 
     def rename new_id
@@ -174,9 +168,10 @@ module Components
     end
 
     def content= new_content
+      change_type = content.empty? ? :new_content : :change_content
       old_content = content
       @xml_root_node.content = new_content
-      report :edit, {content: old_content}
+      report change_type, old_content
     end
 
     def descended_from? target

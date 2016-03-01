@@ -10,4 +10,8 @@ class String
   def parameterized?
     self.include?('@(')
   end
+
+  def classify
+    split('_').collect do |word| word.capitalize unless word == '_' end.join
+  end
 end
