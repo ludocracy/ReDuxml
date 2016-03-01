@@ -1,12 +1,12 @@
 require_relative '../template'
 require 'minitest/autorun'
 require 'nokogiri'
-SAMPLE_TEMPLATE = 'xml/sample_template.xml'
+SAMPLE_TEMPLATE = 'C:\Users\b33791\RubymineProjects\DesignOS\patterns\tests\xml\sample_template.xml'
 
 class HistoryTest < MiniTest::Test
   include Patterns
   def setup
-    @t = Template.new Nokogiri::XML File.read SAMPLE_TEMPLATE
+    @t = Template.new SAMPLE_TEMPLATE
   end
 
   attr_accessor :t

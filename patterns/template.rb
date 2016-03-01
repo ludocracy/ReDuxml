@@ -7,6 +7,7 @@ module Patterns
 
   class Template < Component
     def initialize xml_node, args = {}
+      xml_node = Nokogiri::XML File.open xml_node if xml_node.is_a?(String)
       xml_node = xml_node.root if xml_node.respond_to?(:root)
       super xml_node, reserved: %w(owners history design)
     end

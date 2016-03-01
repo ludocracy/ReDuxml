@@ -16,7 +16,7 @@
             <description>created file</description>
         </insert>
     </history>
-    <design id="design_id" logics="logic">
+    <design id="design_id">
         <parameters>
             <parameter name="param0" value="1">
                 <description>param0 is an integer and will be tested against the instance below</description>
@@ -35,8 +35,8 @@
         <array size="4" id="array_id">
             <!-- example of where you could add design data -->
             <instance id="thisid" ref="targetid"/>
-            <iterator_test>@(iterator+1) is an iterator expression</iterator_test>
-            <p_test>@(param0) is a design param expression</p_test>
+            <iterator_test id="iterator_test0">@(iterator+1) is an iterator expression</iterator_test>
+            <p_test id="p_test0">@(param0) is a design param expression</p_test>
         </array>
     </design>
 </template>

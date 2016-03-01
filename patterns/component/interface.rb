@@ -44,7 +44,8 @@ module Components
         end
       end
       a = []
-      xml_nodes.each do |xml_node| a << xml_node if xml_node.content.parameterized? end
+      xml_nodes.collect do |xml_node| a << xml_node if xml_node.content.parameterized? end
+      a
     end
 
     def type
@@ -122,15 +123,6 @@ module Components
     def each &block
       super &block
   end
-
-    def report type, obj
-      if design_comp? && post_init?
-        add_observer template.history if template && count_observers == 0
-        changed
-        h = {parent: id, target: obj}
-        notify_observers type, h
-      end
-    end
 
     def << obj
       objs = obj.is_a?(Array) ? obj : [obj]

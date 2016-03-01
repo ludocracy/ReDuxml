@@ -1,5 +1,7 @@
 require_relative '../design'
+require_relative '../../patterns/template'
 require 'minitest/autorun'
+SAMPLE_TEMPLATE = 'C:\Users\b33791\RubymineProjects\DesignOS\patterns\component\tests\xml\sample_template.xml'
 
 class DesignTest < MiniTest::Test
   include Patterns
@@ -14,6 +16,11 @@ class DesignTest < MiniTest::Test
     c = Instance.new(%(<instance id="inner"/>))
     x = d.find_kansei c
     assert_equal c.name, x.name
+  end
+
+  def test_load_from_template
+    t = Patterns::Template.new SAMPLE_TEMPLATE
+    assert_equal 'design', t.design.type
   end
 
   def test_link_instantiate

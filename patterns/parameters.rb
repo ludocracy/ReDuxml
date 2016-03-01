@@ -33,7 +33,6 @@ module Patterns
   # specialization of Component holds parameter name, value and description
   # also, during Build, its abstracts and concretes track parameter value overrides
   class Parameter < Component
-    include Observable
 
     def initialize xml_node, args={}
       if xml_node.nil?
@@ -51,7 +50,9 @@ module Patterns
     # parameter value assignments must be recorded
     def value= val
       if val != self[:value]
+        old_val = self[:value]
         self[:value] = val
+        report :change_attribute, {old_value: old_val, new_value: val, attr_name: 'value'}
       end
     end
   end

@@ -23,19 +23,17 @@ module Patterns
           new_kids << child if child.simple_class != 'parameters'
         end
       else
-        new_kids << target.clone
+        new_kid = target.clone
+        new_kid.rename "#{id}.#{target.id}"
+        new_kids << new_kid
       end
       new_kids
     end
   end
 
   class Design < Instance
-    def logics
-      true
-    end
-
-    def instantiate
-      super
+    def instantiate target=nil
+      [self]
     end
 
     def find_kansei target
@@ -43,6 +41,7 @@ module Patterns
       each do |node|
         return node if node.name == n
       end
+      nil
     end
   end
 

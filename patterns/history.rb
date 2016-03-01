@@ -1,5 +1,5 @@
 require_relative 'component/component'
-require_relative '../tree_farm_hand'
+require_relative 'C:\Users\b33791\RubymineProjects\DesignOS\tree_farm_hand.rb'
 
 module Patterns
   include Components
@@ -49,6 +49,7 @@ module Patterns
         end
       end
       super xml_node, args
+      @name = object_id
     end
 
     def description

@@ -1,12 +1,13 @@
 require_relative '../template'
 require 'minitest/autorun'
+SAMPLE_TEMPLATE = 'C:\Users\b33791\RubymineProjects\DesignOS\patterns\tests\xml\sample_template.xml'
 
 # tests term formatting - without regard to validity of evaluation
 class TemplateTest < MiniTest::Test
   include Patterns
   attr_reader :template
   def setup
-    @template = Template.new(File.read('xml/sample_template.xml'))
+    @template = Template.new SAMPLE_TEMPLATE
   end
 
   def test_sample_template_owner

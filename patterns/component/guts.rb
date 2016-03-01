@@ -3,6 +3,7 @@ require_relative '../../ext/xml'
 
 module Components
   module Guts
+    include Observable
     private
     # loads methods to run during initialize from a hash
     def exec_methods method_names
@@ -73,6 +74,15 @@ module Components
 
     def class_to_xml
       element self.simple_class
+    end
+
+    def report type, obj
+      if design_comp? && post_init?
+        add_observer template.history if template && count_observers == 0
+        changed
+        h = {parent: id, target: obj}
+        notify_observers type, h
+      end
     end
 
     def change_attr_value key, val

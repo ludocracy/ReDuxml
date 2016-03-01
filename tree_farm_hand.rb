@@ -24,7 +24,7 @@ module TreeFarmHand
 
   def resolve_str content_str, param_hash
     question = find_expr content_str
-    return if question.nil?
+    return content_str if question.nil?
     reply = Macro.new Symja.instance.evaluate(question, param_hash)
     replacement_str = reply.parameterized? ? reply : reply.demacro
     macro_string = Macro.new(question)
@@ -80,7 +80,12 @@ module TreeFarmHand
   def resolve_ref ref
     ref = ref.respond_to?(:id) ? ref[:ref] : ref
     return nil if ref.nil?
-    ref.match(Regexp.identifier) ? base_template.design.find_kansei(ref) : Patterns::Template.new(File.open(ref)).design
+    d = base_template.design
+    if ref.match(Regexp.identifier)
+      base_template.design.find_kansei(ref)
+    else
+      Patterns::Template.new(File.open(ref)).design
+    end
   end
 
   def get_inst_hierarchy node
@@ -97,8 +102,14 @@ module TreeFarmHand
     inst_hierarchy.each do |inst|
       if inst.params && inst.params.any?
         inst.params.each do |param|
-          next unless param[:name]
-          h[param[:name].to_sym] = param[:value]
+          param_name = param[:name]
+          next unless param_name
+          new_value = param[:value]
+          old_val = h[param_name.to_sym]
+          if old_val && old_val != new_value
+            param.value = new_value
+          end
+          h[param_name.to_sym] = new_value
         end
       end
     end
@@ -106,7 +117,7 @@ module TreeFarmHand
   end
 
   def add_kansei design
-    @kansei_array << Template.new(wrap design.xml)
+    @kansei_array << Patterns::Template.new(wrap design.xml)
   end
 
   def dead_node? node

@@ -50,7 +50,7 @@ class Symja
           result = result[:string]
           string_expr_or_false = true
         else
-          string_expr_or_false = true if val.parameterized?
+          string_expr_or_false = true if result.parameterized?
         end
       end
       result || identifier

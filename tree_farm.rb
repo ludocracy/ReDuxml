@@ -31,7 +31,10 @@ module Patterns
       if current_node.respond_to?(:params)
         ref_target = resolve_ref current_node[:ref]
         current_node.instantiate(ref_target).each do |new_node|
-          current_node << new_node unless new_node.parent === current_node
+          unless current_node.find_child(new_node.id) || current_node.id == new_node.id
+            current_node << new_node
+          end
+
         end
       end
     end
@@ -63,8 +66,7 @@ module Patterns
       parameterized_xml_nodes.each do |xml_node|
         param_hash = get_param_hash current_node
         content_str = xml_node.content.to_s
-        resolve_str content_str, param_hash
-        xml_node.content = resolved_str
+        xml_node.content = resolve_str content_str, param_hash
       end
       current_node
     end # def resolved_parameterized!
