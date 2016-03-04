@@ -8,18 +8,17 @@ class InterfaceTest < MiniTest::Test
   @e
   attr_reader :e
   def setup
-    @e = Component.new(%(<birdhouse color="red" size="large"/>))
+    @e = Component.new(%(<birdhouse id="birdhouse0" color="red" size="large"/>))
   end
 
   def test_to_s
-    answer = %(<birdhouse color="red" size="large"/>)
+    answer = %(<birdhouse color="red" id="birdhouse0" size="large"/>)
     assert_equal answer, e.to_s
   end
 
   def test_promote_attr
-    answer = %(<birdhouse size="large"><color>red</color></birdhouse>)
     e.promote(:color)
-    assert_equal answer, e.to_s
+    assert_equal 'color', e.first_child.type
   end
 
   def test_type
@@ -28,8 +27,8 @@ class InterfaceTest < MiniTest::Test
   end
 
   def test_add_child
-    answer = %(<birdhouse color="red" size="large"><material>pine</material></birdhouse>)
-    e << Component.new(%(<material>pine</material>))
+    answer = %(<birdhouse color="red" id="birdhouse0" size="large"><material id="id0">pine</material></birdhouse>)
+    e << Component.new(%(<material id="id0">pine</material>))
     assert_equal answer, e.to_s
   end
 
@@ -59,21 +58,21 @@ class InterfaceTest < MiniTest::Test
   end
 
   def test_stub
-    t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
+    t = Component.new(%(<birdhouse id="birdhouse0"><color/><material><wood>pine</wood></material></birdhouse>))
     s = t.stub
-    assert_equal %(<birdhouse/>), s.xml.to_s
+    assert_equal %(<birdhouse id="birdhouse0"/>), s.xml.to_s
     assert_equal 0, s.children.size
   end
 
   def test_remove
-    t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
+    t = Component.new(%(<birdhouse id="birdhouse0"><color id="abc"/><material><wood>pine</wood></material></birdhouse>))
     c = t.find_child('material')
     t.remove c
-    assert_equal %(<birdhouse><color/></birdhouse>), t.xml.to_s
+    assert_equal %(<birdhouse id="birdhouse0"><color id="abc"/></birdhouse>), t.xml.to_s
   end
 
   def test_get_parameterized_nodes
-    a = Component.new(%(<design><birdhouse attr="@(param)">@(pine)<color/><material><wood>pine</wood></material></birdhouse></design>))
+    a = Component.new(%(<design><birdhouse id="birdhouse0" attr="@(param)">@(pine)<color/><material><wood>pine</wood></material></birdhouse></design>))
     t = a.detached_subtree_copy
     s = []
     t.find_child(:birdhouse).parameterized_xml_nodes.each do |node| s << node.to_s end

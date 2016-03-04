@@ -39,7 +39,7 @@ module TreeFarmInterface
   def plant file
     xml = Nokogiri::XML File.read file
     t = Template.new(xml)
-    t.design.each do |node| t.grammar.validate node end
+    t.design.each do |node| t.grammar.validate node end unless t.grammar.nil?
     @kansei_array << t
     base_template
   end

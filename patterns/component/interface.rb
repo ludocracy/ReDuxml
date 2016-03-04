@@ -174,7 +174,7 @@ module Components
       old_id = id
       super new_id
       @xml_root_node[:id] = new_id
-      report :edit, {id: old_id}
+      report :change_attribute, {id: old_id} if design_comp?
     end
 
     def content= new_content

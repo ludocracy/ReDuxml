@@ -26,10 +26,11 @@ class HistoryTest < MiniTest::Test
   end
 
   def test_new_attr
-    t.design.find_child('targetiddxcz')[:new_attribute] = 'new value'
+    t
+    t.design.find_child('thing1')[:new_attribute] = 'new value'
     c = t.history.first
     assert_equal 'new_attribute', c.type
-    assert_equal %(Component 'targetiddxcz' of type 'thing' given new attribute 'new_attribute' with value 'new value'.), c.description
+    assert_equal %(Component 'thing1' of type 'thing' given new attribute 'new_attribute' with value 'new value'.), c.description
   end
 
   def test_new_content

@@ -18,7 +18,7 @@ module Patterns
       change_comp = change_class.new(nil, change_hash)
       add change_comp, 0
       @xml_root_node.prepend_child change_comp.xml
-      unless change_comp.type[-5..-1] == 'error'
+      unless change_comp.type[-5..-1] == 'error' || root.grammar.nil?
         root.grammar.qualify change_comp
       end
     end
@@ -52,7 +52,7 @@ module Patterns
       self[:date]
     end
 
-    def subject context_template=nil
+    def subject context_template=root
       resolve_ref :subject, context_template
     end
 
@@ -82,7 +82,7 @@ module Patterns
     end
 
     def inserted
-      resolve_ref :object
+      resolve_ref :object, root
     end
   end
 

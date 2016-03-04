@@ -70,7 +70,7 @@ module Components
     end
 
 
-    def class_to_xml
+    def class_to_xml args={}
       element self.simple_class, {id: self.simple_class+object_id.to_s}
     end
 

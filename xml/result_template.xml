@@ -2,33 +2,40 @@
 <template id="pruned">
         
         
-        <owners>
-          <owner id="chef_id">
-            
-          <name>module: Chef</name>
-</owner>
-        </owners>
         
-        <grammar/>
-        <history>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="p_test0.array_id3"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="iterator_test0.array_id3"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="p_test0.array_id2"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="iterator_test0.array_id2"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="p_test0.array_id1"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="iterator_test0.array_id1"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="p_test0"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="iterator_test0"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="test_instance_0_id.targetiddxcz"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="thing1"/>
-<insert date="2016-03-02 16:10:57 -0600" parent="design_id" target="targetiddxcz"/>
-          <insert id="change_0_id" owner="tree_farm">
+        
+        
+        <name id="name3040">temp_name</name>
+<version id="version3042">1.0</version>
+<owners id="owners3044">
+          
+        <owner id="chef_id">
+            
+          <name id="name3046">module: Chef</name>
+</owner>
+</owners>
+<description id="description3048">created by Chef module to wrap around non-DesignOS XML design</description>
+<grammar id="grammar3050"/>
+<history id="history3052">
+<insert date="2016-03-04 12:59:55 -0600" id="insert3078" object="p_test0.array_id3" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3076" object="iterator_test0.array_id3" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3074" object="p_test0.array_id2" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3072" object="iterator_test0.array_id2" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3070" object="p_test0.array_id1" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3068" object="iterator_test0.array_id1" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3066" object="p_test0" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3064" object="iterator_test0" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3062" object="test_instance_0_id.targetiddxcz" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3060" object="thing1" subject="design_id"/>
+<insert date="2016-03-04 12:59:55 -0600" id="insert3058" object="targetiddxcz" subject="design_id"/>
+          
+      <insert id="change_0_id" owner="tree_farm">
               
               
-          <description>created file</description>
-<date>2016-03-02 16:10:57 -0600</date>
+          <description id="description3054">created file</description>
+<date id="date3056">2016-03-04 12:59:55 -0600</date>
 </insert>
-      </history>
+</history>
 <design id="design_id">
         <!--null-->
     <thing id="targetiddxcz">something something</thing>
@@ -43,7 +50,4 @@
 <iterator_test id="iterator_test0.array_id3">4 is an iterator expression</iterator_test>
 <p_test id="p_test0.array_id3">1 is a design param expression</p_test>
 </design>
-<name>temp_name</name>
-<version>1.0</version>
-<description>created by Chef module to wrap around non-DesignOS XML design</description>
 </template>

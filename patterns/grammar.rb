@@ -61,7 +61,7 @@ module Patterns
     def qualify change
       children.each do |child|
         subj = change.subject root
-        if child[:subject] == subj.type
+        if subj && child[:subject] == subj.type
           child.qualify change
         end
       end
