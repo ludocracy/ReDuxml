@@ -20,7 +20,8 @@ module Patterns
       args.each do |key, val| self << Parameter.new(nil, {name: key, value: val}) end if children.empty?
     end
 
-    def [] target_key
+    def [] target_key=nil
+      return xml_root_node.attributes if target_key.nil?
       children.each do |param_node| return param_node[:value] if param_node[:name] == target_key.to_s  end
     end
 

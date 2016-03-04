@@ -10,7 +10,7 @@ class ComponentTest < MiniTest::Test
   end
 
   def test_init_nil
-   assert_raises (ArgumentError) do Component.new(nil) end
+   assert_equal 'component', Component.new(nil).type
   end
 
   def test_init_str

@@ -4,6 +4,19 @@ require_relative '../../ext/macro'
 module Components
   module Interface
     include Observable
+    include Comparable
+
+    def <=> comp
+      case size <=> comp.size
+        when -1 then -1
+        when 0 then xml_root_node.size <=> comp.xml_root_node.size
+        when 1 then 1
+      end
+    end
+
+    def is_component?
+      true
+    end
 
     def promote attr_key, args={}
       new_name = args[:element] || attr_key.to_s
@@ -77,7 +90,12 @@ module Components
       if_str.parameterized? || if_str == 'true' ? true : false
     end
 
-    # finds first near match child
+    def find_children type
+      a = []
+      children.each do |child| a << child if child.type == type.to_s end
+      a
+    end
+
     def find_child child_pattern, cur_comp = nil
         pattern = if child_pattern.is_a?(Array)
                     child_pattern.any? ? child_pattern.first : nil
@@ -105,7 +123,7 @@ module Components
         find_child(child_pattern[1..-1]) if child_pattern.is_a?(Array)
       end
       nil
-    end
+    end #def find_child
 
     # overriding TreeNode::content to point to XML head's content
     def content
@@ -116,13 +134,13 @@ module Components
       self[:id]
     end
 
-    def [] attr
-      xml_root_node[attr.to_s]
+    def [] attr=nil
+      attr.nil? ? xml_root_node.attributes : xml_root_node[attr.to_s]
     end
 
     def each &block
       super &block
-  end
+    end
 
     def << obj
       objs = obj.is_a?(Array) ? obj : [obj]
@@ -130,7 +148,7 @@ module Components
         new_kid = coerce node
         add new_kid
         @xml_cursor.add_child new_kid.xml_root_node
-        report :insert, node.id
+        report :insert, node if design_comp?
       end
     end
 

@@ -39,13 +39,11 @@ module Components
       end
     end
 
-    # child has a ruby class of its own
     def init_reserved child
       child_class = Patterns::const_get(child.name.capitalize)
-      add child_class.new(child, reserved: reserved_word_array)
+      self << child_class.new(child, reserved: reserved_word_array)
     end
 
-    # child is just XML - wrap it
     def init_generic child
       self << Component.new(child, reserved: reserved_word_array)
     end
@@ -73,14 +71,24 @@ module Components
 
 
     def class_to_xml
-      element self.simple_class
+      element self.simple_class, {id: self.simple_class+object_id.to_s}
+    end
+
+    def resolve_ref attr, context_template
+      ref = self[attr.to_sym]
+      return nil if ref.nil?
+      if ref.match(Regexp.identifier)
+        context_template.design.find_kansei(ref)
+      else
+        Patterns::Template.new(File.open(ref)).design
+      end
     end
 
     def report type, obj
-      if design_comp? && post_init?
+      if post_init? || respond_to?(:qualify)
         add_observer template.history if template && count_observers == 0
         changed
-        h = {parent: id, target: obj}
+        h = {subject: self, object: obj}
         notify_observers type, h
       end
     end
@@ -96,7 +104,6 @@ module Components
                       change_type = :new_attribute
                       :nil
                     end
-
           @xml_root_node[key] = val
           report change_type, {old_value: old_val, new_value: val, attr_name: key.to_s}
       end

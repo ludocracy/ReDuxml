@@ -28,16 +28,16 @@ class DesignTest < MiniTest::Test
   end
 
   def test_instance_instantiate
-    i = Instance.new(%(<instance id="outer"><child/></instance>))
+    i = Instance.new(%(<instance id="outer"><child id="child0"/></instance>))
     c = i.instantiate nil
-    assert_equal 'child', c.first.name
+    assert_equal 'child0', c.first.name
   end
 
   def test_instance_instantiate_params
-    i = Instance.new(%(<instance id="outer"><parameters><parameter name="param" value="10"/></parameters><child></child></instance>))
+    i = Instance.new(%(<instance id="outer"><parameters><parameter name="param" value="10"/></parameters><child id="child0"></child></instance>))
     c = i.instantiate nil
     assert c.size == 1
-    assert_equal 'child', c.first.name
+    assert_equal 'child0', c.first.name
   end
 
   def test_array_instantiate

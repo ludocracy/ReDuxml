@@ -19,6 +19,11 @@ class TemplateTest < MiniTest::Test
     assert_equal 'insert', a
   end
 
+  def test_sample_template_grammar
+    a = template.grammar.children.first.type
+    assert_equal 'rule', a
+  end
+
   def test_sample_template_design
     assert_equal 'test_instance_0_id', template.design.find_child(:instance).id
   end

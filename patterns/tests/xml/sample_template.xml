@@ -11,6 +11,9 @@
         </owner>
     </owners>
     <description>This should be allowed.</description>
+    <grammar>
+        <rule id="rule_0" subject="thing">subject.content != 'something something'</rule>
+    </grammar>
     <history>
         <insert id="change_0_id" date="2015-08-20T19:20:30+01:00" target="design_id" previous="" owner="b33791">
             <description>created file</description>

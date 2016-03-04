@@ -16,8 +16,9 @@ module Patterns
       p.simple_class == 'parameters' ? p : []
     end
 
-    def instantiate target=nil
+    def instantiate target_template=nil
       new_kids = []
+      target = resolve_ref :ref, target_template
       if target.nil?
         children.each do |child|
           new_kids << child if child.simple_class != 'parameters'
@@ -32,7 +33,7 @@ module Patterns
   end
 
   class Design < Instance
-    def instantiate target=nil
+    def instantiate
       [self]
     end
 
@@ -49,9 +50,8 @@ module Patterns
   class Link < Instance
     attr_reader :ref
 
-    def instantiate target
-      raise Exception if target.nil?
-      @ref = target
+    def instantiate target=nil
+      resolve_ref nil, target
       self
     end
   end
@@ -60,7 +60,7 @@ module Patterns
   class Array < Instance
     include Enumerable
 
-    def instantiate target=nil
+    def instantiate target_template=nil
       size_expr = size.respond_to?(:to_i) ? size.to_i : size.to_s
       if size_expr.is_a? Fixnum
         iterator_index = 0

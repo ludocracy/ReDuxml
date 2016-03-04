@@ -30,7 +30,7 @@
                 <parameter name="derived_param" value="@(monkey)"/>
                 <parameter name="derived_resolvable" value="@(param0+20)"/>
             </parameters>
-            <blah>
+            <blah id="blah">
                 <p_test id="resolvable">@(derived_resolvable) is a derived resolved value</p_test>
                 <p_test id="unresolvable">@(derived_param) is a derived unresolved value</p_test>
             </blah>

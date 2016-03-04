@@ -49,6 +49,7 @@ module TreeFarmHand
           </owner>
         </owners>
         <description>created by Chef module to wrap around non-DesignOS XML design</description>
+        <grammar/>
         <history>
           <insert id="change_0_id" owner="tree_farm">
               <description>created file</description>
@@ -74,17 +75,6 @@ module TreeFarmHand
     else
       r = resolve_parameterized!(current_node, :if)
       r.if?
-    end
-  end
-
-  def resolve_ref ref
-    ref = ref.respond_to?(:id) ? ref[:ref] : ref
-    return nil if ref.nil?
-    d = base_template.design
-    if ref.match(Regexp.identifier)
-      base_template.design.find_kansei(ref)
-    else
-      Patterns::Template.new(File.open(ref)).design
     end
   end
 

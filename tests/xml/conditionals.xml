@@ -27,6 +27,6 @@
         </parameters>
         <conditional_comp id="should_be_false" if="@(param0 &gt; 0)">This component should NOT appear in the output!</conditional_comp>
         <conditional_comp id="should_be_true" if="@(param0 == 0)">This component SHOULD appear in the output!</conditional_comp>
-        <unconditional_comp>This component should ALSO appear in the output!</unconditional_comp>
+        <unconditional_comp id="unconditional_comp0">This component should ALSO appear in the output!</unconditional_comp>
     </design>
 </template>

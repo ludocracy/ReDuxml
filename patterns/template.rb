@@ -1,6 +1,7 @@
 require_relative 'component/component'
 require_relative 'history'
 require_relative 'design'
+require_relative 'grammar'
 
 module Patterns
   include Components
@@ -9,11 +10,15 @@ module Patterns
     def initialize xml_node, args = {}
       xml_node = Nokogiri::XML File.open xml_node if xml_node.is_a?(String)
       xml_node = xml_node.root if xml_node.respond_to?(:root)
-      super xml_node, reserved: %w(owners history design)
+      super xml_node, reserved: %w(owners history grammar design)
     end
 
     def history
       find_child 'history'
+    end
+
+    def grammar
+      find_child 'grammar'
     end
 
     def design

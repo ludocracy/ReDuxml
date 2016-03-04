@@ -50,6 +50,14 @@ class InterfaceTest < MiniTest::Test
     assert_equal 'pine', t.find_child(%w(material wood)).content
   end
 
+  def test_find_children
+    t = Component.new(%(<birdhouse><color/><material><wood id="part0">pine</wood><wood id="part1">oak</wood><nails id="part3">steel</wood></material></birdhouse>))
+    woods = t.last_child.find_children :wood
+
+    assert_equal 'wood', woods.last.type
+    assert_equal 2, woods.size
+  end
+
   def test_stub
     t = Component.new(%(<birdhouse><color/><material><wood>pine</wood></material></birdhouse>))
     s = t.stub

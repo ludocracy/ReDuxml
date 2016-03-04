@@ -29,12 +29,10 @@ module Patterns
     def instantiate! current_node
       @cursor = current_node
       if current_node.respond_to?(:params)
-        ref_target = resolve_ref current_node[:ref]
-        current_node.instantiate(ref_target).each do |new_node|
+        current_node.instantiate(base_template).each do |new_node|
           unless current_node.find_child(new_node.id) || current_node.id == new_node.id
             current_node << new_node
           end
-
         end
       end
     end

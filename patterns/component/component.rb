@@ -32,12 +32,11 @@ module Components
     alias_method :id, :name
 
     def initialize xml_node, args={}
-      raise ArgumentError unless @xml_root_node = xml_node.xml
       @reserved_word_array = args[:reserved] || []
-      @xml_cursor ||= xml_root_node
-      id = xml_root_node[:id] || xml_root_node[:name] || xml_root_node.name
+      @xml_root_node = @xml_cursor = xml_node.nil? ? class_to_xml(args) : xml_node.xml
+      xml_root_node[:id] ||= xml_root_node.name+object_id.to_s
       # must happen before traverse to have @children/@children_hash available
-      super id, xml_root_node.content
+      super xml_root_node[:id], xml_root_node.content
       # traverse and load Component from xml
       traverse_xml exec_methods %w(do_nothing init_reserved init_generic)
     end # end of Component::initialize(xml_node, args={})

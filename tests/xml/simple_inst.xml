@@ -28,7 +28,7 @@
         </parameters>
         <!-- example of where you could add design data -->
         <some_component id="reftarget">this is a design component</some_component>
-        <blah>
+        <blah id="blah">
             <instance id="simpleinst" ref="reftarget"/>
         </blah>
     </design>

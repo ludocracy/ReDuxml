@@ -1,5 +1,4 @@
-require_relative 'component/component'
-require_relative 'C:\Users\b33791\RubymineProjects\DesignOS\tree_farm_hand.rb'
+require_relative '../patterns/grammar'
 
 module Patterns
   include Components
@@ -7,16 +6,21 @@ module Patterns
   class History < Component
     include Enumerable
 
+    attr_reader :rules
+
     def initialize xml_node=nil, args={}
       xml_node = %(<history><insert id="change_0" owner="system"><description>file created</description><date>#{Time.now.to_s}</date></insert></history>) if xml_node.nil?
       super xml_node, reserved: %w(insert remove change_content change_attribute new_content new_attribute error correction instantiate move undo)
     end
 
-    def update type, change
+    def update type, change_hash
       change_class = Patterns::const_get type.to_s.classify
-      change_comp = change_class.new(nil, change)
+      change_comp = change_class.new(nil, change_hash)
       add change_comp, 0
       @xml_root_node.prepend_child change_comp.xml
+      unless change_comp.type[-5..-1] == 'error'
+        root.grammar.qualify change_comp
+      end
     end
 
     def each &block
@@ -32,24 +36,11 @@ module Patterns
     end
   end
 
-  # individual change; not to be used, only for subclassing
-  class Change < Component
-    include TreeFarmHand
-
-    def initialize xml_node, args = {}
-      if xml_node.nil?
-        xml_node = class_to_xml
-        xml_node[:date] = Time.now.to_s
-        args.each do |key, val|
-          if val.is_a?(Hash)
-            val.each do |k, v| xml_node << element(k.to_s, nil, v) end
-          else
-            xml_node << element(key.to_s, nil, val)
-          end
-        end
-      end
-      super xml_node, args
-      @name = object_id
+  class Change < Pattern
+    def class_to_xml args={}
+      xml_node = super args
+      xml_node[:date] = Time.now.to_s
+      xml_node
     end
 
     def description
@@ -61,38 +52,37 @@ module Patterns
       self[:date]
     end
 
-    def affected_parent
-      resolve_ref find_child(:parent).content
+    def subject context_template=nil
+      resolve_ref :subject, context_template
     end
 
     def base_template
       root
     end
-
-    def target
-      targe = find_child(:target)
-      targe = targe.children.first if targe.has_children?
-      targe
-    end
   end
 
   class Remove < Change
+    def class_to_xml args={}
+      super(args) << args[:object].xml
+    end
+
     def description
-      super || %(Component '#{removed.id}' of type '#{removed.type}' was removed from component '#{affected_parent.id}' of type '#{affected_parent.type}'.)
+      super ||
+          %(Component '#{removed.id}' of type '#{removed.type}' was removed from component '#{subject.id}' of type '#{subject.type}'.)
     end
 
     def removed
-      find_child(:target).children.first
+      object
     end
   end
 
   class Insert < Change
     def description
-      super || %(Component '#{inserted.id}' of type '#{inserted.type}' was added to component '#{affected_parent.id}' of type '#{affected_parent.type}'.)
+      super || %(Component '#{inserted.id}' of type '#{inserted.type}' was added to component '#{subject.id}' of type '#{subject.type}'.)
     end
 
     def inserted
-      resolve_ref find_child(:target).content
+      resolve_ref :object
     end
   end
 
@@ -103,69 +93,66 @@ module Patterns
   end
 
   class ChangeContent < Edit
+    def class_to_xml args={}
+      xml_node = super
+      xml_node.content = args[:object].to_s
+      xml_node
+    end
+
     def description
       super
-      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' changed content from '#{old_content}' to '#{new_content}'."
+      "Component '#{subject.id}' of type '#{subject.type}' changed content from '#{old_content}' to '#{new_content}'."
     end
 
     def old_content
-      target.content
+      content
     end
 
     def new_content
-      affected_parent.content
+      subject.content
     end
   end
 
   class ChangeAttribute < Edit
+    def class_to_xml args={}
+      xml_node = super args
+      args[:object].each do |k, v| xml_node[k] = v end if args[:object].is_a?(Hash)
+      xml_node
+    end
+
     def description
       super
-      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' changed attribute '#{attr_name}' value from '#{old_value}' to '#{new_value}'."
-    end
-
-    def old_value
-      find_child(:old_value).content
-    end
-
-    def new_value
-      affected_parent[attr_name.to_sym]
-    end
-
-    def attr_name
-      find_child(:attr_name).content
+      "Component '#{subject.id}' of type '#{subject.type}' changed attribute '#{self[:attr_name]}' value from '#{self[:old_value]}' to '#{self[:new_value]}'."
     end
   end
 
   class NewContent < Edit
-
     def description
       super
-      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' given new content '#{new_content}'."
+      "Component '#{subject.id}' of type '#{subject.type}' given new content '#{new_content}'."
     end
 
     def new_content
-      affected_parent.content
+      subject.content
     end
   end
 
   class NewAttribute < Edit
+    def class_to_xml args={}
+      xml_node = super args
+      args[:object].each do |k, v| xml_node[k] = v end if args[:object].is_a?(Hash)
+      xml_node
+    end
+
     def description
       super
-      "Component '#{affected_parent.id}' of type '#{affected_parent.type}' given new attribute '#{new_attr_name}' with value '#{new_attr_value}'."
-    end
-
-    def new_attr_name
-      find_child(:attr_name).content
-    end
-
-    def new_attr_value
-      find_child(:new_value).content
+      "Component '#{subject.id}' of type '#{subject.type}' given new attribute '#{self[:attr_name]}' with value '#{self[:new_value]}'."
     end
   end
 
   class Undo < Change
     def description
-      super || "#{target_full_name} removed from #{parent_full_name}."
+      super || "#{subject.id} undone."
     end
 
     def undone_change
@@ -174,8 +161,32 @@ module Patterns
   end
 
   class Error < Change
+    def initialize xml_node, args={}
+      super xml_node, args
+    end
+
+    def violated_rule
+      root.rules[self[:rule]]
+    end
+  end
+
+  class ValidateError < Error
     def description
-      super || "#{target_full_name} removed from #{parent_full_name}."
+      super || "#{non_compliant_change.description} which violates rule: #{violated_rule.description}."
+    end
+
+    def non_compliant_change
+      root.history.find_child self[:object]
+    end
+  end
+
+  class QualifyError < Error
+    def description
+      super || "#{non_compliant_pattern.description} which violates rule: #{violated_rule.description}."
+    end
+
+    def non_compliant_object
+      object
     end
   end
 end # end of module Patterns
