@@ -10,10 +10,18 @@ class Parameters < DuxObject
 
   def initialize xml_node=nil, args = {}
     if xml_node.nil?
-      xml_node = class_to_xml
+      xml_node = class_to_xml args
     end
     super xml_node, reserved: %w(parameter)
-    args.each do |key, val| self << Parameter.new(nil, {name: key, value: val}) end if children.empty?
+    sleep 0
+  end
+
+  def class_to_xml args
+    xml_node = super
+    args.each do |key, val|
+      xml_node << element('parameter', {name: key, value: val})
+    end
+    xml_node
   end
 
   def [] target_key=nil

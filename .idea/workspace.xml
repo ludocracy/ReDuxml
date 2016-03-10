@@ -2,17 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c65e4c82-27d6-4cfa-af17-a8f13af3e506" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ext/macro.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ext/tests/macro_test.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/array_inst.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/component_collision.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/conditionals.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/derived_params.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/fraternal_twins.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/inline_param.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/param_override.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/xml/simple_inst.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dux/tests/meta_test.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java" afterPath="$PROJECT_DIR$/java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dux/meta.rb" afterPath="$PROJECT_DIR$/dux/meta.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dux/parameters.rb" afterPath="$PROJECT_DIR$/dux/parameters.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/java/symja_android_library/matheclipse-parser/src/main/resources/operators.txt" afterPath="$PROJECT_DIR$/java/symja_android_library/matheclipse-parser/src/main/resources/operators.txt" />
     </list>
     <ignored path="DesignOS.iws" />
@@ -25,17 +21,20 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="ChangesViewManager" flattened_view="false" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__tree_farm_test___DesignOS.coverage" NAME="Run test 'tree_farm_test': DesignOS Coverage Results" MODIFIED="1457117964431" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@All_tests_in_tests__DesignOS__1_.coverage" NAME="All tests in tests: DesignOS (1) Coverage Results" MODIFIED="1456789951407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/component/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@All_tests_in_tests__DesignOS__2_.coverage" NAME="All tests in tests: DesignOS (2) Coverage Results" MODIFIED="1456789969750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__interface_test___DesignOS.coverage" NAME="Run test 'interface_test': DesignOS Coverage Results" MODIFIED="1456879358612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/component/tests" MODULE_NAME="DesignOS" />
+    <SUITE FILE_PATH="coverage/DesignOS@All_tests_in_Dux__Dux.coverage" NAME="All tests in Dux: Dux Coverage Results" MODIFIED="1457572239219" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Dux" MODULE_NAME="Dux" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__grammar_test___DesignOS.coverage" NAME="Run test 'grammar_test': DesignOS Coverage Results" MODIFIED="1457122746510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/tests" MODULE_NAME="DesignOS" />
+    <SUITE FILE_PATH="coverage/DesignOS@Run_test__meta_test___DesignOS.coverage" NAME="Run test 'meta_test': DesignOS Coverage Results" MODIFIED="1457574065378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dux/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__template_test___DesignOS.coverage" NAME="Run test 'template_test': DesignOS Coverage Results" MODIFIED="1456940669603" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__rules_test___DesignOS.coverage" NAME="Run test 'rules_test': DesignOS Coverage Results" MODIFIED="1456938168465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__history_test___DesignOS.coverage" NAME="Run test 'history_test': DesignOS Coverage Results" MODIFIED="1457117154487" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__design_test___DesignOS.coverage" NAME="Run test 'design_test': DesignOS Coverage Results" MODIFIED="1456939448140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns/tests" MODULE_NAME="DesignOS" />
+    <SUITE FILE_PATH="coverage/DesignOS@Run_test__design_os_test___DesignOS.coverage" NAME="Run test 'design_os_test': DesignOS Coverage Results" MODIFIED="1457572071375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@All_tests_in_patterns__DesignOS.coverage" NAME="All tests in patterns: DesignOS Coverage Results" MODIFIED="1456861995665" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/patterns" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__object2xml_test___DesignOS.coverage" NAME="Run test 'object2xml_test': DesignOS Coverage Results" MODIFIED="1456784997238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ext/tests" MODULE_NAME="DesignOS" />
     <SUITE FILE_PATH="coverage/DesignOS@Run_test__xml_test___DesignOS.coverage" NAME="Run test 'xml_test': DesignOS Coverage Results" MODIFIED="1456940616190" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ext/tests" MODULE_NAME="DesignOS" />
@@ -52,11 +51,51 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="design_os_test.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/design_os_test.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="meta_test.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dux/tests/meta_test.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="parameters.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dux/parameters.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="design.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/dux/design.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.10855683">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="meta.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dux/meta.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -83,8 +122,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ext/tests/ast_expand_test.rb" />
-        <option value="$PROJECT_DIR$/java/symja_android_library/matheclipse-parser/src/main/resources/operators.txt" />
         <option value="$PROJECT_DIR$/ext/array.rb" />
         <option value="$PROJECT_DIR$/ext/tests/symja_test.rb" />
         <option value="$PROJECT_DIR$/ext/symja_ternary_rewriter.rb" />
@@ -132,6 +169,10 @@
         <option value="$PROJECT_DIR$/patterns/grammar.rb" />
         <option value="$PROJECT_DIR$/patterns/history.rb" />
         <option value="$PROJECT_DIR$/patterns/tests/grammar_test.rb" />
+        <option value="$PROJECT_DIR$/../Dux/dux/meta.rb" />
+        <option value="$PROJECT_DIR$/dux/tests/meta_test.rb" />
+        <option value="$PROJECT_DIR$/dux/parameters.rb" />
+        <option value="$PROJECT_DIR$/dux/meta.rb" />
       </list>
     </option>
   </component>
@@ -180,48 +221,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DesignOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="xml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -229,11 +228,12 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="project.propDebugger" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.ruby.settings.RubyActiveModuleSdkConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Dita" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Dux" />
     <property name="editor.config.accepted" value="true" />
+    <property name="project.settings.patched" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -243,7 +243,7 @@
       <recent name="C:\Users\b33791\RubymineProjects\DesignOS\xml" />
     </key>
   </component>
-  <component name="RunManager" selected="Test::Unit/Shoulda/Minitest.Run test 'grammar_test': DesignOS">
+  <component name="RunManager" selected="Test::Unit/Shoulda/Minitest.Run test 'meta_test': DesignOS">
     <configuration default="false" name="Run test 'design_os_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest" temporary="true">
       <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
       <module name="DesignOS" />
@@ -260,56 +260,6 @@
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/tests/design_os_test.rb" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Run test 'tree_farm_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest" temporary="true">
-      <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
-      <module name="DesignOS" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$/tests" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <envs>
-        <env name="JRUBY_OPTS" value="-X+O" />
-      </envs>
-      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/tests/tree_farm_test.rb" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Run test 'history_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest" temporary="true">
-      <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
-      <module name="DesignOS" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$/patterns/tests" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <envs>
-        <env name="JRUBY_OPTS" value="-X+O" />
-      </envs>
-      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/patterns/tests/history_test.rb" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -344,11 +294,11 @@
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
       <method />
     </configuration>
-    <configuration default="false" name="Run test 'grammar_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest" temporary="true">
+    <configuration default="false" name="Run test 'meta_test': DesignOS" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest" temporary="true">
       <predefined_log_file id="RUBY_TESTUNIT" enabled="true" />
       <module name="DesignOS" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$/patterns/tests" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$/dux/tests" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
@@ -359,7 +309,7 @@
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
       <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/patterns/tests/grammar_test.rb" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/dux/tests/meta_test.rb" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -497,20 +447,17 @@
       <envs />
       <method />
     </configuration>
-    <list size="6">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'rewriter_test': DesignOS" />
       <item index="1" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'design_os_test': DesignOS" />
-      <item index="2" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'tree_farm_test': DesignOS" />
-      <item index="3" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'history_test': DesignOS" />
-      <item index="4" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.All tests in DesignOS: DesignOS" />
-      <item index="5" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'grammar_test': DesignOS" />
+      <item index="2" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.All tests in DesignOS: DesignOS" />
+      <item index="3" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'meta_test': DesignOS" />
     </list>
     <recent_temporary>
-      <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.All tests in DesignOS: DesignOS" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'meta_test': DesignOS" />
         <item index="1" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'design_os_test': DesignOS" />
-        <item index="2" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'grammar_test': DesignOS" />
-        <item index="3" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.Run test 'tree_farm_test': DesignOS" />
+        <item index="2" class="java.lang.String" itemvalue="Test::Unit/Shoulda/Minitest.All tests in DesignOS: DesignOS" />
       </list>
     </recent_temporary>
   </component>
@@ -525,39 +472,45 @@
       <option name="number" value="Default" />
       <updated>1448244029841</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="some fixes related to loading external xml">
+      <created>1457572218258</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1457572218258</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="All_tests_in_DesignOS__DesignOS - 2016.03.04 at 12h 33m 50s.xml">
-      <configuration name="All tests in DesignOS: DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 27m 13s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="All_tests_in_DesignOS__DesignOS - 2016.03.04 at 12h 46m 19s.xml">
-      <configuration name="All tests in DesignOS: DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 28m 27s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="All_tests_in_DesignOS__DesignOS - 2016.03.04 at 12h 53m 35s.xml">
-      <configuration name="All tests in DesignOS: DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 29m 13s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="All_tests_in_DesignOS__DesignOS - 2016.03.04 at 12h 59m 56s.xml">
-      <configuration name="All tests in DesignOS: DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 32m 39s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Run_test__grammar_test___DesignOS - 2016.03.04 at 13h 09m 14s.xml">
-      <configuration name="Run test 'grammar_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 33m 10s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Run_test__history_test___DesignOS - 2016.03.04 at 12h 44m 44s.xml">
-      <configuration name="Run test 'history_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 33m 24s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Run_test__history_test___DesignOS - 2016.03.04 at 12h 46m 03s.xml">
-      <configuration name="Run test 'history_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 35m 56s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Run_test__tree_farm_test___DesignOS - 2016.03.04 at 12h 47m 01s.xml">
-      <configuration name="Run test 'tree_farm_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 38m 41s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Run_test__tree_farm_test___DesignOS - 2016.03.04 at 12h 58m 52s.xml">
-      <configuration name="Run test 'tree_farm_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 40m 34s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="Run_test__tree_farm_test___DesignOS - 2016.03.04 at 12h 59m 41s.xml">
-      <configuration name="Run test 'tree_farm_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
+    <history-entry file="Run_test__meta_test___DesignOS - 2016.03.09 at 19h 41m 17s.xml">
+      <configuration name="Run test 'meta_test': DesignOS" configurationId="TestUnitRunConfigurationType" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
@@ -566,6 +519,7 @@
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16323908" sideWeight="0.49506173" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292232" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -603,6 +557,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="some fixes related to loading external xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="some fixes related to loading external xml" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -635,11 +593,31 @@
           <line>109</line>
           <option name="timeStamp" value="438" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="ruby-line">
+          <url>file://$PROJECT_DIR$/dux/tests/meta_test.rb</url>
+          <line>12</line>
+          <option name="timeStamp" value="507" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="ruby-line">
+          <url>file://$PROJECT_DIR$/dux/tests/meta_test.rb</url>
+          <line>13</line>
+          <option name="timeStamp" value="508" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="ruby-line">
+          <url>file://$PROJECT_DIR$/dux/design.rb</url>
+          <line>5</line>
+          <option name="timeStamp" value="515" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="ruby-line">
+          <url>file://$PROJECT_DIR$/../Dux/dux/dux_object/guts.rb</url>
+          <line>46</line>
+          <option name="timeStamp" value="516" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="498" />
+      <option name="time" value="517" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="TestUnitRunConfigurationType">
@@ -688,6 +666,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -749,6 +728,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="2046" column="8" selection-start-line="2046" selection-start-column="8" selection-end-line="2046" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -777,6 +757,94 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/design_os.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="58" selection-start-line="3" selection-start-column="58" selection-end-line="3" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Dux/dux/tests/meta_test.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2630561">
+          <caret line="8" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Dux/dux.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.39458415">
+          <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/design_os_test.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dux/tests/xml/sample_dux.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Dux/dux/meta.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dux/meta.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dux/tests/meta_test.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dux/parameters.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Dux/dux/dux_object/guts.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dux/design.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.10855683">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>

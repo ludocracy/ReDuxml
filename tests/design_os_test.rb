@@ -3,6 +3,8 @@ require 'minitest/autorun'
 
 class DuxerTest < MiniTest::Test
   SAMPLE_DUX = File.expand_path(File.dirname(__FILE__) + '/../tests/xml/sample_dux.xml')
+  RESULT_DUX = File.expand_path(File.dirname(__FILE__) + '/../tests/xml/result_dux.xml')
+
   # Called before every test method runs. Can be used
   # to set up fixture information.
 
@@ -47,7 +49,6 @@ class DuxerTest < MiniTest::Test
   end
 
   def test_save_dux
-    skip
     g = Duxer.new
     g.load File.expand_path(File.dirname(__FILE__) + '/xml/inline_param.xml')
     g.resolve
