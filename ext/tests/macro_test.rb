@@ -1,4 +1,6 @@
-require_relative '../macro'
+require File.expand_path(File.dirname(__FILE__) +  '/../macro')
+require File.expand_path(File.dirname(__FILE__) +  '/../string')
+
 require 'minitest/autorun'
 
 class MacroTest < MiniTest::Test

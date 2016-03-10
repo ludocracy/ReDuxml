@@ -1,3 +1,4 @@
+require_relative '../../../Dux/ext/regexp'
 require_relative '../symja'
 require 'minitest/autorun'
 

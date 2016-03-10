@@ -1,0 +1,45 @@
+<meta id="template_id">
+    <!-- sample of template file without any design data (need to namespace in sub schema) -->
+    <name>Template example</name>
+    <version>0.9</version>
+    <owners>
+        <owner id="b33791">
+            <name>Peter Kong</name>
+        </owner>
+        <owner id="dummy_owner_id">
+            <name>asdf fdsd</name>
+        </owner>
+    </owners>
+    <description>This should be allowed.</description>
+    <grammar>
+        <rule id="rule_0" subject="thing">subject.content != 'something something'</rule>
+    </grammar>
+    <history>
+        <insert id="change_0_id" date="2015-08-20T19:20:30+01:00" target="design_id" previous="" owner="b33791">
+            <description>created file</description>
+        </insert>
+    </history>
+    <design id="design_id">
+        <parameters>
+            <parameter name="param0" value="1">
+                <description>param0 is an integer and will be tested against the instance below</description>
+            </parameter>
+        </parameters>
+        <!-- example of where you could add design data -->
+        <instance visible="debug !customer" id="test_instance_0_id" ref="targetiddxcz" if="@(param0 &gt; 0)">
+            <parameters>
+                <parameter name="instance_param_0" value="fff">
+                    <description>what this param is about</description>
+                </parameter>
+            </parameters>
+        </instance>
+        <thing id="targetiddxcz">something something</thing>
+        <thing id="thing1"/>
+        <array size="4" id="array_id">
+            <!-- example of where you could add design data -->
+            <instance id="thisid" ref="targetid"/>
+            <iterator_test id="iterator_test0">@(iterator+1) is an iterator expression</iterator_test>
+            <p_test id="p_test0">@(param0) is a design param expression</p_test>
+        </array>
+    </design>
+</meta>

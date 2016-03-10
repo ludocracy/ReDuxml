@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="C:\Users\b33791\RubymineProjects\DesignOS\rng\design.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<template xmlns="" id="template_id">
-    <!-- sample of template file without any design data (need to namespace in sub schema) -->
+<meta xmlns="" id="meta_id">
+    <!-- sample of meta file without any design data (need to namespace in sub schema) -->
     <name>Template example</name>
     <version>0.9</version>
     <owners>
@@ -13,8 +13,9 @@
         </owner>
     </owners>
     <description>tests simple instantiation</description>
+    <grammar/>
     <history>
-        <insert id="change_0_id" change_ids="template_id" previous="" owner="b33791">
+        <insert id="change_0_id">
             <description>created file</description>
             <date>2015-08-20T19:20:30+01:00</date>
         </insert>
@@ -32,4 +33,4 @@
             <instance id="simpleinst" ref="reftarget"/>
         </blah>
     </design>
-</template>
+</meta>

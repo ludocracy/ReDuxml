@@ -24,7 +24,7 @@ module SymjaTernaryRewriters
     expr.match(/(->|:>)/) ? evalengine.parse(expr) : expr
   end
 
-  # rewrite this and next method later to use Symja's visitors/patterns/replacement etc
+  # rewrite this and next method later to use Symja's visitors/dux/replacement etc
   def rewrite_ternary_ast_to_if_3 expr
     if expr.respond_to?(:isAST) && expr.isAST
       build_ternary_ast_stack expr

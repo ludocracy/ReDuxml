@@ -1,5 +1,5 @@
-require_relative '../ext/regexp'
-require_relative '../ext/string'
+require File.expand_path(File.dirname(__FILE__) +  '/../../Dux/ext/regexp')
+require File.expand_path(File.dirname(__FILE__) +  '/string')
 
 class Macro < String
   def initialize str
