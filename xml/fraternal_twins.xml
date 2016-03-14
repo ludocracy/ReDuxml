@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?> <design id="design_id" logics="logic">
+        <instance id="instance_0">
+            <parameters>
+                <parameter name="param0" value="0"/>
+            </parameters>
+            <description>for this instance, param0 == @(param0)</description>
+        </instance>
+        <instance id="instance_1">
+            <parameters>
+                <parameter name="param0" value="10"/>
+            </parameters>
+            <description>but for this instance, param0 == @(param0)</description>
+        </instance>
+    </design>

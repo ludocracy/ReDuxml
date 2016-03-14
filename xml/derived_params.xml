@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <design id="design_id" logics="logic">
+        <parameters>
+            <parameter name="param0" value="10">
+                <description>param0 is an integer and will be tested against the instance below</description>
+            </parameter>
+        </parameters>
+        <instance id="param_overrides_inst">
+            <parameters>
+                <parameter name="derived_param" value="@(monkey)"/>
+                <parameter name="derived_resolvable" value="@(param0+20)"/>
+            </parameters>
+            <blah id="blah">
+                <p_test id="resolvable">@(derived_resolvable) is a derived resolved value</p_test>
+                <p_test id="unresolvable">@(derived_param) is a derived unresolved value</p_test>
+            </blah>
+        </instance>
+    </design>

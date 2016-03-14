@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+        <parameters>
+            <parameter name="param0" value="0">
+                <description>param0 is an integer and will be tested against the instance below</description>
+            </parameter>
+        </parameters>
+        <!-- example of where you could add design data -->
+        <some_component id="overriding">this component thinks param0 = @(param0)</some_component>
+        <instance id="param_overrides_inst">
+            <parameters>
+                <parameter name="param0" value="10"/>
+            </parameters>
+            <some_component id="overridden">this component should also say param0 = @(param0)</some_component>
+        </instance>
+    </design>

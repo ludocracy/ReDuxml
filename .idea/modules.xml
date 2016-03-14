@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DesignOS.iml" filepath="$PROJECT_DIR$/.idea/DesignOS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Dux/.idea/Dux.iml" filepath="$PROJECT_DIR$/../Dux/.idea/Dux.iml" />
     </modules>
   </component>
 </project>

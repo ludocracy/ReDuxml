@@ -1,0 +1,13 @@
+<meta id="temp_id">
+            
+            <grammar id="grammar2098"/><history id="history2100">
+              
+          <add id="change_0">
+                  
+                  
+              <description id="description2102">initial commit</description><date id="date2104">2016-03-14 16:25:13 -0500</date></add></history>
+
+    <grammar>
+        <rule id="rule_0" subject="thing">subject.content != 'something something'</rule>
+    </grammar>
+    </meta>
