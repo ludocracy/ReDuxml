@@ -9,6 +9,18 @@ class ParameterizationTest < MiniTest::Test
     @e = Dux::Object.new(%(<birdhouse id="birdhouse0" color="red" size="large"/>))
   end
 
+  def test_stub
+    t = Dux::Object.new(%(<birdhouse id="birdhouse0"><color/><material><wood>pine</wood></material></birdhouse>))
+    s = t.stub
+    assert_equal %(<birdhouse id="birdhouse0"/>), s.xml.to_s
+    assert_equal 0, s.children.size
+  end
+
+  def test_promote_attr
+    e.promote(:color)
+    assert_equal 'color', e.first_child.type
+  end
+
   def test_get_parameterized_nodes
     a = Dux::Object.new(%(<design><birdhouse id="birdhouse0" attr="@(param)">@(pine)<color/><material><wood>pine</wood></material></birdhouse></design>))
     t = a.detached_subtree_copy
