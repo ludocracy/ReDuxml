@@ -1,12 +1,16 @@
+# in lieu of proper understanding of Symja's java hooks
+# this module attempts to handle missing ternary operator
+# by first tricking Symja into reading ternary symbols as other operators of similar precedence
+# then reordering AST to represent If statement instead
 module SymjaTernaryRewriters
   # needed because Symja already has uses for '?' and ':'
-  # using roughly equivalent precedence operators instead
-  def rewrite_ternary_to_placeholder_0 expr
+  # using roughly equivalent precedence operators '->' and ':>' instead
+  def rewrite_ternary_to_placeholder_0(expr)
     expr.gsub(/(\?|:)/,{'?' => '->', ':' => ':>'})
   end
 
-  # symja doesn't understand solitary vars as boolean values
-  def rewrite_ternary_vars_1 expr
+  # symja doesn't understand solitary vars e.g. @(!param) as boolean values
+  def rewrite_ternary_vars_1(expr)
     if expr.include?('->')
       expr.gsub(/\b[a-zA-Z][a-zA-Z0-9_]*\b(?=(?:\s*->))/) do |match|
         if match.match(/(true|false)/)
@@ -20,12 +24,15 @@ module SymjaTernaryRewriters
     end
   end # end of def rewrite_ternary_vars_1
 
-  def rewrite_ternary_to_ast_2 expr
+  # if expression contains placeholder operators, reparse expression to move operation into proper precedence for If statement
+  # returns string if not ternary; AST if it is
+  def rewrite_ternary_to_ast_2(expr)
     expr.match(/(->|:>)/) ? evalengine.parse(expr) : expr
   end
 
+  # if method receives AST, not string, attempts to rearrange arguments and operators to convert placeholder operators into If statement
   # rewrite this and next method later to use Symja's visitors/lib/replacement etc
-  def rewrite_ternary_ast_to_if_3 expr
+  def rewrite_ternary_ast_to_if_3(expr)
     if expr.respond_to?(:isAST) && expr.isAST
       build_ternary_ast_stack expr
       # parse expression as Rule/RuleDelayed statement then find first RuleDelayed AST i.e. ternary ':'
@@ -59,7 +66,7 @@ module SymjaTernaryRewriters
           end
           break
         end
-      end
+      end # ternary_ast_stack.reverse.each
 
       final_ast = ternary_ast_stack.pop
 
@@ -71,12 +78,11 @@ module SymjaTernaryRewriters
       end
     else
       expr
-    end # end of if expr is an AST in need of processing or not
-
+    end # if ... expr is an AST in need of processing or not
   end # def rewrite_ternary_ast_to_if_3
 
   private
-  def build_ternary_ast_stack ast
+  def build_ternary_ast_stack(ast)
     operation = ast.head.toString
     if operation == 'RuleDelayed'
       ternary_ast_stack << ast
@@ -93,7 +99,6 @@ module SymjaTernaryRewriters
       true
     else
       false
-    end
+    end # if operation == 'RuleDelayed'
   end # def get_ternary_ast_stack
-
 end # module SymjaTernaryRewriter

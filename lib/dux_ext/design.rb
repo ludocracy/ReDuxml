@@ -1,19 +1,19 @@
 require File.expand_path(File.dirname(__FILE__) + '/parameters')
-module Dux
-  class Instance < Object
-    def initialize xml_node=nil, args={}
-      xml_node = class_to_xml if xml_node.nil?
-      super xml_node, reserved: %w(parameters array instance link)
-    end
 
+module Dux
+  # Instances are copies of another XML element with a distinct set of parameter values
+  # like Objects in relation to a Class
+  class Instance < Object
+    # returns parameters or empty array
     def params
       p = find_child 'parameters'
       p.simple_class == 'parameters' ? p : []
     end
 
-    def instantiate target_dux=nil
+    # creates copy of referent (found from context given by 'meta') at this element's location
+    def instantiate(meta=nil)
       new_kids = []
-      target = resolve_ref :ref, target_dux
+      target = resolve_ref :ref, meta
       if target.nil?
         children.each do |child|
           new_kids << child if child.simple_class != 'parameters'
@@ -24,26 +24,32 @@ module Dux
         new_kids << new_kid
       end
       new_kids
-    end
-  end
+    end # def instantiate
+  end # class Instance
 
+  # root element for an XML file that is entirely parameterized
   class Design < Instance; end
 
-  # links allow parameters to be bound to attribute values or element content in the design objects wrapped by the link dux_ext
+  # links allow parameters to be bound to attribute values or element content in the design objects wrapped by the link
   class Link < Instance
     attr_reader :ref
 
-    def instantiate target=nil
+    # TODO not sure how to represent this!
+    def instantiate(target=nil)
       resolve_ref nil, target
       self
     end
   end
 
-  # name collision? doesn't seem like it...
+  # XML object array
+  # represents a pattern of copies of a this object's children or referents
+  # differentiates between copies using iterator Parameter
   class Array < Instance
     include Enumerable
 
-    def instantiate target_dux=nil
+    # reifies pattern by actually copying children and assigning each unique properties derived from iterator value
+    # TODO do we need argument?
+    def instantiate(meta=nil)
       size_expr = size.respond_to?(:to_i) ? size.to_i : size.to_s
       if size_expr.is_a? Fixnum
         iterator_index = 0
@@ -63,15 +69,17 @@ module Dux
       else
         []
       end
-    end
+    end # def instantiate
 
+    # size can be Fixnum or a Parameter expression
     def size
       self[:size]
     end
 
+    # overriding #each to only traverse children and return self on completion, not Enumerator
     def each &block
       @children.each &block
       self
     end
-  end
-end
+  end # class Array
+end # module Dux

@@ -1,60 +1,68 @@
 require File.expand_path(File.dirname(__FILE__) + '/object')
 
 module Dux
+  # container for all Parameter objects pertaining to this Instance
   class Parameters < Object
     include Enumerable
 
-    def each &block
+    # overriding #each to only traverse children
+    def each(&block)
       children.each &block
     end
 
-    def initialize xml_node=nil, args = {}
-      if xml_node.nil?
-        xml_node = class_to_xml args
+    # Parameters can be initialized from a Hash of parameter names and values
+    def initialize(*args)
+      super *args
+      unless xml? args
+        args.first.each do |key, val|
+          @xml.remove_attribute key
+          self << Dux::Parameter.new(key, val)
+        end
       end
-      super xml_node, reserved: %w(parameter)
-      sleep 0
     end
 
-    private def class_to_xml args
-      xml_node = super
-      args.each do |key, val|
-        xml_node << element('parameter', {name: key, value: val})
-      end
-      xml_node
-    end
-
-    def [] target_key=nil
-      return xml_root_node.attributes if target_key.nil?
+    # overriding #[] to return parameter children as from a Hash
+    # simply returns attribute hash if no argument given
+    def [](target_key=nil)
+      return xml.attributes if target_key.nil?
       children.each do |param_node| return param_node[:value] if param_node[:name] == target_key.to_s  end
     end
 
+    # TODO replace with Rule?
     def << param
       raise Exception unless param.is_a?(Parameter)
       super param
     end
-  end
+  end # class Parameters
 
+  # represents a parameter that can be used in any element's attribute values or text content
+  # and is replaced with its value when validating an XML design
   class Parameter < Object
-    def initialize xml_node, args={}
-      if xml_node.nil?
-        xml_node = class_to_xml
-        xml_node[:name] = args[:name]
-        xml_node[:value] = args[:value] if args[:value]
+    # Parameter can be initialized from XML Element or Ruby args
+    # args[0] must be name of Parameter
+    # args[1] can be starting value of Parameter
+    # args[2] can be description text of Parameter
+    def initialize(*args)
+      super()
+      unless xml? args
+        self[:name] = args.first
+        self[:value] = args[1] if args[1]
+        self << args.last if args[2]
       end
-      super xml_node, args
     end
 
+    # returns current value of Parameter
     def value
       self[:value] || find_child(:string).content
     end
 
-    def value= val
+    # changes value of Parameter and reports change
+    def value=(val)
       if val != self[:value]
         old_val = self[:value]
         self[:value] = val
         report :change_attribute, {old_value: old_val, new_value: val, attr_name: 'value'}
       end
-    end
-  end
-end
+    end # def value=
+  end # class Parameter
+end # module Dux
