@@ -1,31 +1,36 @@
 require File.expand_path(File.dirname(__FILE__) + '/object')
 
-module Dux
+module Duxml
   # container for all Parameter objects pertaining to this Instance
   class Parameters < Object
     include Enumerable
 
-    # overriding #each to only traverse children
+
+    # Traverses each child node, yielding each to the specified block.
+    #
+    # @yieldparam node [Duxml::Parameter] Each parameter node.
     def each(&block)
       children.each &block
     end
 
-    # Parameters can be initialized from a Hash of parameter names and values
+    # @param args [Hash|Nokogiri::XML::Node] if args are not XML, given hash interpreted as parameter, value pairs to initialize new Duxml::Parameter children
     def initialize(*args)
       super *args
       unless xml? args
         args.first.each do |key, val|
           @xml.remove_attribute key
-          self << Dux::Parameter.new(key, val)
+          self << Duxml::Parameter.new(key, val)
         end
       end
     end
 
     # overriding #[] to return parameter children as from a Hash
-    # simply returns attribute hash if no argument given
-    def [](target_key=nil)
-      return xml.attributes if target_key.nil?
-      children.each do |param_node| return param_node[:value] if param_node[:name] == target_key.to_s  end
+    #
+    # @param key [Symbol|String] attempt to match Duxml::Parameter@name
+    # @return [String|Hash] matching parameter's value or attributes as hash if no key given
+    def [](key=nil)
+      return xml.attributes if key.nil?
+      children.each do |param_node| return param_node[:value] if param_node[:name] == key.to_s  end
     end
 
     # TODO replace with Rule?
@@ -39,9 +44,9 @@ module Dux
   # and is replaced with its value when validating an XML design
   class Parameter < Object
     # Parameter can be initialized from XML Element or Ruby args
-    # args[0] must be name of Parameter
-    # args[1] can be starting value of Parameter
-    # args[2] can be description text of Parameter
+    # @param args[0] [String] must be name of Parameter
+    # @param args[1] [String|Fixnum|Float|Boolean] can be starting value of Parameter
+    # @param args[2] [String] can be description text of Parameter
     def initialize(*args)
       super()
       unless xml? args
@@ -51,12 +56,12 @@ module Dux
       end
     end
 
-    # returns current value of Parameter
+    # @return [String] current value of Parameter
     def value
       self[:value] || find_child(:string).content
     end
 
-    # changes value of Parameter and reports change
+    # @param val [String|Fixnum|Float|Boolean] changes value of Parameter and reports change
     def value=(val)
       if val != self[:value]
         old_val = self[:value]

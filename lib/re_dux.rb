@@ -1,17 +1,19 @@
 require File.expand_path(File.dirname(__FILE__) + '/symja_ext/symja')
 require File.expand_path(File.dirname(__FILE__) + '/ruby_ext/macro')
-require File.expand_path(File.dirname(__FILE__) + '/../../Dux/lib/dux')
+require 'duxml'
 
 # contains Dux module, allowing multiple XML files to be worked on concurrently
 class Duxer
-  include Dux
+  include ReDuxml
 
   def initialize
     @dux_array = []
   end
 end
 
-module Dux
+module ReDuxml
+  include Duxml
+
   @dux_array
   @cursor
 
