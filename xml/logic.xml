@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logic>
+  <operators>
+    <!-- indexing -->
+    <operator id="op_square" precedence="90" logic="string">
+      <regexp>\[</regexp>
+      <symbol>[</symbol>
+      <match>cl_square</match>
+    </operator>
+    <operator id="cl_square" precedence="90" logic="string">
+      <regexp>\]</regexp>
+      <symbol>]</symbol>
+      <position>postfix</position>
+      <match>op_square</match>
+      <arity>1</arity>
+    </operator>
+
+    <!-- grouping -->
+    <operator id="op_parens" precedence="100" logic="global">
+      <regexp>\(</regexp>
+      <symbol>(</symbol>
+      <position>prefix</position>
+      <match>cl_parens</match>
+      <arity>1</arity>
+    </operator>
+    <operator id="cl_parens" precedence="100" logic="global">
+      <regexp>\)</regexp>
+      <symbol>)</symbol>
+      <position>postfix</position>
+      <match>op_parens</match>
+      <arity>1</arity>
+    </operator>
+
+    <!-- combinators -->
+    <operator id="interro" logic="global" precedence="10">
+      <regexp>\?</regexp>
+      <symbol>?</symbol>
+      <arity>3</arity>
+      <match>colon</match>
+    </operator>
+    <operator id="colon" logic="global" precedence="10">
+      <symbol>:</symbol>
+      <match>interro</match>
+    </operator>
+    <operator id="and" logic="boolean" precedence="0">
+      <regexp>&amp;{2}</regexp>
+      <symbol>&amp;&amp;</symbol>
+      <identity>true</identity>
+    </operator>
+    <operator id="or" logic="boolean" precedence="0">
+      <regexp>\|{2}</regexp>
+      <symbol>||</symbol>
+      <identity>false</identity>
+    </operator>
+    <operator id="not" logic="boolean" precedence="1">
+      <regexp>(!)(?=\w|!)</regexp>
+      <symbol>!</symbol>
+      <arity>1</arity>
+      <identity>monad</identity>
+      <right_associative>true</right_associative>
+      <inverse>not</inverse>
+    </operator>
+
+    <!-- comparators -->
+    <operator id="eq" logic="arithmetic string" precedence="30">
+      <symbol>==</symbol>
+      <reverse>eq</reverse>
+      <inverse>ne</inverse>
+    </operator>
+    <operator id="lt" logic="arithmetic string" precedence="35">
+      <symbol>&lt;</symbol>
+      <reverse>gt</reverse>
+      <inverse>ge</inverse>
+    </operator>
+    <operator id="gt" logic="arithmetic string" precedence="35">
+      <symbol>></symbol>
+      <reverse>lt</reverse>
+      <inverse>le</inverse>
+    </operator>
+    <operator id="le" logic="arithmetic string" precedence="35">
+      <symbol>&lt;=</symbol>
+      <reverse>ge</reverse>
+      <inverse>gt</inverse>
+    </operator>
+    <operator id="ge" logic="arithmetic string" precedence="35">
+      <symbol>>=</symbol>
+      <reverse>le</reverse>
+      <inverse>lt</inverse>
+    </operator>
+    <operator id="ne" logic="arithmetic string" precedence="30">
+      <symbol>!=</symbol>
+      <reverse>ne</reverse>
+      <inverse>eq</inverse>
+    </operator>
+
+    <!-- arithmetic -->
+    <operator id="add" precedence="55" logic="arithmetic string">
+      <regexp>\+</regexp>
+      <symbol>+</symbol>
+      <identity>0</identity>
+      <inverse>sub</inverse>
+    </operator>
+    <operator id="sub" precedence="55" logic="arithmetic">
+      <symbol>-</symbol>
+      <identity>0</identity>
+      <inverse>add</inverse>
+    </operator>
+    <operator id="neg" precedence="65" logic="arithmetic">
+      <regexp>(!)(?=\w|!)</regexp>
+      <symbol>-</symbol>
+      <arity>1</arity>
+      <right_associative>true</right_associative>
+      <identity>0</identity>
+      <inverse>neg</inverse>
+    </operator>
+    <operator id="mul" precedence="60" logic="arithmetic">
+      <regexp>\*</regexp>
+      <symbol>*</symbol>
+      <print>×</print>
+      <identity>1</identity>
+      <inverse>div</inverse>
+    </operator>
+    <operator id="div" precedence="60" logic="arithmetic">
+      <regexp>\/</regexp>
+      <symbol>/</symbol>
+      <print>÷</print>
+      <identity>1</identity>
+      <inverse>mul</inverse>
+    </operator>
+    <operator id="mod" precedence="60" logic="arithmetic">
+      <symbol>%</symbol>
+    </operator>
+    <operator id="exp" precedence="70" logic="arithmetic">
+      <regexp>(\*{2})|\^{1}</regexp>
+      <symbol>^</symbol>
+      <identity>1</identity>
+      <inverse>log</inverse>
+    </operator>
+    <operator id="log" precedence="70" logic="arithmetic">
+      <position>prefix</position>
+      <inverse>exp</inverse>
+    </operator>
+  </operators>
+</logic>

@@ -2,25 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../../ruby_ext/string')
 
 # methods to extend Dux::Object with methods needed to process parameterized XML content
 module Parameterization
-  # takes the target attribute and makes it an element according to arguments...
-  # TODO explain how args work and probably simplify it?
-  def promote(attr_key, args={})
-    new_name = args[:element] || attr_key.to_s
-    if !args[:attr].nil?
-      new_attr = args[:attr] || attr_key.to_s
-      new_val = args[:value] || self[attr_key]
-      s_string = "<#{new_name.to_s} #{new_attr}=\"#{new_val}\"/>"
-    else
-      new_content = args[:content] || self[attr_key]
-      s_string = "<#{new_name}>#{new_content}</#{new_name}>"
-    end
-    new_comp = Dux::Object.new(s_string)
-    self << new_comp
-    @xml.remove_attribute attr_key.to_s
-    new_comp
-    report :edit, attr_key.to_sym => ''
-  end
-
   # returns the first ancestor of this object that is of type Dux::Instance
   def instance
     parentage.each do |ancestor| return ancestor if ancestor.respond_to?(:params) end
