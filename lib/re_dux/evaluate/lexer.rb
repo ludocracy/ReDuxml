@@ -1,39 +1,31 @@
 require_relative '../../ruby_ext/regexp'
+require_relative '../../../lib/symbolic_ext/modulus/symbolic'
 
 module Lexer
   @string_hash
-
+  @input
+  @tokens
   attr_reader :string_hash
+  attr_accessor :input, :tokens
 
   TOKEN_TYPES = {
       string:   /STRING[\d]+/,
+      function: /log|exp|sqrt/,
+      bool:     /true|false/,
       param:    Regexp.identifier,
       num:      /\d/,
-      bool:     /true|false/,
       grouping: /[\(\):,]/
   }
 
   Struct.new('Token', :type, :value)
 
   def lex(expr)
-    snippets = tag_strings(expr).split(/\b/).reverse.collect do |s| s.strip end
-    tokens = []
-    while (sub_str = snippets.pop) do
-      t = :operator
-      TOKEN_TYPES.each do |type, regexp|
-        m = regexp.match(sub_str).to_s
-        if regexp.match(sub_str).to_s == sub_str
-          t = type
-          break
-        end
-      end
-
-      formatted_str = untag_strings subst_subtr(sub_str)
-      if t == :operator && formatted_str.size > 1 && logic[formatted_str].nil?
-        formatted_str.split(//).reverse.each do |c| snippets << c unless c.strip.empty? end
-      else
-        tokens << (@last_token = Struct::Token.new(t, formatted_str))
-      end
+    @input = tag_strings(expr).split(/\b/).reverse.collect do |s| s.strip end
+    @tokens = []
+    while (sub_str = input.pop) do
+      type = get_type sub_str
+      value = formatted_value(sub_str, type)
+      tokens << (@last_token = Struct::Token.new(type, value)) unless value.nil?
     end
     @last_token = nil
     tokens
@@ -43,7 +35,44 @@ module Lexer
 
   attr_reader :last_token
 
-  def subst_subtr(_str)
+  def formatted_value(sub_str, type)
+    formatted_str = untag_strings subst_minus(sub_str)
+    case type
+      when :operator, :grouping
+        split_or_keep formatted_str
+      when :param then get_var(formatted_str)
+      when :num then formatted_str.to_i
+      when :bool then formatted_str == 'true'
+      else
+        formatted_str
+    end
+  end
+
+  def get_var(str)
+    if(var_token = tokens.find do |t| t.value.to_s == str end)
+      var_token.value
+    else
+      Symbolic.send(:var, name: str)
+    end
+  end
+
+  def split_or_keep(str)
+    if str.size > 1 && logic[str].nil?
+      str.split(//).reverse.each do |c| input << c unless c.strip.empty? end
+      nil
+    else
+      logic[str]
+    end
+  end
+
+  def get_type(sub_str)
+    TOKEN_TYPES.each do |type, regexp|
+      return type if regexp.match(sub_str).to_s == sub_str
+    end
+    :operator
+  end
+
+  def subst_minus(_str)
     str = _str.dup
     if str == '-'
       unless last_token.nil? || last_token.type == 'operator' || %w(\( , :).include?(last_token.value)

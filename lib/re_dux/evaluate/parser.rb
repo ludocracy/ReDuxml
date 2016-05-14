@@ -1,6 +1,5 @@
 require 'duxml'
-require 'ast'
-require_relative 'operable'
+require_relative 'operator'
 require_relative 'lexer'
 
 module ReDuxml
@@ -29,15 +28,21 @@ module ReDuxml
 
     include Duxml
     include Lexer
-    include AST
 
-    def initialize(logic)
-      load logic
-      @logic = {}
-      doc.logic.Operator.each do |op|
-        op.extend Operable
-        @logic[op.symbol] = op
+    def to_s
+      doc.logic.name
+    end
+
+    def initialize(_logic)
+      if _logic
+        load _logic
+        @logic = {}
+        doc.logic.Operator.each do |op|
+          op.parent = @logic
+          @logic[op.symbol] = op
+        end
       end
+      raise Exception if logic.nil?
     end
 
     # TODO attribute code to Dentaku
@@ -49,13 +54,12 @@ module ReDuxml
 
       return nil if input.empty?
 
-      while (token = input.shift)
-        last_token ||= token
+      while(token = input.shift)
         case token.type
           when :num, :bool, :string, :param
-            output.push Node.new(token.value)
+            output.push AST::Node.new(token.value)
           when :operator
-            op_prop = get_op(token)
+            op_prop = token.value
             if op_prop.right_associative?
               while op_stack.last && op_prop.precedence < op_stack.last.precedence
                 consume
@@ -69,12 +73,12 @@ module ReDuxml
             op_stack << op_prop
           when :function
             arities << 0
-            op_stack << Node.new(token.value)
+            op_stack << token.value
           when :grouping
-            op_prop = get_op(token)
-            case token.value
+            op_prop = token.value
+            case op_prop.to_s
               when '('
-                if input.first && input.first.value == '('
+                if input.any? && input.first.type == :grouping && input.first.value.to_s == '('
                   input.shift
                   consume(0)
                 else
@@ -92,7 +96,7 @@ module ReDuxml
                 end
               when ','
                 arities[-1] += 1
-                while op_stack.any? && op_stack.last.
+                while op_stack.any? && op_stack.last.symbol != '('
                   consume
                 end
               when ':'
@@ -101,7 +105,7 @@ module ReDuxml
                 end
               else
                 fail ParseError, "Unknown grouping token #{ token.value }"
-            end # case token.value
+            end # case token.value ... when :grouping
           else
             fail ParseError, "Not implemented for tokens of type #{ token.type }"
         end # case token.type
@@ -118,15 +122,11 @@ module ReDuxml
       output.first
     end # def parse(expr)
 
-    #private
-
-    def get_op(token)
-      logic[token.value]
-    end
+    private
 
     def consume(count=2)
       operator = op_stack.pop
-      output.push AST::Node.new(operator.symbol, get_args(operator.arity || count))
+      output.push AST::Node.new(operator, get_args(operator.arity || count))
     end
 
     def get_args(count)

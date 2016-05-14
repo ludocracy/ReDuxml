@@ -1,7 +1,7 @@
 require_relative '../../../lib/re_dux/evaluate/parser'
 require 'test/unit'
 
-class MacroParserTest < Test::Unit::TestCase
+class ParserTest < Test::Unit::TestCase
   include ReDuxml
 
   def setup
@@ -10,32 +10,21 @@ class MacroParserTest < Test::Unit::TestCase
 
   attr_reader :p
 
-  def test_lexer
-    ts = p.lex('9 < 7').collect do |t| t.type end
-    assert_equal [:num, :operator, :num], ts
-    ts = p.lex('9 < var').collect do |t| t.type end
-    assert_equal [:num, :operator, :param], ts
-    tokens = p.lex('-9-7 - var')
-    o = p.get_op(tokens.first)
-    ts = p.lex('-9-7 - var').collect do |t| t.type == :operator ? p.get_op(t).id : t.type.to_s end
-    assert_equal %w(neg num sub num sub param), ts
-    # TODO test re-substitution of strings here!
-    ts = p.lex('"s s " != var').collect do |t| t.type end
-    vs = p.lex('"s s " != var').collect do |t| t.value end
-    assert_equal [:string, :operator, :param], ts
-    assert_equal ['"s s "', '!=', 'var'], vs
-    ts = p.lex('var ? true : 0').collect do |t| t.type end
-    assert_equal [:param, :operator, :bool, :grouping, :num], ts
-  end
-
-  def test_parse
+  def test_parse_groups
     # unary
     ast = p.parse '!true'
     assert_equal "(!\n  (true))", ast.to_sexp
+    assert_equal :prefix, ast.type.position
 
     # binary
     ast = p.parse '2 + 2'
     assert_equal "(+\n  (2)\n  (2))", ast.to_sexp
+    ast = p.parse 'var0 == var1'
+    assert_equal '!=', ast.type.inverse.symbol
+
+    # binary, associative
+    ast = p.parse '2^var'
+    assert_equal '2^var', ast.print
 
     # ternary
     ast = p.parse 'var ? "true!!!" : 3'
@@ -51,5 +40,12 @@ class MacroParserTest < Test::Unit::TestCase
     ast = p.parse '(var - 2) * 6'
     output = ast.to_sexp
     assert_equal %((*\n  (\u2013\n    (var)\n    (2))\n  (6))), output
+  end
+
+  def test_parse_types
+    ast = p.parse 'var + 2'
+    assert_equal '(var)', ast.children.first.to_s
+    assert_equal 'Symbolic::Variable', ast.children.first.type.class.to_s
+    assert_equal 2, ast.children.last.type
   end
 end
