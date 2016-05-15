@@ -10,7 +10,8 @@ module Symbolic
   end
 
   def -@(var)
-    return unless var.is_a?(Node)
+    return -var unless var.is_a?(Node)
+    return -var.type if var.type.is_a?(Numeric)
     reversed = var.type.reverse
     reversed ? new_ast(reversed, *var.children.dup) : new_ast(:-@, [var])
   end

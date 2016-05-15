@@ -57,11 +57,11 @@ class EvaluateTest < Test::Unit::TestCase
         exp_var:                ['2**var',      '2**var'],
         exp_cancel:             [1,             'var**0'],
         log_simple:             [3.0,           'log(8, 2)'],
-        #log_var:                ['log(2,var)',  'log(2, var)'], TODO clean up return value string!
+        log_var:                ['log(2,var)',  'log(2, var)'],
         mod_simple:             [2,             '8 % 6'],
         mod_var:                ['var%2',       'var%2'],
-        #neg_simple:             [-9,            '-9'], TODO negative Fixnum's get to_s'd?
-        #neg_identity:           [0,             '-0'],
+        neg_simple:             [-9,            '-9'],
+        neg_identity:           [0,             '-0'],
         neg_var:                ['-var',        '-var'],
         add_div:                [12,            '9 + 9/3'],
         add_sub_var:            ['var',         '2*var - var'],
