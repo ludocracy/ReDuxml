@@ -1,9 +1,22 @@
 require 'symbolic'
 require_relative '../../ruby_ext/fixnum'
+require_relative '../../ruby_ext/boolean'
 
 module Symbolic
   class Variable
     include AST
+
+    def and(obj)
+      return self if obj.equal?(true) || obj.equal?(self)
+      return false if obj.equal?(false)
+      nil
+    end
+
+    def or(obj)
+      return self if obj.equal?(false) || obj.equal?(self)
+      return true if obj.equal?(true)
+      nil
+    end
 
     def <(obj)
       eql?(obj) ? false : nil
@@ -17,11 +30,11 @@ module Symbolic
       if obj.is_a?(Variable) || obj.is_a?(Numeric)
         return object_id == obj.object_id ? false : nil
       end
-      case obj
-        when true then new_ast(:!, [self])
-        when false then self
-        else nil
-      end
+
+      return !self if obj.equal?(true)
+      return self if obj.equal?(false)
+      return false if obj.equal?(self)
+      nil
     end
 
     def ==(obj)
@@ -29,12 +42,11 @@ module Symbolic
         result = object_id == obj.object_id ? true : nil
         return result
       end
-      case obj
-        when self then true
-        when false then new_ast(:!, obj)
-        when true then self
-        else nil
-      end
+
+      return !self if obj.equal?(false)
+      return self if obj.equal?(true)
+      return true if obj.equal?(self)
+      nil
     end
 
     def >=(obj)

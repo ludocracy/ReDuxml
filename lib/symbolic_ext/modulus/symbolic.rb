@@ -15,8 +15,9 @@ module Symbolic
     reversed ? new_ast(reversed, *var.children.dup) : new_ast(:-@, [var])
   end
 
-  def !(var)
-    return unless var.is_a?(Node)
+  def not(var)
+    return nil if var.is_a?(Symbolic::Variable)
+    return !var unless var.is_a?(Node)
     inverted = var.type.inverse
     inverted ? new_ast(inverted, *var.children.dup) : new_ast(:!, [var])
   end

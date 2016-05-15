@@ -31,29 +31,34 @@
   </operator>
 
   <!-- combinators -->
-  <operator id="interro" logic="global" precedence="10">
+  <operator id="interro" logic="global" precedence="0">
     <regexp>\?</regexp>
     <symbol>?</symbol>
+    <right_associative>true</right_associative>
+    <ruby>ternary</ruby>
     <arity>3</arity>
     <pair>:</pair>
   </operator>
-  <operator id="colon" logic="global" precedence="10">
+  <operator id="colon" logic="global" precedence="0">
     <symbol>:</symbol>
     <pair>?</pair>
   </operator>
-  <operator id="and" logic="boolean" precedence="0">
+  <operator id="and" logic="boolean" precedence="10">
     <regexp>&amp;{2}</regexp>
     <symbol>&amp;&amp;</symbol>
+    <ruby>and</ruby>
     <identity>true</identity>
   </operator>
-  <operator id="or" logic="boolean" precedence="0">
+  <operator id="or" logic="boolean" precedence="10">
     <regexp>\|{2}</regexp>
     <symbol>||</symbol>
+    <ruby>or</ruby>
     <identity>false</identity>
   </operator>
-  <operator id="not" logic="boolean" precedence="1">
+  <operator id="not" logic="boolean" precedence="11">
     <position>prefix</position>
     <regexp>(!)(?=\w|!)</regexp>
+    <ruby>not</ruby>
     <symbol>!</symbol>
     <arity>1</arity>
     <identity>monad</identity>

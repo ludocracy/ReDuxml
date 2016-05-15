@@ -23,8 +23,8 @@ class ParserTest < Test::Unit::TestCase
     assert_equal '!=', ast.type.inverse.symbol
 
     # binary, associative
-    ast = p.parse '2^var'
-    assert_equal '2^var', ast.print
+    ast = p.parse '2**var'
+    assert_equal '2**var', ast.print
 
     # ternary
     ast = p.parse 'var ? "true!!!" : 3'
@@ -40,6 +40,11 @@ class ParserTest < Test::Unit::TestCase
     ast = p.parse '(var - 2) * 6'
     output = ast.to_sexp
     assert_equal %((*\n  (\u2013\n    (var)\n    (2))\n  (6))), output
+  end
+
+  def test_ternary_nested
+    ast = p.parse 'true ? true ? 0 : 1 : 2'
+    assert_equal "(?\n  (true)\n  (?\n    (true)\n    (0)\n    (1))\n  (2))", ast.to_sexp
   end
 
   def test_parse_types

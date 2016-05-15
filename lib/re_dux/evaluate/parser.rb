@@ -60,16 +60,20 @@ module ReDuxml
             output.push AST::Node.new(token.value)
           when :operator
             op_prop = token.value
+            arities << op_prop.arity-1 if op_prop.symbol == '?'
             if op_prop.right_associative?
               while op_stack.last && op_prop.precedence < op_stack.last.precedence
-                consume
+                if !op_stack.last.grouping?
+                  consume
+                else
+                  break
+                end
               end
             else
-              while op_stack.last && op_prop.precedence <= op_stack.last.precedence
+              while op_stack.last && op_prop.precedence <= op_stack.last.precedence && !op_stack.last.grouping?
                 consume
               end
             end
-            arities << op_prop.arity-1 if op_prop.symbol == '?'
             op_stack << op_prop
           when :function
             arities << 0
@@ -85,14 +89,14 @@ module ReDuxml
                   op_stack << op_prop
                 end
               when ')'
-                while op_stack.any? && !op_stack.last.grouping?
-                  consume
+                while op_stack.any? && op_stack.last.symbol != op_prop.pair.to_s
+                  consume(arities.pop || op_stack.last.arity)
                 end
                 lparen = op_stack.pop
-                fail ParseError, "Unbalanced parenthesis" unless lparen.grouping?
+                fail ParseError, "Unbalanced parenthesis" unless lparen && lparen.grouping?
 
                 if op_stack.last && op_stack.last.position == 'prefix'
-                  consume(arities.pop.next)
+                  consume(arities.pop)
                 end
               when ','
                 arities[-1] += 1
@@ -101,8 +105,10 @@ module ReDuxml
                 end
               when ':'
                 while op_stack.any? && op_stack.last.symbol != '?'
-                  consume
+                  consume(arities.pop)
                 end
+                arities[-1] += 1
+                op_stack << op_prop
               else
                 fail ParseError, "Unknown grouping token #{ token.value }"
             end # case token.value ... when :grouping
@@ -125,12 +131,13 @@ module ReDuxml
     private
 
     def consume(count=2)
+      op_stack.pop if op_stack.last.symbol == ':'
       operator = op_stack.pop
       output.push AST::Node.new(operator, get_args(operator.arity || count))
     end
 
     def get_args(count)
-      Array.new(count) { output.pop }.reverse
+      Array.new(count) { output.pop }.reverse.compact
     end
   end # class Parser
 end # module ReDuxml

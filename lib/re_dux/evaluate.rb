@@ -40,7 +40,7 @@ module ReDuxml
       expr = _expr.dup
       param_hash.each do |param, val| expr.gsub!(param, val) end
       expr
-  end
+    end
 
     include Symbolic
 
@@ -56,6 +56,7 @@ module ReDuxml
             new_child
           end
         end.flatten
+        begin
         result = case operator.position
                    when :prefix
                      method(operator.ruby).call(*args)
@@ -63,6 +64,9 @@ module ReDuxml
                      args.first.send(operator.ruby, *args[1..-1])
                  end
         result.nil? ? ast : result
+        rescue
+          ast
+        end
       else
         ast
       end
