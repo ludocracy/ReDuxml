@@ -1,9 +1,7 @@
 require_relative 'element/parameterization'
 require 'duxml'
 
-module ReDuxml
-  include Duxml
-
+module Duxml
   class Element
     include Parameterization
   end

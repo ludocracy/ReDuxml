@@ -26,7 +26,6 @@ class OperatorTest < Test::Unit::TestCase
     assert_equal 2, ops[-5].arity
     assert_equal 1, ops[-6].arity
     assert_equal 'log', ops.last.symbol
-    assert_equal '-', ops[-6].inverse.to_s
     assert_equal '&&', ops[6].symbol
   end
 end

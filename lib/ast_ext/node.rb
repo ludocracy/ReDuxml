@@ -43,7 +43,8 @@ module AST
 
   def new_ast(op, *obj)
     args = obj.collect do |o| o.is_a?(Node) ? o : Node.new(o) end
-    args.unshift self if is_a?(Node) || is_a?(Fixnum)
+    args.unshift self if is_a?(Node)
+    args.unshift Node.new(self) if is_a?(Fixnum)
     args.unshift Node.new(self) if self.is_a?(Symbolic::Variable)
     Node.new(op, args)
   end

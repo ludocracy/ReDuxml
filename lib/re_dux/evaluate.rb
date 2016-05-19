@@ -6,8 +6,6 @@ module ReDuxml
     include ReDuxml
     include Symbolic
 
-    COMPARATORS = %w()
-
     @param_hash
     @parser
 
@@ -25,7 +23,6 @@ module ReDuxml
     def evaluate(_expr, _param_hash={})
       @param_hash = _param_hash
       expr = resolve_params _expr
-      # TODO do substitution using Symbolic#sub may be easier to detect? or detect elsewhere for trace purposes?
       result = reduce parser.parse expr
       case
         when result.respond_to?(:imaginary), result.class == TrueClass, result.class == FalseClass then result

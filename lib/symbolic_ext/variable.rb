@@ -1,6 +1,6 @@
 require 'symbolic'
-require_relative '../../ruby_ext/fixnum'
-require_relative '../../ruby_ext/boolean'
+require_relative '../ruby_ext/fixnum'
+require_relative '../ruby_ext/boolean'
 
 module Symbolic
   class Variable

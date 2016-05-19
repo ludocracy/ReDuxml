@@ -1,4 +1,4 @@
-require_relative '../comparators/variable'
+require_relative 'variable'
 
 module Symbolic
   class Coerced

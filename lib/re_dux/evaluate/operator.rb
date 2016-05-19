@@ -1,4 +1,5 @@
 module Operator
+  include Reportable
   # @return [Boolean]
   def grouping?
     nodes.find do |n|
@@ -29,6 +30,7 @@ module Operator
 
   # @return [String] literal for operator e.g. '+'
   def symbol
+    return nil unless self.respond_to?(:nodes)
     nodes.find do |n|
       return n.text if n.name == 'symbol'
     end

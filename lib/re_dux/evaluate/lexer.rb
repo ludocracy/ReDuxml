@@ -1,5 +1,5 @@
 require_relative '../../ruby_ext/regexp'
-require_relative '../../../lib/symbolic_ext/modulus/symbolic'
+require_relative '../../../lib/symbolic_ext/symbolic'
 
 module Lexer
   @string_hash

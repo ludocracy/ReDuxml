@@ -1,12 +1,12 @@
 # coding: utf-8
 Gem::Specification.new do |spec|
-  spec.name          = "ReDux"
-  spec.version       = "0.5.0"
+  spec.name          = "ReDuxml"
+  spec.version       = "0.1.0"
   spec.summary       = "Reusable Dynamic Universal XML"
   spec.authors       = ["Peter Kong"]
   spec.email         = ["peter.kong@nxp.com"]
   spec.homepage      = "http://www.github.com/re_duxml"
-  spec.license       = "LGPL-3"
+  spec.license       = "MIT"
 
   spec.required_ruby_version     = '>= 1.9.3'
   spec.required_rubygems_version = '>= 1.8.11'
@@ -20,7 +20,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Add any gems that your plugin needs to run within a host application
-  spec.add_runtime_dependency "duxml", "~> 0.5"
+  spec.add_runtime_dependency "duxml", "~> 0.6"
+  spec.add_runtime_dependency "symbolic", "~> 0.3"
 
   # Add any gems that your plugin needs for its development environment only
 end

@@ -10,7 +10,7 @@ module Parameterization
   end
 
   # changes condition of this object's existence
-  def if= condition
+  def if=(condition)
     # check for valid conditional
     change_attr_value :if, condition
   end
