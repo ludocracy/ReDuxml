@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../lib/dux_ext/design')
+require File.expand_path(File.dirname(__FILE__) + '/../../lib/re_dux/design')
 require 'minitest/autorun'
 
 class DesignTest < MiniTest::Test
