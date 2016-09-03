@@ -4,7 +4,7 @@ require 'test/unit'
 class DuxerTest < Test::Unit::TestCase
   SAMPLE_FILE = File.expand_path(File.dirname(__FILE__) + '/../xml/sample.xml')
   RESULT_FILE = File.expand_path(File.dirname(__FILE__) + '/../xml/result.xml')
-  LOGIC = File.expand_path(File.dirname(__FILE__) + '/../xml/logic.xml')
+  LOGIC_FILE = File.expand_path(File.dirname(__FILE__) + '/../xml/logic.xml')
 
   # Called before every test method runs. Can be used
   # to set up fixture information.
@@ -12,14 +12,7 @@ class DuxerTest < Test::Unit::TestCase
   include ReDuxml
 
   def setup
-    a = File.exists?(SAMPLE_FILE)
-    load SAMPLE_FILE, LOGIC_FILE
-  end
-
-  def test_load
-    assert meta.is_a?(Meta)
-    assert doc.is_a?(Doc)
-    assert doc.root.is_a?(Element)
+    load SAMPLE_FILE
   end
 
   def test_instantiation_history
@@ -44,42 +37,6 @@ class DuxerTest < Test::Unit::TestCase
     resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml')
     p_test = d.find_child(%w(blah p_test))
     assert_equal '0 is a design param expression', p_test.content
-  end
-
-  def test_save
-    omit
-    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml')
-    save RESULT_FILE
-    x = File.read(RESULT_FILE)
-    d = Dux::Meta.new(x).design
-    p_test = d.find_child(%w(blah p_test))
-    assert_equal '0 is a design param expression', p_test.content
-  end
-
-  def test_traverse
-    omit
-    resolve SAMPLE_FILE
-    assert t === current
-    assert b === base
-  end
-
-  def test_instance_name_collision
-    omit
-    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/component_collision.xml')
-    assert_equal 'this design component should collide', doc.children[0].content
-    assert_equal 'with this component!', doc.children[1].content
-  end
-
-  def test_instantiate_ref
-    omit
-    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/simple_inst.xml')
-    assert_equal 'this is a design component', doc.find_child(%w(blah some_component)).content
-  end
-
-  def test_instantiate_array
-    omit
-    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/array_inst.xml')
-    assert_equal '4 is an iterator expression', c.find_child('iterator_test.array_id3').content
   end
 
   def test_param_overrides

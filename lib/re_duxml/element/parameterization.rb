@@ -6,7 +6,7 @@ module Parameterization
   # returns true if self[:if] is true or indeterminate (because condition is currently parameterized)
   # returns false otherwise i.e. this node does not exist in this design build
   def if?
-    return true unless (if_str = xml[:if])
+    return true unless (if_str = self[:if])
     if_str.parameterized? || if_str == 'true' ? true : false
   end
 
