@@ -1,4 +1,4 @@
-require_relative '../../../lib/re_dux/evaluate/parser'
+require_relative '../../../lib/re_duxml/evaluate/parser'
 require 'test/unit'
 
 class LexerTest < Test::Unit::TestCase

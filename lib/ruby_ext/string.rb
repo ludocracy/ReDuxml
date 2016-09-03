@@ -1,3 +1,6 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
+require 'duxml'
+
 # extending String with #parameterized? and #balanced_parens? only to assist macro.rb
 class String
   # returns whether or not contents include any Macro strings i.e. Parameter expressions

@@ -1,9 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) +  '/../../lib/ruby_ext/macro')
 require File.expand_path(File.dirname(__FILE__) +  '/../../lib/ruby_ext/string')
 
-require 'minitest/autorun'
+require 'test/unit'
 
-class MacroTest < MiniTest::Test
+class MacroTest < Test::Unit::TestCase
   def setup
     @m = Macro.new "2 + asdf"
     @n = Macro.new "2 + 4"
@@ -24,16 +24,5 @@ class MacroTest < MiniTest::Test
   def test_parameterized
     assert @m.parameterized?
     assert !@n.parameterized?
-  end
-
-  def test_illegal_char
-    assert !"asdf-asd".identifier?
-    assert !"asd!fasd".identifier?
-    assert !"asdf()asd".identifier?
-    assert !"asdf[]asd".identifier?
-  end
-
-  def test_valid_identifier
-    assert "aDD323_sdf".identifier?
   end
 end

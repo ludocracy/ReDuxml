@@ -1,5 +1,5 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 module Operator
-  include Reportable
   # @return [Boolean]
   def grouping?
     nodes.find do |n|

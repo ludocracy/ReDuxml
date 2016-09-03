@@ -1,6 +1,7 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 require File.expand_path(File.dirname(__FILE__) + '/ruby_ext/macro')
-require File.expand_path(File.dirname(__FILE__) + '/re_dux/evaluate')
-require File.expand_path(File.dirname(__FILE__) + '/re_dux/element')
+require File.expand_path(File.dirname(__FILE__) + '/re_duxml/evaluate')
+require File.expand_path(File.dirname(__FILE__) + '/re_duxml/element')
 
 module ReDuxml
   include Duxml
