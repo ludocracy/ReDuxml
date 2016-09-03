@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../lib/ruby_ext/string')
-require 'minitest/autorun'
+require 'test/unit'
 
-class StringParamedTest < MiniTest::Test
+class ParametersTest < Test::Unit::TestCase
   def setup
     # Do nothing
   end

@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../../lib/dux_ext/object')
-require 'minitest/autorun'
+require File.expand_path(File.dirname(__FILE__) + '/../../../lib/re_duxml/element/parameterization')
+require 'test/unit'
 
-class ParameterizationTest < MiniTest::Test
+class ParameterizationTest < Test::Unit::TestCase
   SAMPLE_TEMPLATE_FILE = File.expand_path(File.dirname(__FILE__) + '/../../../xml/sample_dux.xml')
 
   attr_reader :e

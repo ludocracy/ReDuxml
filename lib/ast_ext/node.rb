@@ -1,3 +1,4 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 require 'ast'
 
 module AST

@@ -1,3 +1,4 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 require File.expand_path(File.dirname(__FILE__) + '/../../ruby_ext/string')
 
 # methods to extend Dux::Object with methods needed to process parameterized XML content

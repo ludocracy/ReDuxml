@@ -1,8 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../lib/dux_ext/parameters')
-require 'minitest/autorun'
+require File.expand_path(File.dirname(__FILE__) + '/../../lib/re_duxml/parameters')
+require 'test/unit'
 
-class ParametersTest < MiniTest::Test
-  include Patterns
+class ParametersTest < Test::Unit::TestCase
 
   def setup
 

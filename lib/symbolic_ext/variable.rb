@@ -1,3 +1,4 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 require 'symbolic'
 require_relative '../ruby_ext/fixnum'
 require_relative '../ruby_ext/boolean'

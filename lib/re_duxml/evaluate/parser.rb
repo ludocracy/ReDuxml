@@ -1,3 +1,4 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 require 'duxml'
 require_relative 'operator'
 require_relative 'lexer'

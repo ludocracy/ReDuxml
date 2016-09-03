@@ -1,3 +1,4 @@
+# Copyright (c) 2016 Freescale Semiconductor Inc.
 require_relative '../../ruby_ext/regexp'
 require_relative '../../../lib/symbolic_ext/symbolic'
 

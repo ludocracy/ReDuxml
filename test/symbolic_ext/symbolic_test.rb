@@ -1,4 +1,4 @@
-require_relative '../../../lib/symbolic_ext/symbolic'
+require_relative '../../lib/symbolic_ext/symbolic'
 require 'test/unit'
 
 class SymbolicTest < Test::Unit::TestCase

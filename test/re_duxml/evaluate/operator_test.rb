@@ -1,4 +1,4 @@
-require_relative '../../../lib/re_dux/evaluate/operator'
+require_relative '../../../lib/re_duxml/evaluate/operator'
 require 'duxml'
 require 'test/unit'
 

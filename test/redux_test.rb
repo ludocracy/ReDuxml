@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../lib/re_dux')
+require File.expand_path(File.dirname(__FILE__) + '/../lib/re_duxml')
 require 'test/unit'
 
 class DuxerTest < Test::Unit::TestCase

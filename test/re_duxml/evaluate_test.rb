@@ -1,4 +1,4 @@
-require_relative '../../lib/re_dux/evaluate'
+require_relative '../../lib/re_duxml/evaluate'
 require 'test/unit'
 
 class EvaluateTest < Test::Unit::TestCase

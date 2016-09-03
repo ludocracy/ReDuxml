@@ -1,5 +1,5 @@
 require_relative '../../lib/ast_ext/node'
-require_relative '../../lib/re_dux/evaluate/parser'
+require_relative '../../lib/re_duxml/evaluate/parser'
 
 require 'test/unit'
 
