@@ -2,72 +2,39 @@
 require File.expand_path(File.dirname(__FILE__) + '/ruby_ext/macro')
 require File.expand_path(File.dirname(__FILE__) + '/re_duxml/evaluate')
 require File.expand_path(File.dirname(__FILE__) + '/re_duxml/element')
+require 'con_duxml'
 
 module ReDuxml
-  include Duxml
+  include ConDuxml
 
-  class ResolverClass < ::Ox::Sax
-    COND_ATTR_NAME = 'if'
-    REF_ATTR_NAME = 'ref'
-
-    @dead = false
-    @cursor_stack
-
-    attr_reader :e, :dead, :cursor_stack
-
-    # @param doc [Ox::Document] document that is being constructed as XML is parsed
-    # @param _observer [Object] object that will observe this document's content
-    def initialize(logic)
-      @cursor_stack = []
-      @e = ReDuxml::Evaluator.new(logic)
-    end
-
-    def cursor
-      @cursor_stack.last
-    end
-
-    def start_element(name)
-      new_el = Duxml::Element.new(name, line, column)
-      cursor << new_el unless cursor.nil?
-      @cursor_stack << new_el
-    end
-
-    def attr(name, val)
-      cursor[name] = val
-    end
-
-    def text(str)
-      cursor << str
-    end
-
-    def end_element(name)
-      case
-        when cursor.if?
-          cursor.remove_attribute(COND_ATTR_NAME)
-        when cursor.respond_to?(:instantiate)
-          # target = cursor.instantiate # target likely plural
-          @cursor_stack[-2].replace(cursor, target)
-        when cursor.ref?
-          # target = resolve_ref
-          @cursor_stack[-2].replace(cursor, target)
-          cursor.remove_attribute(REF_ATTR_NAME)
-        else
-          @cursor_stack[-2].remove(cursor)
-          return
+  # @param doc_or_path [Doc, String] XML to load; can be Doc, String path or String XML
+  # @return [Doc] instantiated XML with parameters resolved with given values
+  def resolve(doc_or_path, opts={})
+    @e = Evaluator.new()
+    @src_doc = get_doc doc_or_path
+    @doc = Doc.new << src_doc.root.instantiate do |node|
+      if node.is_a?(String)
+        resolve_str(node, get_params(node))
+      else
+        resolved_attrs = {}
+        node.attributes.each do |attr, val| resolved_attrs[attr] = resolve_str(val, get_params(node)) end
+        resolved_node = Element.new(node.name, resolved_attrs)
+        if resolved_node.if?
+          resolved_node[:if] = nil if resolved_node[:if] == 'true'
+          resolved_node.instantiate
+        end
       end
-      @cursor_stack.pop
     end
   end
 
-  # generates new doc from current doc, resolving parameter values and instantiating Instance objects, and pruning filtered objonents.
-  def resolve(path=nil)
-    io = File.open path
-    saxer = ResolverClass.new(Duxml::Doc.new)
-    Ox.sax_parse(saxer, io, {convert_special: true, symbolize: false})
-    saxer.cursor
-  end
-
+  attr_reader :e, :src_doc
   private
+
+  # @param node [Element] a given element is expected to have child <parameters/> with grandchildren <parameter/>
+  # @return [Hash] returns parameter values as hash
+  def get_params(node)
+    # TODO how to make this recursive? need to collect overrides!!
+  end
 
   # finds index of close parentheses corresponding to first open parentheses found in given str
   def find_close_parens_index(str)

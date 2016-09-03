@@ -3,6 +3,7 @@ require_relative 'evaluate/parser'
 
 module ReDuxml
   class Evaluator
+    LOGIC_FILE = File.expand_path(File.dirname(__FILE__) + '/../../xml/logic.xml')
     include Math
     include ReDuxml
     include Symbolic
@@ -13,7 +14,7 @@ module ReDuxml
     attr_reader :param_hash, :parser
 
     def initialize(logic=nil)
-      @parser = Parser.new(logic || '../../xml/logic.xml')
+      @parser = Parser.new(logic || LOGIC_FILE)
       @param_hash = {}
     end
 
