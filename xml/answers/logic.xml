@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logic>
+  <!-- indexing -->
+  <operator id="op_square" precedence="90" logic="string">
+    <regexp>\[</regexp>
+    <symbol>[</symbol>
+    <pair>]</pair>
+  </operator>
+  <operator id="cl_square" precedence="90" logic="string">
+    <regexp>\]</regexp>
+    <symbol>]</symbol>
+    <position>postfix</position>
+    <pair>[</pair>
+    <arity>1</arity>
+  </operator>
+
+  <!-- grouping -->
+  <operator id="op_parens" precedence="100" logic="global">
+    <regexp>\(</regexp>
+    <symbol>(</symbol>
+    <position>prefix</position>
+    <pair>)</pair>
+    <arity>1</arity>
+  </operator>
+  <operator id="cl_parens" precedence="100" logic="global">
+    <regexp>\)</regexp>
+    <symbol>)</symbol>
+    <position>postfix</position>
+    <pair>(</pair>
+    <arity>1</arity>
+  </operator>
+
+  <!-- combinators -->
+  <operator id="interro" logic="global" precedence="0">
+    <regexp>\?</regexp>
+    <symbol>?</symbol>
+    <right_associative>true</right_associative>
+    <ruby>ternary</ruby>
+    <arity>3</arity>
+    <pair>:</pair>
+  </operator>
+  <operator id="colon" logic="global" precedence="0">
+    <symbol>:</symbol>
+    <pair>?</pair>
+  </operator>
+  <operator id="and" logic="boolean" precedence="10">
+    <regexp>&amp;{2}</regexp>
+    <symbol>&amp;&amp;</symbol>
+    <ruby>and</ruby>
+    <identity>true</identity>
+  </operator>
+  <operator id="or" logic="boolean" precedence="10">
+    <regexp>\|{2}</regexp>
+    <symbol>||</symbol>
+    <ruby>or</ruby>
+    <identity>false</identity>
+  </operator>
+  <operator id="not" logic="boolean" precedence="11">
+    <position>prefix</position>
+    <regexp>(!)(?=\w|!)</regexp>
+    <ruby>not</ruby>
+    <symbol>!</symbol>
+    <arity>1</arity>
+    <identity>monad</identity>
+    <right_associative>true</right_associative>
+    <inverse>!</inverse>
+  </operator>
+
+  <!-- comparators -->
+  <operator id="eq" logic="arithmetic string" precedence="30">
+    <symbol>==</symbol>
+    <reverse>==</reverse>
+    <inverse>!=</inverse>
+  </operator>
+  <operator id="lt" logic="arithmetic string" precedence="35">
+    <symbol>&lt;</symbol>
+    <reverse>&gt;</reverse>
+    <inverse>&gt;=</inverse>
+  </operator>
+  <operator id="gt" logic="arithmetic string" precedence="35">
+    <symbol>></symbol>
+    <reverse>&lt;</reverse>
+    <inverse>&lt;=</inverse>
+  </operator>
+  <operator id="le" logic="arithmetic string" precedence="35">
+    <symbol>&lt;=</symbol>
+    <reverse>&gt;=</reverse>
+    <inverse>&gt;</inverse>
+  </operator>
+  <operator id="ge" logic="arithmetic string" precedence="35">
+    <symbol>>=</symbol>
+    <reverse>&lt;=</reverse>
+    <inverse>&lt;</inverse>
+  </operator>
+  <operator id="ne" logic="arithmetic string" precedence="30">
+    <symbol>!=</symbol>
+    <reverse>!=</reverse>
+    <inverse>==</inverse>
+  </operator>
+
+  <!-- arithmetic -->
+  <operator id="add" precedence="55" logic="arithmetic string">
+    <regexp>\+</regexp>
+    <symbol>+</symbol>
+    <identity>0</identity>
+    <inverse>&#8211;</inverse>
+  </operator>
+  <operator id="sub" precedence="55" logic="arithmetic">
+    <symbol>&#8211;</symbol>
+    <ruby>-</ruby>
+    <identity>0</identity>
+    <inverse>+</inverse>
+  </operator>
+  <operator id="neg" precedence="65" logic="arithmetic">
+    <position>prefix</position>
+    <symbol>-</symbol>
+    <ruby>-@</ruby>
+    <arity>1</arity>
+    <right_associative>true</right_associative>
+    <identity>0</identity>
+    <inverse>-</inverse>
+  </operator>
+  <operator id="mul" precedence="60" logic="arithmetic">
+    <regexp>\*</regexp>
+    <symbol>*</symbol>
+    <print>×</print>
+    <identity>1</identity>
+    <inverse>/</inverse>
+  </operator>
+  <operator id="div" precedence="60" logic="arithmetic">
+    <regexp>\/</regexp>
+    <symbol>/</symbol>
+    <print>÷</print>
+    <identity>1</identity>
+    <inverse>*</inverse>
+  </operator>
+  <operator id="mod" precedence="60" logic="arithmetic">
+    <symbol>%</symbol>
+  </operator>
+  <operator id="exp" precedence="70" logic="arithmetic">
+    <regexp>\*{2}</regexp>
+    <symbol>**</symbol>
+    <ruby>**</ruby>
+    <print>^</print>
+    <identity>1</identity>
+    <inverse>log</inverse>
+  </operator>
+  <operator id="log" precedence="70" logic="arithmetic">
+    <symbol>log</symbol>
+    <position>prefix</position>
+    <inverse>^</inverse>
+  </operator>
+</logic>

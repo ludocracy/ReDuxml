@@ -49,10 +49,6 @@ class ReDuxmlTest < Test::Unit::TestCase
     assert_equal '@(monkey) is a derived unresolved value', c.find_child(%w(blah unresolvable)).content
   end
 
-  def test_link_design
-    # INCOMPLETE REQUIREMENTS!!!
-  end
-
   def teardown
   end
 end

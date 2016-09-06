@@ -12,5 +12,6 @@
                 <parameter name="param0" value="10"/>
             </parameters>
             <some_component id="overridden">this component should also say param0 = @(param0)</some_component>
+            <second_child/>
         </instance>
     </design>

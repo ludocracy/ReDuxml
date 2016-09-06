@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+    <parameters>
+        <parameter name="derived_param" value="@(monkey)"/>
+    </parameters>
+    <blah id="blah">
+        <p_test id="resolvable">30 is a derived resolved value</p_test>
+        <p_test id="unresolvable">@(monkey) is a derived unresolved value</p_test>
+    </blah>
+</design>
