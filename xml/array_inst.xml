@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <design id="design_id" logics="logic">
-    <array size="4" id="array_id">
+    <duxml:array size="4" id="array_id">
         <!-- example of where you could add design data -->
         <iterator_test id="iterator_test">@(iterator+1) is an iterator expression</iterator_test>
-    </array>
+    </duxml:array>
 </design>

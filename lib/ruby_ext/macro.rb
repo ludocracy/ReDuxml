@@ -17,16 +17,16 @@ class Macro
   # string including MACRO_SYMBOL and DELIMITERS
   attr_accessor :macro_string
 
+  # checks a string to see if it's a valid macro expression without leading or trailing non-expression or delimiter text
+  def self.is_macro?(str)
+    str[0,2] == MACRO_SYMBOL+DELIMITERS.first && str[-1] == DELIMITERS.last && str.balanced_parens?
+  end
+
   # takes given string and wraps in MACRO_SYMBOL and DELIMITERS if not already wrapped
   # e.g. str => 'asdf'
   #      Macro.new str => '@(asdf)'
   def initialize(str)
-    @macro_string = is_macro?(str) ? str : "#{MACRO_SYMBOL}#{DELIMITERS.first}#{str}#{DELIMITERS.last}"
-  end
-
-  # checks a string to see if it's a valid macro expression without leading or trailing non-expression or delimiter text
-  def is_macro?(str)
-    str[0,2] == MACRO_SYMBOL+DELIMITERS.first && str[-1] == DELIMITERS.last && str.balanced_parens?
+    @macro_string = Macro.is_macro?(str) ? str : "#{MACRO_SYMBOL}#{DELIMITERS.first}#{str}#{DELIMITERS.last}"
   end
 
   # compares #demacro'd @macro_string to obj

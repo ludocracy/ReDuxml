@@ -8,6 +8,7 @@ class EvaluateTest < Test::Unit::TestCase
     @e = Evaluator.new
     @cases = {
         #boolean
+        identity:               ['var_0',       'var_0'],
         and_simple:             [true,          'true && true'],
         and_identity:           ['var',         'var && true'],
         and_cancel:             [false,         'var && false'],
@@ -36,7 +37,7 @@ class EvaluateTest < Test::Unit::TestCase
         ternary_nest_false:     [9,             'false ? 0 : true ? 9 : 0'],
 
         #arithmetic
-        add_simple:             [10,            '9 + 1'],
+        add_simple:             [100,            '90 + 10'],
         add_identity:           [9,             '9 + 0'],
         add_var:                ['var+9',       '9 + var'],
         sub_simple:             [8,             '9 - 1'],
@@ -115,8 +116,10 @@ class EvaluateTest < Test::Unit::TestCase
 
   attr_reader :cases, :e
 
-  def test_substitution
-
+  def test_var
+    question = cases[:identity].last
+    result = e.evaluate(question)
+    assert_equal cases[:identity].first, result, question
   end
 
   def test_math

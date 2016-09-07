@@ -1,8 +1,10 @@
 # Copyright (c) 2016 Freescale Semiconductor Inc.
 require_relative 'evaluate/parser'
+require_relative '../../lib/ruby_ext/macro'
 
 module ReDuxml
   class Evaluator
+    LOGIC_FILE = File.expand_path(File.dirname(__FILE__) + '/../../xml/logic.xml')
     include Math
     include ReDuxml
     include Symbolic
@@ -13,7 +15,7 @@ module ReDuxml
     attr_reader :param_hash, :parser
 
     def initialize(logic=nil)
-      @parser = Parser.new(logic || '../../xml/logic.xml')
+      @parser = Parser.new(logic || LOGIC_FILE)
       @param_hash = {}
     end
 
@@ -24,6 +26,9 @@ module ReDuxml
     def evaluate(_expr, _param_hash={})
       @param_hash = _param_hash
       expr = resolve_params _expr
+      return expr if expr.parameterized?
+      return expr if Regexp.identifier.match(expr).to_s == expr
+      return expr.to_i if expr.to_i.to_s == expr
       result = reduce parser.parse expr
       case
         when result.respond_to?(:imaginary), result.class == TrueClass, result.class == FalseClass then result

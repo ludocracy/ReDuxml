@@ -16,6 +16,11 @@ class LexerTest < Test::Unit::TestCase
     assert_equal [:num, :operator, :num], ts
   end
 
+  def test_number_tagging
+    ts = lex('90 < 70').collect do |t| t.type end
+    assert_equal [:num, :operator, :num], ts
+  end
+
   def test_prefix_unary
     vs = lex('!(var < 7)').collect do |t| t.value end
     assert_equal :prefix, vs.first.position

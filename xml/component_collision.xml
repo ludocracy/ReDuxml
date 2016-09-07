@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <design id="design_id" logics="logic">
-        <parameters>
+        <duxml:parameters>
             <parameter name="param0" value="0">
                 <description>param0 is an integer and will be tested against the instance below</description>
             </parameter>
-        </parameters>
+        </duxml:parameters>
         <some_component>this design component should collide</some_component>
-        <instance id="blah">
+        <duxml:instance id="blah">
             <some_component>with this component!</some_component>
-        </instance>        
+        </duxml:instance>
     </design>

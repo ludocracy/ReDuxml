@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+    <blah id="blah">
+        <p_test>0 is a design param expression</p_test>
+    </blah>
+</design>

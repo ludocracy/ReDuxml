@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+    <some_component id="overriding">this component thinks param0 = 0</some_component>
+    <some_component id="overridden">this component should also say param0 = 10</some_component>
+    <second_child/>
+</design>

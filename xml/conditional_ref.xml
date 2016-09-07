@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id">
+    <duxml:parameters>
+        <parameter name="param0" value="1">
+            <description>param0 is an integer and will be tested against the instance below</description>
+        </parameter>
+    </duxml:parameters>
+    <!-- example of where you could add design data -->
+    <duxml:instance visible="debug !customer" id="test_instance_0_id" ref="targetiddxcz" if="@(param0 &gt; 0)">
+        <duxml:parameters>
+            <parameter name="instance_param_0" value="fff">
+                <description>what this param is about</description>
+            </parameter>
+        </duxml:parameters>
+    </duxml:instance>
+    <thing id="targetiddxcz">something something @(param0)</thing>
+</design>

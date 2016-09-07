@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+    <description>for this instance, param0 == 0</description>
+    <description>but for this instance, param0 == 10</description>
+</design>

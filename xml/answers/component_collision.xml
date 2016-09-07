@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+    <some_component>this design component should collide</some_component>
+    <some_component id="blah">with this component!</some_component>
+</design>

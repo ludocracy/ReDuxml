@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design id="design_id" logics="logic">
+    <iterator_test id="iterator_test0">1 is an iterator expression</iterator_test>
+    <iterator_test id="iterator_test1">2 is an iterator expression</iterator_test>
+    <iterator_test id="iterator_test2">3 is an iterator expression</iterator_test>
+    <iterator_test id="iterator_test3">4 is an iterator expression</iterator_test>
+</design>

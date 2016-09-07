@@ -14,7 +14,7 @@ module Lexer
       function: /log|exp|sqrt/,
       bool:     /true|false/,
       param:    Regexp.identifier,
-      num:      /\d/,
+      num:      /\d+/,
       grouping: /[\(\):,]/
   }
 
