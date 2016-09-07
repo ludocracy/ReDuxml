@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <design id="design_id" logics="logic">
-        <parameters>
+        <duxml:parameters>
             <parameter name="param0" value="0">
                 <description>param0 is an integer and will be tested against the instance below</description>
             </parameter>
-        </parameters>
+        </duxml:parameters>
             <blah id="blah">
                 <p_test>@(param0) is a design param expression</p_test>
             </blah>
         
     </design>
-</meta>

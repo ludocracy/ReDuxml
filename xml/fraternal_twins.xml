@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?> <design id="design_id" logics="logic">
-        <instance id="instance_0">
-            <parameters>
+        <duxml:instance id="instance_0">
+            <duxml:parameters>
                 <parameter name="param0" value="0"/>
-            </parameters>
+            </duxml:parameters>
             <description>for this instance, param0 == @(param0)</description>
-        </instance>
-        <instance id="instance_1">
-            <parameters>
+        </duxml:instance>
+        <duxml:instance id="instance_1">
+            <duxml:parameters>
                 <parameter name="param0" value="10"/>
-            </parameters>
+            </duxml:parameters>
             <description>but for this instance, param0 == @(param0)</description>
-        </instance>
+        </duxml:instance>
     </design>

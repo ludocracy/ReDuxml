@@ -10,6 +10,6 @@ class String
 
   # returns whether number of open parentheses and close parentheses match
   def balanced_parens?
-    self.match('(').size == self.match(')').size
+    self.match(/\(/).size == self.match(/\)/).size
   end
 end # class String

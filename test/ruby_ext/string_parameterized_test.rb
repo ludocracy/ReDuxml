@@ -13,6 +13,10 @@ class ParametersTest < Test::Unit::TestCase
     # Do nothing
   end
 
+  def balanced_parens
+    assert true, '@(asdf)'.balanced_parens?
+  end
+
   #
   def test_parameterized
     assert "asdf @(asd)".parameterized?

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <design id="design_id" logics="logic">
-        <parameters>
+        <duxml:parameters>
             <parameter name="param0" value="0">
                 <description>param0 is an integer and will be tested against the instance below</description>
             </parameter>
-        </parameters>
+        </duxml:parameters>
         <!-- example of where you could add design data -->
         <some_component id="overriding">this component thinks param0 = @(param0)</some_component>
-        <instance id="param_overrides_inst">
-            <parameters>
+        <duxml:instance id="param_overrides_inst">
+            <duxml:parameters>
                 <parameter name="param0" value="10"/>
-            </parameters>
+            </duxml:parameters>
             <some_component id="overridden">this component should also say param0 = @(param0)</some_component>
             <second_child/>
-        </instance>
+        </duxml:instance>
     </design>

@@ -9,31 +9,32 @@ module ReDuxml
 
   # @param doc_or_node [Doc, String] XML to load; can be Doc, String path or String XML; also XML Element when recursing
   # @return [Doc] instantiated XML with parameters resolved with given values
-  def resolve(doc_or_node, params={})
+  def resolve(doc_or_node, parent_params={})
     if doc_or_node.is_a?(Element)
-      resolved_attrs = {}
-      new_params = get_params(doc_or_node, params)
-      resolved_node = Element.new(doc_or_node.name, resolved_attrs)
-      new_children = doc_or_node.nodes.collect do |src_node|
-        if src_node.respond_to?(:nodes)
-          resolved_child = src_node.stub
-          resolved_child.attributes.each do |attr, val| resolved_child[attr] = resolve_str(val, new_params) end
-          if resolved_node.if?
-            resolved_node[:if] = nil if resolved_node[:if] == 'true'
-            resolved_node.activate.collect do |inst| resolve inst end
+      resolved_node = doc_or_node.stub
+      this_params = get_params(doc_or_node, parent_params)
+      new_children = doc_or_node.nodes.collect do |child|
+        if child.respond_to?(:nodes)
+          new_child = child.clone
+          new_child.attributes.each do |attr, val|
+            new_child[attr] = resolve_str(val, this_params)
+          end
+          if new_child.if?
+            new_child[:if] = nil
+            child_params = get_params(new_child, this_params)
+            new_child.activate.collect do |inst|
+              resolve(inst, child_params)
+            end
           end
         else
-          resolve_str(src_node, new_params)
+          resolve_str(child, this_params)
         end
       end.flatten.compact
-      if new_children.any?
-        resolved_node << new_children
-      end
-      resolved_node
+      resolved_node << new_children
     else
       @e ||= Evaluator.new
       @src_doc = get_doc doc_or_node
-      @doc = Doc.new << resolve(src_doc.root, params)
+      @doc = Doc.new << resolve(src_doc.root, parent_params)
     end
   end
 
@@ -42,17 +43,15 @@ module ReDuxml
 
 
   def get_params(node, param_hash)
-    if node.nodes.any? do |child| child.name == 're_duxml:parameters' end
+    if node.nodes.any? and !node.text? and node.nodes[0].name == 'duxml:parameters'
       local_params = {}
-      params = node.parameters.nodes.clone
+      params = node[0].nodes.clone
       params.each do |param|
-        name = param[:name]
-        val = param[:value]
-        new_val = resolve_str(param_hash, val)
-        parameters.remove param unless new_val.parameterized?
-        local_params[name] = new_val
+        new_val = resolve_str(param[:value], param_hash)
+        node[0].delete param unless new_val.parameterized?
+        local_params[param[:name]] = new_val
       end
-      node.remove parameters unless node.parameters.nodes.any?
+      node.delete node[0] unless node[0].nodes.any?
       param_hash.merge local_params
     else
       param_hash
@@ -83,9 +82,9 @@ module ReDuxml
   def resolve_str(content_str, param_hash)
     question = find_expr content_str
     return content_str if question.nil?
-    reply = Macro.new e.evaluate(question, param_hash)
-    replacement_str = reply.parameterized? ? reply : reply.demacro
-    macro_string = Macro.new(question)
+    reply = Macro.new e.evaluate(question, param_hash).to_s
+    replacement_str = reply.parameterized? ? reply.macro_string : reply.demacro
+    macro_string = Macro.new(question).macro_string
     content_str.gsub(macro_string, replacement_str)
   end
 

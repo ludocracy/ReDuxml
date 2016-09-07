@@ -23,6 +23,7 @@ module AST
       return type.to_s if children.empty?
       str = ''
       op = type.respond_to?(:text) ? type : logic[type.to_s]
+      return str unless op
       case op.position
         when :prefix
           str << op.symbol

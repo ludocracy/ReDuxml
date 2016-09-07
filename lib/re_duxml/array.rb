@@ -1,5 +1,4 @@
 # Copyright (c) 2016 Freescale Semiconductor Inc.
-
 require 'con_duxml/instance'
 
 module ConDuxml
@@ -10,22 +9,22 @@ module ConDuxml
     include Instance
 
     # @return [Array[Element]] flattened array of all duplicated Elements
-    def instantiate(&block)
+    def activate
       # TODO add implicit @iterator param
       size_expr = size.respond_to?(:to_i) ? size.to_i : size.to_s
       if size_expr.is_a? Fixnum
         new_children = []
         size_expr.times do
           source_nodes = if nodes.empty? and self[:ref]
-                           resolve_ref
+                           [resolve_ref.clone]
                          else
-                           nodes
+                           nodes.collect do |node| node.clone end
                          end
           source_nodes.each do |node|
-            new_children << node.instantiate(&block)
+            new_children << node
           end
         end
-        new_children
+        new_children.flatten
       else
         [self]
       end

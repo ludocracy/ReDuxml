@@ -16,6 +16,10 @@ class MacroTest < Test::Unit::TestCase
     # Do nothing
   end
 
+  def test_is_macro
+    assert_equal true, Macro.is_macro?('@(asdf)')
+  end
+
   # Fake test
   def test_demacro
     assert_equal "2 + asdf", @m.demacro

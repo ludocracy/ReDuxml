@@ -2,5 +2,5 @@
 <design id="design_id" logics="logic">
     <some_component id="overriding">this component thinks param0 = 0</some_component>
     <some_component id="overridden">this component should also say param0 = 10</some_component>
-    <second_child id="param_overrides_inst"/>
+    <second_child/>
 </design>
