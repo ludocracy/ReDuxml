@@ -10,7 +10,6 @@ module ConDuxml
 
     # @return [Array[Element]] flattened array of all duplicated Elements
     def activate
-      # TODO add implicit @iterator param
       size_expr = size.respond_to?(:to_i) ? size.to_i : size.to_s
       if size_expr.is_a? Fixnum
         new_children = []
