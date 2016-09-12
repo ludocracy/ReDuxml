@@ -11,3 +11,5 @@ result*
 java/
 java/*
 #backup zip
+
+*.gem

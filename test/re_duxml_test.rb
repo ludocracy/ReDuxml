@@ -47,7 +47,6 @@ class ReDuxmlTest < Test::Unit::TestCase
   end
 
   def test_instantiate_array
-    omit
     resolve File.expand_path(File.dirname(__FILE__) + '/../xml/array_inst.xml')
     answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/array_inst.xml')
     assert_equal answer.root.to_s, doc.root.to_s

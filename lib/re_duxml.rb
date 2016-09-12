@@ -2,6 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/ruby_ext/macro')
 require File.expand_path(File.dirname(__FILE__) + '/re_duxml/evaluate')
 require File.expand_path(File.dirname(__FILE__) + '/re_duxml/element')
+require File.expand_path(File.dirname(__FILE__) + '/re_duxml/array')
 require 'con_duxml'
 
 module ReDuxml
@@ -12,18 +13,22 @@ module ReDuxml
   def resolve(doc_or_node, parent_params={})
     if doc_or_node.is_a?(Element)
       resolved_node = doc_or_node.stub
+      resolved_node.attributes.each do |attr, val|
+        resolved_node[attr] = resolve_str(val, parent_params)
+      end
       this_params = get_params(doc_or_node, parent_params)
       new_children = doc_or_node.nodes.collect do |child|
         if child.respond_to?(:nodes)
           new_child = child.clone
-          new_child.attributes.each do |attr, val|
-            new_child[attr] = resolve_str(val, this_params)
-          end
+          new_child[:if] = resolve_str(new_child[:if], this_params) if new_child[:if]
           if new_child.if?
             new_child[:if] = nil
             child_params = get_params(new_child, this_params)
-            new_child.activate.collect do |inst|
-              resolve(inst, child_params)
+            new_instances = new_child.activate
+            i = -1
+            new_instances.collect do |inst|
+              i += 1
+              resolve(inst, child_params.merge({'iterator' => i.to_s}))
             end
           end
         else
