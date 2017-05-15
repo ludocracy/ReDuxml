@@ -33,9 +33,9 @@ module AST
           str << op.symbol
         when :infix
           if op.arity > 2
-            str << children.first.print(logic) << op.symbol << children[1].print(logic) << op.pair.to_s << children.last.print
+            str << children.first.print(logic) << op.symbol << children[1].print(logic) << op.pair.symbol << children.last.print
           else
-            str << (children.first.respond_to?(:print) ? children.first.print(logic) : children.first.to_s) << op.symbol << children.last.print
+            str << (children.first.respond_to?(:print) ? children.first.print(logic) : children.first.symbol) << op.symbol << children.last.print
           end
         else # should not happen
       end

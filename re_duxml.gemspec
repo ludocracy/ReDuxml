@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Add any gems that your plugin needs to run within a host application
+  spec.add_runtime_dependency "duxml", "~> 0.8.9"
   spec.add_runtime_dependency "con_duxml", "~> 0.4.0"
   spec.add_runtime_dependency "ast", "~> 2.2"
   spec.add_runtime_dependency "symbolic", "~> 0.3"

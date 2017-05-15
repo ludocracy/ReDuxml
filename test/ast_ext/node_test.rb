@@ -7,7 +7,7 @@ class NodeTest < Test::Unit::TestCase
   include AST
 
   def setup
-    @p = ReDuxml::Parser.new('../../xml/logic.xml')
+    @p = ReDuxml::Parser.new(File.expand_path(File.dirname(__FILE__) + '/../../xml/logic.xml'))
   end
 
   attr_reader :p

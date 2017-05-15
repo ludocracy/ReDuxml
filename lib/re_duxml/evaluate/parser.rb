@@ -81,7 +81,8 @@ module ReDuxml
             op_stack << token.value
           when :grouping
             op_prop = token.value
-            case op_prop.to_s
+            op_str = op_prop.respond_to?(:nodes) ? op_prop.symbol : op_prop.to_s
+            case op_str
               when '('
                 if input.any? && input.first.type == :grouping && input.first.value.to_s == '('
                   input.shift
@@ -90,7 +91,7 @@ module ReDuxml
                   op_stack << op_prop
                 end
               when ')'
-                while op_stack.any? && op_stack.last.symbol != op_prop.pair.to_s
+                while op_stack.any? && op_stack.last.symbol != op_prop.pair.symbol
                   consume(arities.pop || op_stack.last.arity)
                 end
                 lparen = op_stack.pop

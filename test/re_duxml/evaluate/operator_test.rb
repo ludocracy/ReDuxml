@@ -8,7 +8,7 @@ class OperatorTest < Test::Unit::TestCase
   include Duxml
 
   def setup
-    load '../../../xml/logic.xml'
+    load File.expand_path(File.dirname(__FILE__) + '/../../../xml/logic.xml')
   end
 
   def test_operator_loading
