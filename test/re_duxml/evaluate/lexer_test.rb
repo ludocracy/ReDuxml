@@ -41,7 +41,14 @@ class LexerTest < Test::Unit::TestCase
   def test_string
   # TODO test re-substitution of strings here!
     ts = lex('"s s " != var').collect do |t| t.type end
-    vs = lex('"s s " != var').collect do |t| t.value.to_s end
+    vs = lex('"s s " != var').collect do |t|
+      v = t.value
+      case
+        when v.respond_to?(:nodes) then v.symbol
+        when v.respond_to?(:name) then v.name
+        else v.to_s
+      end
+    end
     assert_equal [:string, :operator, :param], ts
     assert_equal ['"s s "', '!=', 'var'], vs
   end

@@ -32,7 +32,8 @@ module ReDuxml
       result = reduce parser.parse expr
       case
         when result.respond_to?(:imaginary), result.class == TrueClass, result.class == FalseClass then result
-        when result.respond_to?(:print) then result.print(parser.logic)
+        when result.respond_to?(:name) then result.name
+        when result.respond_to?(:to_sexp) then result.print(parser.logic)
         else result.to_s
       end
     end

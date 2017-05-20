@@ -13,12 +13,14 @@ class ParserTest < Test::Unit::TestCase
   def test_parse_groups
     # unary
     ast = p.parse '!true'
-    assert_equal "(!\n  (true))", ast.to_sexp
+    assert_equal '!', ast.type.symbol
+    assert_equal '[s(:true)]', ast.children.to_s
     assert_equal :prefix, ast.type.position
 
     # binary
     ast = p.parse '2 + 2'
-    assert_equal "(+\n  (2)\n  (2))", ast.to_sexp
+    assert_equal '+', ast.type.symbol
+    assert_equal '[s(:2), s(:2)]', ast.children.to_s
     ast = p.parse 'var0 == var1'
     assert_equal '!=', ast.type.inverse.symbol
 
@@ -28,23 +30,30 @@ class ParserTest < Test::Unit::TestCase
 
     # ternary
     ast = p.parse 'var ? "true!!!" : 3'
-    output = ast.to_sexp
-    assert_equal %((?\n  (var)\n  ("true!!!")\n  (3))), output
+    assert_equal '?', ast.type.symbol
+    assert_equal '[s(:var), s(:"true!!!"), s(:3)]', ast.children.to_s
 
     # OoO-reversed
-    ast = p.parse 'var - 2 * 6'
-    output = ast.to_sexp
-    assert_equal %((\u2013\n  (var)\n  (*\n    (2)\n    (6)))), output
+    ast = p.parse 'var + 2 * 6'
+    output = ast.print
+    assert_equal 'var+2*6', output
 
     # OoO-reverse_grouped
-    ast = p.parse '(var - 2) * 6'
-    output = ast.to_sexp
-    assert_equal %((*\n  (\u2013\n    (var)\n    (2))\n  (6))), output
+    ast = p.parse '(var + 2) * 6'
+    assert_equal '*', ast.type.symbol
+    assert_equal '(6)', ast.children.last.to_s
+    assert_equal '+', ast.children.first.type.symbol
+    assert_equal '[s(:var), s(:2)]', ast.children.first.children.to_s
   end
 
   def test_ternary_nested
     ast = p.parse 'true ? true ? 0 : 1 : 2'
-    assert_equal "(?\n  (true)\n  (?\n    (true)\n    (0)\n    (1))\n  (2))", ast.to_sexp
+    assert_equal '?', ast.type.symbol
+    assert_equal '(true)', ast.children.first.to_s
+    sub_ast = ast.children[1]
+    assert_equal '?', sub_ast.type.symbol
+    assert_equal '(2)', ast.children[2].to_s
+    assert_equal '[s(:true), s(:0), s(:1)]', sub_ast.children.to_s
   end
 
   def test_parse_types
