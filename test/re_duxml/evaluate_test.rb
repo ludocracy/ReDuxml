@@ -119,13 +119,13 @@ class EvaluateTest < Test::Unit::TestCase
   def test_num_params
     question = 'a + b'
     result = e.evaluate(question, {a: 2, b: 3})
-    assert_equal '5', result, question
+    assert_equal 5, result, question
   end
 
   def test_str_params
     question = 'a + b'
     result = e.evaluate(question, {a: '2', b: '3'})
-    assert_equal '5', result, question
+    assert_equal 5, result, question
   end
 
   def test_var
