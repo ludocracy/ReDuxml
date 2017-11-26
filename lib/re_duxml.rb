@@ -11,6 +11,7 @@ module ReDuxml
   # @param doc_or_node [Doc, String] XML to load; can be Doc, String path or String XML; also XML Element when recursing
   # @return [Doc] instantiated XML with parameters resolved with given values
   def resolve(doc_or_node, parent_params={})
+    @e ||= Evaluator.new
     if doc_or_node.is_a?(Element)
       resolved_node = doc_or_node.stub
       resolved_node.attributes.each do |attr, val|
@@ -18,11 +19,11 @@ module ReDuxml
       end
       this_params = get_params(doc_or_node, parent_params)
       new_children = doc_or_node.nodes.collect do |child|
-        if child.respond_to?(:nodes)
+        if child.respond_to?(:nodes) # if this node is an XML element...
           new_child = child.clone
           new_child[:if] = resolve_str(new_child[:if], this_params) if new_child[:if]
-          if new_child.if?
-            new_child[:if] = nil
+          if new_child.if? # if this node should exist
+            new_child[:if] = nil if new_child[:if] == 'true'
             child_params = get_params(new_child, this_params)
             new_instances = new_child.activate
             i = -1
@@ -31,13 +32,12 @@ module ReDuxml
               resolve(inst, child_params.merge({'iterator' => i.to_s}))
             end
           end
-        else
+        else # this is a text node
           resolve_str(child, this_params)
         end
       end.flatten.compact
       resolved_node << new_children
     else
-      @e ||= Evaluator.new
       @src_doc = get_doc doc_or_node
       @doc = Doc.new << resolve(src_doc.root, parent_params)
     end
