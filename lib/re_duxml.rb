@@ -85,20 +85,26 @@ module ReDuxml
   # @param param_hash [Hash] keys are parameter names, values are parameter values e.g. {var0: 'param', var1: 'eter'}
   # @return [String] content_str with parameter values substituted and algebraically reduced if any unknown parameters remain e.g. 'a parameter string @(var2)'
   def resolve_str(content_str, param_hash)
-    question = find_expr content_str
-    return content_str if question.nil?
-    reply = Macro.new e.evaluate(question, param_hash).to_s
-    replacement_str = reply.parameterized? ? reply.macro_string : reply.demacro
-    macro_string = Macro.new(question).macro_string
-    content_str.gsub(macro_string, replacement_str)
+    questions = find_exprs content_str
+    return content_str if questions.empty?
+    questions.each do |question|
+      reply = Macro.new e.evaluate(question, param_hash).to_s
+      replacement_str = reply.parameterized? ? reply.macro_string : reply.demacro
+      macro_string = Macro.new(question).macro_string
+      content_str.gsub!(macro_string, replacement_str)
+    end
+    content_str
   end
 
   # @param str [String] string that may contain parameter expression e.g. 'asdf @(param + 2) asdf'
-  # @return [String] macro string e.g. 'asdf @(param + 2) asdf' => 'param + 2'
-  def find_expr(str)
-    expr_start_index = str.index('@(')
-    return nil if expr_start_index.nil?
-    expr_end_index = find_close_parens_index str[expr_start_index+1..-1]
-    str[expr_start_index+2, expr_end_index-1]
+  # @return [Array[String]] array of macro strings e.g. 'asdf @(param + 2) asdf' => 'param + 2'
+  def find_exprs(str)
+    expressions = []
+    str.scan('@(') do |c|
+      expr_start_index = $~.offset(0)[0] # gets index of current match
+      expr_end_index = find_close_parens_index str[expr_start_index+1..-1]
+      expressions << str[expr_start_index+2, expr_end_index-1]
+    end
+    expressions
   end
 end # module Dux
