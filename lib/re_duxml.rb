@@ -85,15 +85,16 @@ module ReDuxml
   # @param param_hash [Hash] keys are parameter names, values are parameter values e.g. {var0: 'param', var1: 'eter'}
   # @return [String] content_str with parameter values substituted and algebraically reduced if any unknown parameters remain e.g. 'a parameter string @(var2)'
   def resolve_str(content_str, param_hash)
+    output_str = content_str.clone
     questions = find_exprs content_str
-    return content_str if questions.empty?
+    return output_str if questions.empty?
     questions.each do |question|
       reply = Macro.new e.evaluate(question, param_hash).to_s
       replacement_str = reply.parameterized? ? reply.macro_string : reply.demacro
       macro_string = Macro.new(question).macro_string
-      content_str.gsub!(macro_string, replacement_str)
+      output_str.gsub!(macro_string, replacement_str)
     end
-    content_str
+    output_str
   end
 
   # @param str [String] string that may contain parameter expression e.g. 'asdf @(param + 2) asdf'
