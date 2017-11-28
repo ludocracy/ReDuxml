@@ -8,9 +8,6 @@ class Element
 end
 
 class ParameterizationTest < Test::Unit::TestCase
-  SAMPLE_TEMPLATE_FILE = File.expand_path(File.dirname(__FILE__) + '/../../../xml/sample_dux.xml')
-
-  attr_reader :e
   def setup
   end
 
@@ -19,6 +16,13 @@ class ParameterizationTest < Test::Unit::TestCase
     t = sax(%(<birdhouse if="true">@(pine)<color/><material><wood>pine</wood></material></birdhouse>))
     assert_equal false, f.if?
     assert_equal true, t.if?
+  end
+
+  def test_parameterized_if
+    xml = sax(%(<element if="@(param)"/>))
+    assert_equal false, xml.if?
+    xml = sax(%(<element if="@(param == 2)"/>))
+    assert_equal true, xml.if?
   end
 
   def test_no_if
