@@ -42,7 +42,9 @@ module ReDuxml
 
     def resolve_params(_expr)
       expr = _expr.dup
-      param_hash.each do |param, val| expr.gsub!(param.to_s, val.to_s) end
+      param_hash.keys.sort_by do |key| -key.size end.each do |key|
+        expr.gsub!(key.to_s, param_hash[key].to_s)
+      end
       expr
     end
 
