@@ -6,7 +6,8 @@
             </parameter>
         </duxml:parameters>
             <blah id="blah">
-                <p_test>@(param0) is a design param expression</p_test>
+                <p>@(param0) is a design param expression</p>
+                <p if="@(other_param)">@(other_param)s are supported as well!</p>
             </blah>
-        
+
     </design>

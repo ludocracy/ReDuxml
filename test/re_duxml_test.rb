@@ -45,6 +45,10 @@ class ReDuxmlTest < Test::Unit::TestCase
     resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml')
     answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/inline_param.xml')
     assert_equal answer.root.to_s, doc.root.to_s
+
+    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml'), {other_param: '"String"'}
+    answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/inline_params_string.xml')
+    assert_equal answer.root.to_s, doc.root.to_s
   end
 
   def test_param_overrides
