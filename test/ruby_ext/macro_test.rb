@@ -7,6 +7,7 @@ class MacroTest < Test::Unit::TestCase
   def setup
     @m = Macro.new "2 + asdf"
     @n = Macro.new "2 + 4"
+    @o = Macro.new '"a string"'
   end
 
   # Called after every test method runs. Can be used to tear
@@ -25,8 +26,13 @@ class MacroTest < Test::Unit::TestCase
     assert_equal "2 + asdf", @m.demacro
   end
 
+  def test_to_s
+    assert_equal "@(2 + asdf)", @m.to_s
+  end
+
   def test_parameterized
     assert @m.parameterized?
     assert !@n.parameterized?
+    assert !@o.parameterized?
   end
 end

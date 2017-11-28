@@ -44,8 +44,13 @@ class Macro
     macro_string[2..-2]
   end
 
+  def to_s
+    macro_string
+  end
+
   # returns nil if not, and match data for any parameter names found
   def parameterized?
+    return false if macro_string[2] == '"' && macro_string[-2] == '"'
     macro_string.match Regexp.identifier
   end
 end # class Macro

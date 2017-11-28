@@ -33,7 +33,6 @@ module ReDuxml
       return expr if Regexp.identifier.match(expr).to_s == expr
       return expr.to_i if expr.to_i.to_s == expr
       result = reduce parser.parse expr
-      puts "result = #{result}"
       case
         when result.respond_to?(:imaginary), result.class == TrueClass, result.class == FalseClass then result
         when result.respond_to?(:name) then result.name

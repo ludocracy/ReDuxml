@@ -89,8 +89,10 @@ module ReDuxml
     questions = find_exprs content_str
     return output_str if questions.empty?
     questions.each do |question|
+      puts "question = #{question}"
       reply = Macro.new e.evaluate(question, param_hash).to_s
-      replacement_str = reply.parameterized? ? reply.macro_string : reply.demacro
+      puts "reply = #{reply.to_s}"
+      replacement_str = reply.parameterized? ? reply.macro_string : reply.demacro 
       macro_string = Macro.new(question).macro_string
       output_str.gsub!(macro_string, replacement_str)
     end
