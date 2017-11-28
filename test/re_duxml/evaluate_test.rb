@@ -119,6 +119,9 @@ class EvaluateTest < Test::Unit::TestCase
   def test_param_name_collision
     question = 'a + apple'
 
+    result = e.evaluate(question, {a: 1})
+    assert_equal 'apple+1', result, question
+
     result = e.evaluate(question, {apple: 1, a: 2})
     assert_equal 3, result, question
 
