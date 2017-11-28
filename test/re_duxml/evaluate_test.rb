@@ -116,6 +116,17 @@ class EvaluateTest < Test::Unit::TestCase
 
   attr_reader :cases, :e
 
+  def test_strings
+    question = '"a string"'
+
+    result = e.evaluate(question)
+    assert_equal question, result
+
+    question = 'string_var'
+    result = e.evaluate(question, {string_var: '"a string"'})
+    assert_equal '"a string"', result
+  end
+
   def test_param_name_collision
     question = 'a + apple'
 

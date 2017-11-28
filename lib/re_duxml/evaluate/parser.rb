@@ -126,7 +126,7 @@ module ReDuxml
       unless output.count == 1
         fail ParseError, "Invalid statement"
       end
-
+      
       output.first
     end # def parse(expr)
 

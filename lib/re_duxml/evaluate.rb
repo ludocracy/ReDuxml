@@ -33,6 +33,7 @@ module ReDuxml
       return expr if Regexp.identifier.match(expr).to_s == expr
       return expr.to_i if expr.to_i.to_s == expr
       result = reduce parser.parse expr
+      puts "result = #{result}"
       case
         when result.respond_to?(:imaginary), result.class == TrueClass, result.class == FalseClass then result
         when result.respond_to?(:name) then result.name
@@ -56,7 +57,9 @@ module ReDuxml
     include Symbolic
 
     def reduce(_ast)
-      ast = _ast.type.respond_to?(:symbol) ? _ast : new_ast(parser.logic[_ast.type.to_s], _ast.children.dup)
+      return _ast if _ast.children.empty?
+      ast = _ast.type.respond_to?(:symbol) ? _ast
+        : new_ast(parser.logic[_ast.type.to_s], _ast.children.dup)
       if ast.children.any?
         operator = ast.type
         args = ast.children.collect do |c|
