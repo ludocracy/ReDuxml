@@ -2,6 +2,6 @@
 <design id="design_id" logics="logic">
     <blah id="blah">
         <p>0 is a design param expression</p>
-        <p>@(other_param)s are supported as well!</p>
+        <p>@(String)s are supported as well!</p>
     </blah>
 </design>

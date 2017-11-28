@@ -7,7 +7,7 @@
         </duxml:parameters>
             <blah id="blah">
                 <p>@(param0) is a design param expression</p>
-                <p if="@(other_param)">@(other_param)s are supported as well!</p>
+                <p>@(other_param)s are supported as well!</p>
             </blah>
 
     </design>

@@ -20,7 +20,7 @@ class ParameterizationTest < Test::Unit::TestCase
 
   def test_parameterized_if
     xml = sax(%(<element if="@(param)"/>))
-    assert_equal false, xml.if?
+    assert_equal true, xml.if?
     xml = sax(%(<element if="@(param == 2)"/>))
     assert_equal true, xml.if?
   end

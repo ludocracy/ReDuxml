@@ -46,8 +46,12 @@ class ReDuxmlTest < Test::Unit::TestCase
     answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/inline_param.xml')
     assert_equal answer.root.to_s, doc.root.to_s
 
-    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml'), {other_param: '"String"'}
-    answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/inline_params_string.xml')
+    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml'), {other_param: 'String'}
+    answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/inline_param_unknown.xml')
+    assert_equal answer.root.to_s, doc.root.to_s
+
+    resolve File.expand_path(File.dirname(__FILE__) + '/../xml/inline_param.xml'), {other_param: 'String'}
+    answer = sax File.expand_path(File.dirname(__FILE__) + '/../xml/answers/inline_param_string.xml')
     assert_equal answer.root.to_s, doc.root.to_s
   end
 
