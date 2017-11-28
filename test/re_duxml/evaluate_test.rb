@@ -116,6 +116,16 @@ class EvaluateTest < Test::Unit::TestCase
 
   attr_reader :cases, :e
 
+  def test_param_name_collision
+    question = 'a + apple'
+
+    result = e.evaluate(question, {apple: 1, a: 2})
+    assert_equal 3, result, question
+
+    result = e.evaluate(question, {a: 1, apple: 2})
+    assert_equal 3, result, question
+  end
+
   def test_num_params
     question = 'a + b'
     result = e.evaluate(question, {a: 2, b: 3})
