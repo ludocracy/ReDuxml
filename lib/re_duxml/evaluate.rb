@@ -24,7 +24,10 @@ module ReDuxml
     end
 
     def evaluate(_expr, _param_hash={})
-      @param_hash = _param_hash
+      _param_hash.each do |key, val|
+        @param_hash[key.to_s] = _param_hash[key]
+      end
+
       expr = resolve_params _expr
       return expr if expr.parameterized?
       return expr if Regexp.identifier.match(expr).to_s == expr
@@ -42,8 +45,10 @@ module ReDuxml
 
     def resolve_params(_expr)
       expr = _expr.dup
-      param_hash.keys.sort_by do |key| -key.size end.each do |key|
-        expr.gsub!(key.to_s, param_hash[key].to_s)
+      _expr.scan(Regexp.identifier) do |match|
+        param_name = match[0]
+        param_value = param_hash[param_name] || param_name
+        expr.gsub!(/\b#{Regexp.quote(param_name)}\b/, param_value.to_s)
       end
       expr
     end
